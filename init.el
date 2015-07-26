@@ -137,8 +137,6 @@
 
 ;;bind pour incrementer
 
-
-
 (defun for ()
   "Insert a template of for loop"
   (interactive)
@@ -225,14 +223,14 @@ using namespace std;
 (defun previous-window()
   (interactive)
   (other-window -1))
- 
+
 ;; let's unleash the power of IDO mode !
 (ido-mode 1)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 
 (setq inhibit-startup-message t
-  inhibit-startup-echo-area-message t) 
+      inhibit-startup-echo-area-message t) 
 ;;(define-key global-map (kbd "RET") 'newline-and-indent)
 
 (desktop-save-mode 1)
@@ -240,10 +238,11 @@ using namespace std;
 `
 
 (defun x11-maximize-frame ()
-    "Maximize the current frame (to full screen)"
-      (interactive)
-        (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
-	  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
+  "Maximize the current frame (to full screen)"
+  (interactive)
+  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
+  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
+
 
 (setq compilation-ask-about-save nil) ;;; Shut up compile saves
 ;;(setq compilation-save-buffers-predicate '(lambda () nil)) ;;; Don't save *anything*
@@ -254,6 +253,7 @@ using namespace std;
 (setq compilation-scroll-output 'first-error)
 (setq compilation-always-kill t)
 
+(tool-bar-mode -1)
 ;; (tooltip-mode nil)
 ;; (setq tooltip-use-echo-area nil)
 
@@ -283,22 +283,8 @@ using namespace std;
           )
       )
     (call-interactively 'compile)
-    ;; (enlarge-window 40)
     )
   )
-
-
-;; (defun my-compilation-hook ()
-;;   (when (not (get-buffer-window "*compilation*"))
-;;     (save-selected-window
-;;       (save-excursion
-;; 	(let* ((w (split-window-vertically))
-;; 	       (h (window-height w)))
-;; 	  (select-window w)
-;; 	  (switch-to-buffer "*compilation*")
-;; 	  (shrink-window (- h 10)))))))
-;; (add-hook 'compilation-mode-hook 'my-compilation-hook)
-
 
 (defun my-compilation-hook ()
   (when (not (get-buffer-window "*compilation*"))
@@ -315,12 +301,11 @@ using namespace std;
 (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
 (setq backup-by-copying t)
 (setq delete-old-versions t
-        kept-new-versions 6
-	  kept-old-versions 2
-	    version-control t)
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
 
 ;; https://twiki.cern.ch/twiki/bin/view/CDS/EmacsTips#B2_Ido
-
 
 (put 'upcase-region 'disabled nil)
 
@@ -450,8 +435,8 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 
 
 (defun close-all-buffers ()
-    (interactive)
-      (mapc 'kill-buffer (buffer-list)))
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
 
 (defun newfile ()
   (interactive)
@@ -535,11 +520,11 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
 (global-set-key [f1] 'run)
 (global-set-key [f2] 'switch-to-ansi-term)
-;;(global-set-key [f3] 'InsertHeaders)
-(global-set-key [f12] 'my_cout) 
+(global-set-key [f8] 'replace-string)
 (global-set-key [f9] 'toggle-source-header)
+(global-set-key [f11] 'x11-maximize-frame) 
+(global-set-key [f12] 'my_cout) 
 (global-set-key (kbd "C-o") 'goto-line)
-(global-set-key (kbd "<f8>") 'replace-string)
 (global-set-key [C-/] 'undo)
 (global-set-key (kbd "§") 'other-window)
 (global-set-key (kbd "±") 'previous-window)
@@ -554,4 +539,5 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 
 (load-file "~/.emacs.d/elpa/leuven-theme-20150622.306/leuven-theme.el")
 (load-theme 'leuven t)
+
 
