@@ -1,50 +1,51 @@
 
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; Load CEDET.
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; See cedet/common/cedet.info for configuration details.
-;; ;; IMPORTANT: For Emacs >= 23.2, you must place this *before* any
-;; ;; CEDET component (including EIEIO) gets activated by another
-;; ;; package (Gnus, auth-source, ...).
-;; (load-file "~/appz/cedet-1.1/common/cedet.el")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Load CEDET.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; See cedet/common/cedet.info for configuration details.
+;; IMPORTANT: For Emacs >= 23.2, you must place this *before* any
+;; CEDET component (including EIEIO) gets activated by another
+;; package (Gnus, auth-source, ...).
+;;(load-file "~/appz/cedet-1.1/common/cedet.el")
 
-;; ;; Enable EDE (Project Management) features
-;; (global-ede-mode 1)
+;; Enable EDE (Project Management) features
+(global-ede-mode 1)
 
-;; ;; Enable EDE for a pre-existing C++ project
-;; ;; (ede-cpp-root-project "NAME" :file "~/myproject/Makefile")
+;; Enable EDE for a pre-existing C++ project
+;; (ede-cpp-root-project "NAME" :file "~/myproject/Makefile")
 
 
-;; ;; Enabling Semantic (code-parsing, smart completion) features
-;; ;; Select one of the following:
+;; Enabling Semantic (code-parsing, smart completion) features
+;; Select one of the following:
 
-;; ;; * This enables the database and idle reparse engines
-;; (semantic-load-enable-minimum-features)
+;; * This enables the database and idle reparse engines
+;;(semantic-load-enable-minimum-features)
 
-;; ;; * This enables some tools useful for coding, such as summary mode,
-;; ;;   imenu support, and the semantic navigator
+;; * This enables some tools useful for coding, such as summary mode,
+;;   imenu support, and the semantic navigator
 ;; (semantic-load-enable-code-helpers)
 
-;; ;; * This enables even more coding tools such as intellisense mode,
-;; ;;   decoration mode, and stickyfunc mode (plus regular code helpers)
-;; ;; (semantic-load-enable-gaudy-code-helpers)
+;; * This enables even more coding tools such as intellisense mode,
+;;   decoration mode, and stickyfunc mode (plus regular code helpers)
+;; (semantic-load-enable-gaudy-code-helpers)
 
-;; ;; * This enables the use of Exuberant ctags if you have it installed.
-;; ;;   If you use C++ templates or boost, you should NOT enable it.
-;; ;; (semantic-load-enable-all-exuberent-ctags-support)
-;; ;;   Or, use one of these two types of support.
-;; ;;   Add support for new languages only via ctags.
-;; ;; (semantic-load-enable-primary-exuberent-ctags-support)
-;; ;;   Add support for using ctags as a backup parser.
-;; ;; (semantic-load-enable-secondary-exuberent-ctags-support)
+;; * This enables the use of Exuberant ctags if you have it installed.
+;;   If you use C++ templates or boost, you should NOT enable it.
+;; (semantic-load-enable-all-exuberent-ctags-support)
+;;   Or, use one of these two types of support.
+;;   Add support for new languages only via ctags.
+;; (semantic-load-enable-primary-exuberent-ctags-support)
+;;   Add support for using ctags as a backup parser.
+;; (semantic-load-enable-secondary-exuberent-ctags-support)
 
-;; ;; Enable SRecode (Template management) minor-mode.
-;; ;; (global-srecode-minor-mode 1)
+;; Enable SRecode (Template management) minor-mode.
+;; (global-srecode-minor-mode 1)
 
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; End of Load CEDET.
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; End of Load CEDET.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'iso-transl)
 
 (set-face-attribute  'mode-line
 		     nil
@@ -59,60 +60,6 @@
 ;;(set-background-color "Black")
 ;;(set-foreground-color "White")
 ;;(set-cursor-color "White")
-
-
-
-(add-to-list 'auto-mode-alist '("/*\\.par" . c++-mode))
-
-(defvar c++-header-ext-regexp "\\.\\(hpp\\|h\\|\hh\\|H\\|\par\\)$")
-(defvar c++-source-ext-regexp "\\.\\(cpp\\|c\\|\cc\\|C\\|\par\\)$")
-(defvar c++-default-header-ext "hpp")
-(defvar c++-default-source-ext "cpp")
-(defvar c++-source-extension-list '("c" "cc" "C" "cpp" "par"))
-(defvar c++-header-extension-list '("h" "hh" "H" "hpp" "par"))
-
-(defun toggle-source-header()
-  "Switches to the source buffer if currently in the header buffer and vice versa."
-  (interactive)
-  (let ((buf (current-buffer))
-	(name (file-name-nondirectory (buffer-file-name)))
-	file
-	offs)
-    (setq offs (string-match c++-header-ext-regexp name))
-    (if offs
-	(let ((lst c++-source-extension-list)
-	      (ok nil)
-	      ext)
-	  (setq file (substring name 0 offs))
-	  (while (and lst (not ok))
-	    (setq ext (car lst))
-	    (if (get-buffer (concat file "." ext))
-		(progn ; Lets you evaluate more than one sexp for the true case
-		  (setq ok t)
-		  (switch-to-buffer (concat file "." ext))))
-	    (if (file-exists-p (concat file "." ext))
-		(progn ; Lets you evaluate more than one sexp for the true case
-		  (setq ok t)
-		  (find-file (concat file "." ext))))
-	    (setq lst (cdr lst))))
-      (let ()
-	(setq offs (string-match c++-source-ext-regexp name))
-	(if offs
-	    (let ((lst c++-header-extension-list)
-		  (ok nil)
-		  ext)
-	      (setq file (substring name 0 offs))
-	      (while (and lst (not ok))
-		(setq ext (car lst))
-		(if (get-buffer (concat file "." ext))
-		    (progn
-		      (setq ok t)
-		      (switch-to-buffer (concat file "." ext))))
-		(if (file-exists-p (concat file "." ext))
-		    (progn
-		      (setq ok t)
-		      (find-file (concat file "." ext))))
-		(setq lst (cdr lst)))))))))
 
 (transient-mark-mode t) ;pour que la region selectionnee soit mise en surbrillance
 
@@ -135,7 +82,8 @@
   (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
 
 
-;;bind pour incrementer
+;; Display column number
+(setq column-number-mode t)
 
 (defun for ()
   "Insert a template of for loop"
@@ -219,11 +167,6 @@ using namespace std;
 ;; (global-set-key [?\C-x ?h] 'help-command) ;; overrides mark-whole-buffer
 
 
-
-(defun previous-window()
-  (interactive)
-  (other-window -1))
-
 ;; let's unleash the power of IDO mode !
 (ido-mode 1)
 (setq ido-enable-flex-matching t)
@@ -234,8 +177,6 @@ using namespace std;
 ;;(define-key global-map (kbd "RET") 'newline-and-indent)
 
 (desktop-save-mode 1)
-
-`
 
 (defun x11-maximize-frame ()
   "Maximize the current frame (to full screen)"
@@ -307,7 +248,10 @@ using namespace std;
 
 ;; https://twiki.cern.ch/twiki/bin/view/CDS/EmacsTips#B2_Ido
 
+;; Activate disabled commands by default
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
 
 (defun switch-to-ansi-term ()
   (interactive)
@@ -459,7 +403,9 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(gdb-many-windows t)
- '(send-mail-function (quote mailclient-send-it)))
+ '(send-mail-function (quote smtpmail-send-it))
+ '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-smtp-service 25))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -516,6 +462,12 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (setq-default indent-tabs-mode nil)
 (setq-default c-basic-offset 4)
 
+;; Loading external el files
+(load-file "~/.emacs.d/elpa/leuven-theme-20150622.306/leuven-theme.el")
+(load-file "~/.emacs.d/toggle-source-header.el")
+(load-theme 'leuven t)
+
+
 (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
 (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
 (global-set-key [f1] 'run)
@@ -527,7 +479,6 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key (kbd "C-o") 'goto-line)
 (global-set-key [C-/] 'undo)
 (global-set-key (kbd "§") 'other-window)
-(global-set-key (kbd "±") 'previous-window)
 (global-set-key (kbd "C-c +") 'increment-number-at-point)
 (global-set-key (kbd "C-x f") 'ido-find-file)
 (global-set-key (kbd "C-x C-b") 'switch-to-buffer)
@@ -537,7 +488,5 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key (kbd "C-c o") 'insert-cout)
 (global-set-key (kbd "C-x <f2>") 'switch-to-ansi-term-and-goto-current-directory)
 
-(load-file "~/.emacs.d/elpa/leuven-theme-20150622.306/leuven-theme.el")
-(load-theme 'leuven t)
-
-
+;; activate View Mode for all read-only files
+(setq view-read-only t)
