@@ -85,19 +85,15 @@
 ;; Display column number
 (setq column-number-mode t)
 
-(defun for ()
+(defun forLoop ()
   "Insert a template of for loop"
   (interactive)
   (insert "for(int i = 0;i<N;i++){\n\n\t}"))
-
-(global-set-key [f7] 'for)
 
 (defun th1f ()
   "Insert a template of for loop"
   (interactive)
   (insert "TH1F* h = new TH1F(\"h\",\"h\",100,0,0);"))
-
-(global-set-key [f6] 'th1f)
 
 (defun th2f ()
   "Insert a template of for TH2F"
@@ -107,19 +103,16 @@
 ;;(global-set-key [C-left] 'th2f)
 
 
-(defun print ()
+(defun printCout ()
   "Write : #define print(token) cout << #token << "\t" << token << endl"
   (interactive)
   (insert "#define print(token) cout << #token << \" : \" << token << endl"))
 
-(global-set-key [f5] 'print)
 
 (defun BeginEquation ()
   "Write : #define print(token) cout << #token << "\t" << token << endl"
   (interactive)
   (insert "\\begin\{align*\}\n\n\\end\{align*\}"))
-
-(global-set-key [f4] 'BeginEquation)
 
 (setq-default ispell-program-name "aspell")
 
@@ -405,7 +398,11 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
  '(gdb-many-windows t)
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-mail-address "ben.coste@gmail.com")
+ '(smtpmail-smtp-user "ben.coste@gmail.com")
  '(smtpmail-smtp-service 25))
+
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -472,6 +469,10 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
 (global-set-key [f1] 'run)
 (global-set-key [f2] 'switch-to-ansi-term)
+(global-set-key [f4] 'BeginEquation)
+(global-set-key [f5] 'printCout)
+(global-set-key [f6] 'th1f)
+(global-set-key [f7] 'forLoop)
 (global-set-key [f8] 'replace-string)
 (global-set-key [f9] 'toggle-source-header)
 (global-set-key [f11] 'x11-maximize-frame) 
