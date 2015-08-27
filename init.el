@@ -90,63 +90,8 @@
   (interactive)
   (insert "for(int i = 0;i<N;i++){\n\n\t}"))
 
-(defun th1f ()
-  "Insert a template of for loop"
-  (interactive)
-  (insert "TH1F* h = new TH1F(\"h\",\"h\",100,0,0);"))
-
-(defun th2f ()
-  "Insert a template of for TH2F"
-  (interactive)
-  (insert "TH2F* h2 = new TH2F(\"h2\",\"h2\",100,0,0,100,0,0);"))
-
-;;(global-set-key [C-left] 'th2f)
-
-
-(defun printCout ()
-  "Write : #define print(token) cout << #token << "\t" << token << endl"
-  (interactive)
-  (insert "#define print(token) cout << #token << \" : \" << token << endl"))
-
-
-(defun BeginEquation ()
-  "Write : #define print(token) cout << #token << "\t" << token << endl"
-  (interactive)
-  (insert "\\begin\{align*\}\n\n\\end\{align*\}"))
-
 (setq-default ispell-program-name "aspell")
 
-(defun InsertHeaders ()
-  "Insert good headers"
-  (interactive)
-  (insert "#include <TFile.h>
-#include <TCanvas.h>
-#include <TF1.h>
-#include <TH2F.h>
-#include <TStyle.h>
-#include <TLegend.h>
-#include <TGraphErrors.h>
-#include <TChain.h>
-#include <TEntryList.h>
-#include <TMultiGraph.h>
-
-#include <iostream>
-
-#include \"/Users/coste/.style.h\"
-
-using namespace std;
-#define print(token) cout << #token << \" : \" << token << endl
-"))
-
-(defun InsertCanvas ()
-  "Insert TCanvas* can = new TCanvas(\"can\",\"can\");"
-  (interactive)
-  (insert "TCanvas* can = new TCanvas(\"can\",\"can\");"))
-
-(defun InsertLogx ()
-  "Insert logx"
-  (interactive)
-  (insert "gPad->SetLogx(1);"))
 
 
 (which-func-mode 1) ;; print the name of the current function at the bottom of the screen
@@ -356,8 +301,6 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 	(my-recompile)))
     ))
 
-
-
 (defun pwd ()
   "Put the current file name on the clipboard"
   (interactive)
@@ -371,25 +314,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
       (message filename))))
 
 
-(defun close-all-buffers ()
-  (interactive)
-  (mapc 'kill-buffer (buffer-list)))
 
-(defun newfile ()
-  (interactive)
-  (insert
-   "#include <iostream>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <map>
-
-#include \"TKey.h\"
-#include \"TROOT.h\"
-#include \"TF1.h\"
-
-#include \"benoit.hpp\"
-#include \"Stack.hpp\""))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -420,7 +345,6 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
   (insert " : \" << ")
   (yank)
   (insert " << std::endl;"))
-
 
 (defun insert-cout (message)
   (interactive "sMessage to cout ? ")
@@ -469,9 +393,6 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
 (global-set-key [f1] 'run)
 (global-set-key [f2] 'switch-to-ansi-term)
-(global-set-key [f4] 'BeginEquation)
-(global-set-key [f5] 'printCout)
-(global-set-key [f6] 'th1f)
 (global-set-key [f7] 'forLoop)
 (global-set-key [f8] 'replace-string)
 (global-set-key [f9] 'toggle-source-header)
