@@ -1,4 +1,3 @@
-
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; Load CEDET.
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -234,8 +233,6 @@ using namespace std;
 ;;(define-key global-map (kbd "RET") 'newline-and-indent)
 
 (desktop-save-mode 1)
-
-`
 
 (defun x11-maximize-frame ()
   "Maximize the current frame (to full screen)"
