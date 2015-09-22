@@ -388,6 +388,14 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (load-theme 'leuven t)
 
 
+(defun copy-quoted-text-at-point ()
+  (interactive)
+  ;; (setq p0 (point))
+  (setq start (+ (search-backward "\"") 1))
+  (forward-char)
+  (setq end (- (search-forward "\"") 1))
+  (kill-ring-save start end))
+
 (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
 (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
 (global-set-key [f1] 'run)
@@ -407,6 +415,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-c o") 'insert-cout)
+(global-set-key (kbd "C-c w") 'copy-quoted-text-at-point)
 (global-set-key (kbd "C-x <f2>") 'switch-to-ansi-term-and-goto-current-directory)
 
 ;; activate View Mode for all read-only files
