@@ -8,7 +8,7 @@
 ;;(load-file "~/appz/cedet-1.1/common/cedet.el")
 
 ;; Enable EDE (Project Management) features
-(global-ede-mode 1)
+;;(global-ede-mode 1)
 
 ;; Enable EDE for a pre-existing C++ project
 ;; (ede-cpp-root-project "NAME" :file "~/myproject/Makefile")
@@ -64,10 +64,23 @@
 
 ;;(ffap-bindings)
 
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-(require 'package) ; initialize the package manager
-(package-initialize)
+(when (>= emacs-major-version 24)
+  (require 'package) ; initialize the package manager
+  (package-initialize)
+  ;; Archives from which to fetch.
+  (setq package-archives
+	(append '(("melpa" . "http://melpa.milkbox.net/packages/"))
+		package-archives))
+
+  ;; Loading external el files
+  (load-file "~/.emacs.d/elpa/leuven-theme-20150622.306/leuven-theme.el")
+  (load-theme 'leuven t)
+)
+
+(load-file "~/.emacs.d/toggle-source-header.el")
+
 
 ;;Nom de la fonction dans la barre
 (which-function-mode 1)
@@ -371,10 +384,6 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
             )))))
 
 
-;; Archives from which to fetch.
-(setq package-archives
-      (append '(("melpa" . "http://melpa.milkbox.net/packages/"))
-              package-archives))
 
 (put 'narrow-to-region 'disabled nil)
 
@@ -382,10 +391,6 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (setq-default indent-tabs-mode nil)
 (setq-default c-basic-offset 4)
 
-;; Loading external el files
-(load-file "~/.emacs.d/elpa/leuven-theme-20150622.306/leuven-theme.el")
-(load-file "~/.emacs.d/toggle-source-header.el")
-(load-theme 'leuven t)
 
 
 (defun copy-quoted-text-at-point ()
@@ -430,3 +435,39 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 
 ;; activate View Mode for all read-only files
 (setq view-read-only t)
+
+(defun send-to-header ()
+  (interactive)
+  (setq equalSign (search-forward "=" (line-end-position) t))
+  ;;(let ((equalSign nil)))
+
+  (defun do-send ()
+    (interactive)
+    (end-of-line)
+    (newline-and-indent)
+    (yank)
+    (whitespace-cleanup-region (line-beginning-position) (line-end-position))
+    (insert ";")
+    (save-buffer)
+    (toggle-source-header)
+    (backward-sexp)
+    (kill-region (line-beginning-position) (point))
+    (indent-for-tab-command)
+    )
+  
+  (if equalSign
+      (progn 
+        (kill-ring-save (line-beginning-position) (- equalSign 1))
+        (toggle-source-header)
+        (goto-char 1)
+
+        (cond ((search-forward-regexp "\\bprivate\\b\[ \\t\]\*:" (point-max) t)   (do-send))
+              ((search-forward-regexp "\\bprotected\\b\[ \\t\]\*:" (point-max) t) (do-send))
+              ((search-forward-regexp "\\bpublic\\b\[ \\t\]\*:" (point-max) t) (do-send))
+              ((search-forward-regexp "\\bclass\\b\.\*:" (point-max) t) (do-send))
+              )
+        )
+    )
+  )
+        
+
