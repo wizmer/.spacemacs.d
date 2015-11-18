@@ -74,10 +74,11 @@
 	(append '(("melpa" . "http://melpa.milkbox.net/packages/"))
 		package-archives))
 
-  ;; Loading external el files
-  (load-file "~/.emacs.d/elpa/leuven-theme-20150622.306/leuven-theme.el")
-  (load-theme 'leuven t)
 )
+
+;; Loading external el files
+;; (load-file "~/.emacs.d/elpa/leuven-theme-20150622.306/leuven-theme.el")
+;; (load-theme 'leuven t)
 
 (load-file "~/.emacs.d/toggle-source-header.el")
 
@@ -411,6 +412,24 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
     (setq end (- (search-forward theDelim) 1))
       (kill-ring-save start end)))
 
+(defun toggle-boolean-at-point()
+  (interactive)
+  (let ((str (thing-at-point 'word)))
+    (setq bounds (bounds-of-thing-at-point 'symbol))
+    (setq pos1 (car bounds))
+    (setq pos2 (cdr bounds))
+    (if (string= str "True")
+        (progn
+          (delete-region pos1 pos2)
+          (insert "False")
+          ))
+    (if (string= str "False")
+        (progn
+          (delete-region pos1 pos2)
+          (insert "True")
+          ))
+    ))
+
 (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
 (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
 (global-set-key [f1] 'run)
@@ -432,6 +451,9 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key (kbd "C-c o") 'insert-cout)
 (global-set-key (kbd "C-c w") 'copy-quoted-text-at-point)
 (global-set-key (kbd "C-x <f2>") 'switch-to-ansi-term-and-goto-current-directory)
+
+(add-hook 'python-mode-hook
+          (lambda () (local-set-key (kbd "C-c C-c") 'toggle-boolean-at-point)))
 
 ;; activate View Mode for all read-only files
 (setq view-read-only t)
@@ -469,5 +491,28 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
         )
     )
   )
-        
+
+(defun my-update-env ()
+  (interactive)
+  (let ((str 
+         (with-temp-buffer
+           (insert-file-contents "env.txt")
+           (buffer-string))) lst)
+    (setq lst (split-string str "\000"))
+    (while lst
+      (setq cur (car lst))
+      (when (string-match "^\\(.*?\\)=\\(.*\\)" cur)
+        (setq var (match-string 1 cur))
+        (setq value (match-string 2 cur))
+        (setenv var value))
+      (setq lst (cdr lst)))))
+
+
+(add-hook 'term-mode-hook
+          (function
+           (lambda ()
+             (define-key term-raw-map [?\C-c prior] 'scroll-down)
+             (define-key term-raw-map [?\C-c next] 'scroll-up))))
+
+
 
