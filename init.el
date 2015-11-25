@@ -430,6 +430,10 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
           ))
     ))
 
+(defun find-regex-in-all-buffers (regexp)
+  (interactive "sSearch for regexp ? ")
+  (multi-occur-in-matching-buffers ".*" regexp))
+
 (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
 (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
 (global-set-key [f1] 'run)
@@ -437,6 +441,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key [f7] 'forLoop)
 (global-set-key [f8] 'replace-string)
 (global-set-key [f9] 'toggle-source-header)
+(global-set-key [f10] 'find-regex-in-all-buffers)
 (global-set-key [f11] 'x11-maximize-frame)
 (global-set-key [f12] 'my_cout)
 (global-set-key (kbd "C-o") 'goto-line)
