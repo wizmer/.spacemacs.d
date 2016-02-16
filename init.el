@@ -44,21 +44,8 @@
 ;; End of Load CEDET.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'iso-transl)
+;; (require 'iso-transl)
 
-(set-face-attribute  'mode-line
-                     nil
-                     :foreground "gray80"
-                     :box '(:line-width 1 :style released-button))
-
-(set-face-attribute  'mode-line-inactive
-                     nil
-                     :foreground "green"
-                     :box '(:line-width 1 :style released-button))
-
-;;(set-background-color "Black")
-;;(set-foreground-color "White")
-;;(set-cursor-color "White")
 
 (transient-mark-mode t) ;pour que la region selectionnee soit mise en surbrillance
 
@@ -74,7 +61,7 @@
 	(append '(("melpa" . "http://melpa.milkbox.net/packages/"))
 		package-archives))
 
-)
+  )
 
 ;; Loading external el files
 ;; (load-file "~/.emacs.d/elpa/leuven-theme-20150622.306/leuven-theme.el")
@@ -145,7 +132,7 @@
 (setq compilation-scroll-output 'first-error)
 (setq compilation-always-kill t)
 
-(tool-bar-mode -1)
+;; (tool-bar-mode -1)
 ;; (tooltip-mode nil)
 ;; (setq tooltip-use-echo-area nil)
 
@@ -228,7 +215,7 @@
 (global-set-key "\C-cb" 'org-iswitchb)
 
 (defun xah-open-file-at-cursor ()
-    "Open the file path under cursor.
+  "Open the file path under cursor.
 If there is text selection, uses the text selection for path.
 If the path starts with “http://”, open the URL in browser.
 Input path can be {relative, full path, URL}.
@@ -237,42 +224,42 @@ If path does not have a file extention, automatically try with “.el” for eli
 This command is similar to `find-file-at-point' but without prompting for confirmation.
 
 URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
-    (interactive)
-    (let ((ξpath (if (use-region-p)
-                     (buffer-substring-no-properties (region-beginning) (region-end))
-                   (let (p0 p1 p2)
-                     (setq p0 (point))
-                     ;; chars that are likely to be delimiters of full path, e.g. space, tabs, brakets.
-                     (skip-chars-backward "^  \"\t\n'|()[]{}<>〔〕“”〈〉《》【】〖〗«»‹›·。\\`")
-                     (setq p1 (point))
-                     (goto-char p0)
-                     (skip-chars-forward "^  \"\t\n'|()[]{}<>〔〕“”〈〉《》【】〖〗«»‹›·。\\'")
-                     (setq p2 (point))
-                     (goto-char p0)
-                     (buffer-substring-no-properties p1 p2)))))
-      (if (string-match-p "\\`https?://" ξpath)
-          (browse-url ξpath)
-        (progn ; not starting “http://”
-          (if (string-match "^\\`\\(.+?\\):\\([0-9]+\\)\\'" ξpath)
-              (progn
-                (let (
-                      (ξfpath (match-string 1 ξpath))
-                      (ξline-num (string-to-number (match-string 2 ξpath))))
-                  (if (file-exists-p ξfpath)
-                      (progn
-                        (find-file ξfpath)
-                        (goto-char 1)
-                        (forward-line (1- ξline-num)))
-                    (progn
-                      (when (y-or-n-p (format "file doesn't exist: 「%s」. Create?" ξfpath))
-                        (find-file ξfpath))))))
+  (interactive)
+  (let ((ξpath (if (use-region-p)
+                   (buffer-substring-no-properties (region-beginning) (region-end))
+                 (let (p0 p1 p2)
+                   (setq p0 (point))
+                   ;; chars that are likely to be delimiters of full path, e.g. space, tabs, brakets.
+                   (skip-chars-backward "^  \"\t\n'|()[]{}<>〔〕“”〈〉《》【】〖〗«»‹›·。\\`")
+                   (setq p1 (point))
+                   (goto-char p0)
+                   (skip-chars-forward "^  \"\t\n'|()[]{}<>〔〕“”〈〉《》【】〖〗«»‹›·。\\'")
+                   (setq p2 (point))
+                   (goto-char p0)
+                   (buffer-substring-no-properties p1 p2)))))
+    (if (string-match-p "\\`https?://" ξpath)
+        (browse-url ξpath)
+      (progn ; not starting “http://”
+        (if (string-match "^\\`\\(.+?\\):\\([0-9]+\\)\\'" ξpath)
             (progn
-              (if (file-exists-p ξpath)
-                  (find-file ξpath)
-                (if (file-exists-p (concat ξpath ".el"))
-                    (find-file (concat ξpath ".el"))
-                  (when (y-or-n-p (format "file doesn't exist: 「%s」. Create?" ξpath))
-                    (find-file ξpath ))))))))))
+              (let (
+                    (ξfpath (match-string 1 ξpath))
+                    (ξline-num (string-to-number (match-string 2 ξpath))))
+                (if (file-exists-p ξfpath)
+                    (progn
+                      (find-file ξfpath)
+                      (goto-char 1)
+                      (forward-line (1- ξline-num)))
+                  (progn
+                    (when (y-or-n-p (format "file doesn't exist: 「%s」. Create?" ξfpath))
+                      (find-file ξfpath))))))
+          (progn
+            (if (file-exists-p ξpath)
+                (find-file ξpath)
+              (if (file-exists-p (concat ξpath ".el"))
+                  (find-file (concat ξpath ".el"))
+                (when (y-or-n-p (format "file doesn't exist: 「%s」. Create?" ξpath))
+                  (find-file ξpath ))))))))))
 
 
 (defun run()
@@ -333,12 +320,15 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(custom-enabled-themes (quote (tango-dark)))
  '(gdb-many-windows t)
  '(send-mail-function (quote smtpmail-send-it))
- '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-mail-address "ben.coste@gmail.com")
- '(smtpmail-smtp-user "ben.coste@gmail.com")
- '(smtpmail-smtp-service 25))
+ '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-smtp-service 25)
+ '(smtpmail-smtp-user "ben.coste@gmail.com"))
 
 
 (custom-set-faces
@@ -410,7 +400,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
                 (setq start (+ startTmp 1))))))
     (forward-char)
     (setq end (- (search-forward theDelim) 1))
-      (kill-ring-save start end)))
+    (kill-ring-save start end)))
 
 (defun toggle-boolean-at-point()
   (interactive)
@@ -434,6 +424,30 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
   (interactive "sSearch for regexp ? ")
   (multi-occur-in-matching-buffers ".*" regexp))
 
+(defun insert-javascript-inspector()
+  (interactive)
+  (insert                  
+   "function xinspect(o,i){
+    if(typeof i=='undefined')i='';
+    if(i.length>50)return '[MAX ITERATIONS]';
+    var r=[];
+    for(var p in o){
+        var t=typeof o[p];
+        r.push(i+'\"'+p+'\" ('+t+') => '+(t=='object' ? 'object:'+xinspect(o[p],i+'  ') : o[p]+''));
+    }
+    return r.join(i+'\\n');
+    }
+    "))
+
+(defun comment-or-uncomment-region-or-line ()
+    "Comments or uncomments the region or the current line if there's no active region."
+    (interactive)
+    (let (beg end)
+        (if (region-active-p)
+            (setq beg (region-beginning) end (region-end))
+            (setq beg (line-beginning-position) end (line-end-position)))
+        (comment-or-uncomment-region beg end)))
+
 (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
 (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
 (global-set-key [f1] 'run)
@@ -455,7 +469,12 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-c o") 'insert-cout)
 (global-set-key (kbd "C-c w") 'copy-quoted-text-at-point)
+(global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x <f2>") 'switch-to-ansi-term-and-goto-current-directory)
+(global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
+
+
+
 
 (add-hook 'python-mode-hook
           (lambda () (local-set-key (kbd "C-c C-c") 'toggle-boolean-at-point)))
@@ -520,4 +539,17 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
              (define-key term-raw-map [?\C-c next] 'scroll-up))))
 
 
+
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+      smtpmail-auth-credentials '(("smtp.gmail.com" 587 "ben.coste" nil))
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      )
+
+
+(defun kill-other-buffers ()
+  "Kill all other buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 
