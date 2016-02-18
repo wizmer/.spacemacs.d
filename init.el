@@ -82,6 +82,11 @@
   (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
 
 
+(setq org-directory "~/todo")
+(setq org-agenda-files '("~/todo/todo.org"))
+(setq org-mobile-inbox-for-pull "~/todo/from-mobile.org")
+
+
 ;; Display column number
 (setq column-number-mode t)
 
