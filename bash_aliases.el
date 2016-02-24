@@ -1,7 +1,7 @@
 (defun bash_aliases()
   (interactive)
   (let ((aliases
-        "alias ip='ipython'
+        "\nalias ip='ipython'
 alias e='emacs -nw --no-desktop'
 alias em='emacs -nw'
 alias o='xdg-open'
