@@ -68,6 +68,7 @@
 ;; (load-theme 'leuven t)
 
 (load-file "~/.emacs.d/toggle-source-header.el")
+(load-file "~/.emacs.d/bash_aliases.el")
 
 
 ;;Nom de la fonction dans la barre
@@ -81,10 +82,12 @@
       (error "No number at point"))
   (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
 
-
 (setq org-directory "~/todo")
-(setq org-agenda-files '("~/todo/todo.org"))
-(setq org-mobile-inbox-for-pull "~/todo/from-mobile.org")
+;;(setq org-agenda-files '("second.org" "tasks.org" "1.org" "2.org" "3.org" "4.org" "5.org" "6.org" "7.org" "8.org" "9.org" "10.org" ))
+(setq org-agenda-files '("second.org"))
+(setq org-mobile-agenda 'default)
+(setq org-mobile-directory "~/Dropbox/mobileOrg-benoit")
+(setq org-mobile-inbox-for-pull "~/Dropbox/mobileOrg-benoit/from-mobile.org")
 
 
 ;; Display column number
@@ -331,7 +334,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
  '(gdb-many-windows t)
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-mail-address "ben.coste@gmail.com")
- '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-smtp-server "smtp.gmail.com" t)
  '(smtpmail-smtp-service 25)
  '(smtpmail-smtp-user "ben.coste@gmail.com"))
 
