@@ -68,7 +68,7 @@
 ;; (load-theme 'leuven t)
 
 (load-file "~/.emacs.d/toggle-source-header.el")
-(load-file "~/.emacs.d/bash_aliases.el")
+(load-file "~/.emacs.d/setup-linux-config.el")
 
 
 ;;Nom de la fonction dans la barre
