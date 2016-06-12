@@ -1,57 +1,4 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Load CEDET.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; See cedet/common/cedet.info for configuration details.
-;; IMPORTANT: For Emacs >= 23.2, you must place this *before* any
-;; CEDET component (including EIEIO) gets activated by another
-;; package (Gnus, auth-source, ...).
-;;(load-file "~/appz/cedet-1.1/common/cedet.el")
-
-;; Enable EDE (Project Management) features
-;;(global-ede-mode 1)
-
-;; Enable EDE for a pre-existing C++ project
-;; (ede-cpp-root-project "NAME" :file "~/myproject/Makefile")
-
-
-;; Enabling Semantic (code-parsing, smart completion) features
-;; Select one of the following:
-
-;; * This enables the database and idle reparse engines
-;;(semantic-load-enable-minimum-features)
-
-;; * This enables some tools useful for coding, such as summary mode,
-;;   imenu support, and the semantic navigator
-;; (semantic-load-enable-code-helpers)
-
-;; * This enables even more coding tools such as intellisense mode,
-;;   decoration mode, and stickyfunc mode (plus regular code helpers)
-;; (semantic-load-enable-gaudy-code-helpers)
-
-;; * This enables the use of Exuberant ctags if you have it installed.
-;;   If you use C++ templates or boost, you should NOT enable it.
-;; (semantic-load-enable-all-exuberent-ctags-support)
-;;   Or, use one of these two types of support.
-;;   Add support for new languages only via ctags.
-;; (semantic-load-enable-primary-exuberent-ctags-support)
-;;   Add support for using ctags as a backup parser.
-;; (semantic-load-enable-secondary-exuberent-ctags-support)
-
-;; Enable SRecode (Template management) minor-mode.
-;; (global-srecode-minor-mode 1)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; End of Load CEDET.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (require 'iso-transl)
-
-
 (transient-mark-mode t) ;pour que la region selectionnee soit mise en surbrillance
-
-;;(ffap-bindings)
-
-;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 
 (when (>= emacs-major-version 24)
   (require 'package) ; initialize the package manager
@@ -82,12 +29,11 @@
       (error "No number at point"))
   (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
 
-(setq org-directory "~/todo")
-;;(setq org-agenda-files '("second.org" "tasks.org" "1.org" "2.org" "3.org" "4.org" "5.org" "6.org" "7.org" "8.org" "9.org" "10.org" ))
-(setq org-agenda-files '("second.org"))
+(setq org-directory "~/notes")
+(setq org-agenda-files '("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org")) ;; List of org-files to be used for creating the agenda view
 (setq org-mobile-agenda 'default)
-(setq org-mobile-directory "~/Dropbox/mobileOrg-benoit")
-(setq org-mobile-inbox-for-pull "~/Dropbox/mobileOrg-benoit/from-mobile.org")
+(setq org-mobile-directory "~/Dropbox/mobileOrg-benoit") ;; The sync repository
+(setq org-mobile-inbox-for-pull "~/Dropbox/mobileOrg-benoit/from-mobile.org") ;; The filename for new notes created from the MobileOrg app
 
 
 ;; Display column number
@@ -96,7 +42,7 @@
 (defun forLoop ()
   "Insert a template of for loop"
   (interactive)
-  (insert "for(int i = 0;i<N;i++){\n\n\t}"))
+  (insert "for(int i = 0;i<N;++i){\n\n\t}"))
 
 (setq-default ispell-program-name "aspell")
 
@@ -163,12 +109,12 @@
   "Run compile and resize the compile window closing the old one if necessary"
   (interactive)
   (progn
-    (if (get-buffer "*compilation*") ; If old compile window exists
-        (progn
-          (delete-windows-on (get-buffer "*compilation*")) ; Delete the compilation windows
-          (kill-buffer "*compilation*") ; and kill the buffers
-          )
-      )
+    ;; (if (get-buffer "*compilation*") ; If old compile window exists
+    ;;     (progn
+    ;;       (delete-windows-on (get-buffer "*compilation*")) ; Delete the compilation windows
+    ;;       (kill-buffer "*compilation*") ; and kill the buffers
+    ;;       )
+    ;;   )
     (call-interactively 'compile)
     )
   )
@@ -332,11 +278,27 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
    [default default default italic underline success warning error])
  '(custom-enabled-themes (quote (tango-dark)))
  '(gdb-many-windows t)
+ '(jabber-account-list
+   (quote
+    (("ben.coste@gmail.com"
+      (:network-server . "talk.google.com")
+      (:port . 5223)
+      (:connection-type . ssl)))))
+ '(mail-host-address "gmail.com")
+ '(org-agenda-files nil)
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-mail-address "ben.coste@gmail.com")
  '(smtpmail-smtp-server "smtp.gmail.com" t)
  '(smtpmail-smtp-service 25)
- '(smtpmail-smtp-user "ben.coste@gmail.com"))
+ '(smtpmail-smtp-user "ben.coste@gmail.com")
+ '(user-full-name "Benoît Coste")
+ '(user-mail-address "ben.coste@gmail.com"))
+
+(setq gnus-select-method
+      '(nnimap "gmail"
+           (nnimap-address "imap.gmail.com")
+           (nnimap-server-port 993)
+           (nnimap-stream ssl)))
 
 
 (custom-set-faces
@@ -351,11 +313,10 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
   (move-beginning-of-line nil)
   (c-indent-line-or-region)
   (kill-line)
-  (insert "std::cout << \"")
-  (yank)
-  (insert " : \" << ")
-  (yank)
-  (insert " << std::endl;"))
+
+  (let* ((str         (substring-no-properties (car kill-ring)))
+         (strNoQuotes (replace-regexp-in-string "\"" "" str)))
+    (insert (concat "std::cout << \"" strNoQuotes " : \" << " str " << std::endl;"))))
 
 (defun insert-cout (message)
   (interactive "sMessage to cout ? ")
@@ -477,6 +438,7 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-c o") 'insert-cout)
 (global-set-key (kbd "C-c w") 'copy-quoted-text-at-point)
+(global-set-key (kbd "C-c m") 'overwrite-mode)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x <f2>") 'switch-to-ansi-term-and-goto-current-directory)
 (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
@@ -548,12 +510,12 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 
 
 
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-      smtpmail-auth-credentials '(("smtp.gmail.com" 587 "ben.coste" nil))
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      )
+;; (setq message-send-mail-function 'smtpmail-send-it
+;;       smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+;;       smtpmail-auth-credentials '(("smtp.gmail.com" 587 "ben.coste" nil))
+;;       smtpmail-default-smtp-server "smtp.gmail.com"
+;;       smtpmail-smtp-server "smtp.gmail.com"
+;;       )
 
 
 (defun kill-other-buffers ()
@@ -561,3 +523,68 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
   (interactive)
   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 
+
+(global-flycheck-mode)
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
+
+;; Package: yasnippet
+(require 'yasnippet)
+(yas-global-mode 1)
+
+(electric-pair-mode 1)
+
+(add-hook
+ 'c++-mode-hook
+ '(lambda()
+    ;; We could place some regexes into `c-mode-common-hook', but note that their evaluation order
+    ;; matters.
+    (font-lock-add-keywords
+     nil '(;; complete some fundamental keywords
+           ("\\<\\(void\\|unsigned\\|signed\\|char\\|short\\|bool\\|int\\|long\\|float\\|double\\)\\>" . font-lock-keyword-face)
+           ;; namespace names and tags - these are rendered as constants by cc-mode
+           ("\\<\\(\\w+::\\)" . font-lock-function-name-face)
+           ;;  new C++11 keywords
+           ("\\<\\(alignof\\|alignas\\|constexpr\\|decltype\\|noexcept\\|nullptr\\|static_assert\\|thread_local\\|override\\|final\\)\\>" . font-lock-keyword-face)
+           ("\\<\\(char16_t\\|char32_t\\)\\>" . font-lock-keyword-face)
+           ;; PREPROCESSOR_CONSTANT, PREPROCESSORCONSTANT
+           ("\\<[A-Z]*_[A-Z_]+\\>" . font-lock-constant-face)
+           ("\\<[A-Z]\\{3,\\}\\>"  . font-lock-constant-face)
+           ;; hexadecimal numbers
+           ("\\<0[xX][0-9A-Fa-f]+\\>" . font-lock-constant-face)
+           ;; integer/float/scientific numbers
+           ("\\<[\\-+]*[0-9]*\\.?[0-9]+\\([ulUL]+\\|[eE][\\-+]?[0-9]+\\)?\\>" . font-lock-constant-face)
+           ;; c++11 string literals
+           ;;       L"wide string"
+           ;;       L"wide string with UNICODE codepoint: \u2018"
+           ;;       u8"UTF-8 string", u"UTF-16 string", U"UTF-32 string"
+           ("\\<\\([LuU8]+\\)\".*?\"" 1 font-lock-keyword-face)
+           ;;       R"(user-defined literal)"
+           ;;       R"( a "quot'd" string )"
+           ;;       R"delimiter(The String Data" )delimiter"
+           ;;       R"delimiter((a-z))delimiter" is equivalent to "(a-z)"
+           ("\\(\\<[uU8]*R\"[^\\s-\\\\()]\\{0,16\\}(\\)" 1 font-lock-keyword-face t) ; start delimiter
+           (   "\\<[uU8]*R\"[^\\s-\\\\()]\\{0,16\\}(\\(.*?\\))[^\\s-\\\\()]\\{0,16\\}\"" 1 font-lock-string-face t)  ; actual string
+           (   "\\<[uU8]*R\"[^\\s-\\\\()]\\{0,16\\}(.*?\\()[^\\s-\\\\()]\\{0,16\\}\"\\)" 1 font-lock-keyword-face t) ; end delimiter
+
+           ;; user-defined types (rather project-specific)
+           ("\\<[A-Za-z_]+[A-Za-z_0-9]*_\\(type\\|ptr\\)\\>" . font-lock-type-face)
+           ("\\<\\(xstring\\|xchar\\)\\>" . font-lock-type-face)
+           ))
+    ) t)
+
+(defun init.d()
+  (interactive)
+  (find-file "~/.emacs.d/init.el")
+  )
+
+;; Yasnippet conflict with ansi-term tab completion so we de-activate it
+(add-hook 'term-mode-hook (lambda()
+        (setq yas-dont-activate t)))
+
+;; Don't ask confirmation before closing ansi-term
+(defun set-no-process-query-on-exit ()
+  (let ((proc (get-buffer-process (current-buffer))))
+    (when (processp proc)
+      (set-process-query-on-exit-flag proc nil))))
+
+(add-hook 'term-exec-hook 'set-no-process-query-on-exit)
