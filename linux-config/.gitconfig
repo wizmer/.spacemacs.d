@@ -1,0 +1,14 @@
+
+
+[user]
+name = wizmer
+email = ben.coste@gmail.com
+[alias]
+co = checkout
+br = branch
+ci = commit
+st = status
+last = log -1 HEAD
+exists = ls-files --error-unmatch
+[push]
+default = simple
