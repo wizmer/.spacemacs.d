@@ -51,6 +51,7 @@ values."
                                       cider
                                       ein
                                       easy-kill
+                                      jabber
                                       )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -107,8 +108,9 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         custom-tango-dark
+                         leuven
                          spacemacs-dark
+                         spacemacs
                          tango-dark
                          tango
                          monokai
@@ -116,14 +118,13 @@ values."
                          spacemacs-light
                          solarized-light
                          solarized-dark
-                         leuven
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+                               :size 20
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -895,6 +896,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
             )))
    
     (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
+
     )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -918,10 +920,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
- '(custom-enabled-themes (quote (custom-tango-dark)))
+ '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
    (quote
     ("093c5fc95104a716c1bdb608ea860c4eb2d37113cb5f7e6f83c76f41ed7081cd" "3a8ec1700930f086cfa102de1a353bdc4dd4db39290b0ab900c16a137ca4c42f" "07db1c8842140ec466f255feb492dd5c9c77db0b0a9c274e82de2e2b518ce3ad" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5aa42e319623e3165cf3711f184faa6fbb7d0c90ead2d945d5f1ec42600e8e98" "9b38567fcb57a7df83c6f7641165fb0350b4d9a396404d4ff26b4e83176fb560" default)))
+ '(exec-path
+   (quote
+    ("c:/windows/system32" "C:/windows" "C:/windows/System32/Wbem" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/Program Files (x86)/WebEx/Productivity Tools" "C:/Program Files (x86)/Sennheiser/SoftphoneSDK/" "C:/Program Files (x86)/Box/Box Edit/" "C:/Program Files/Git/cmd" "C:/HashiCorp/Vagrant/bin" "d:/Userfiles/bcoste/appz/emacs/libexec/emacs/24.4/i686-pc-mingw32" "d:/Userfiles/bcoste/appz/Aspell/bin" "d:/Userfiles/bcoste/appz/Putty" )))
  '(gdb-many-windows t)
  '(jabber-account-list
    (quote
@@ -930,7 +935,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (:port . 5223)
       (:connection-type . ssl)))))
  '(mail-host-address "gmail.com")
- '(org-agenda-files nil)
+ '(org-agenda-files nil t)
  '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t))))
  '(org-confirm-babel-evaluate nil)
  '(send-mail-function (quote smtpmail-send-it))
@@ -938,6 +943,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(smtpmail-smtp-server "smtp.gmail.com" t)
  '(smtpmail-smtp-service 25)
  '(smtpmail-smtp-user "ben.coste@gmail.com")
+ '(tramp-default-method "ssh")
  '(user-full-name "Benoît Coste")
  '(user-mail-address "ben.coste@gmail.com"))
 (custom-set-faces
@@ -949,7 +955,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
 
 
-(setq ein:use-auto-complete t)
+;; (setq ein:use-auto-complete t)
 ;; (setq ein:use-auto-complete-superpack t)
 
 
