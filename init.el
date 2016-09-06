@@ -271,6 +271,8 @@ values."
   (global-set-key (kbd "C-x f")   'helm-find-files)
   (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
   (global-set-key (kbd "C-x b")   'helm-buffers-list)
+  (global-set-key (kbd "M-y")   'helm-show-kill-ring)
+
   (global-set-key (kbd "C-x j") 'ansi-term)
   (global-set-key (kbd "C-c o") 'insert-cout)
   (global-set-key (kbd "C-c w") 'copy-quoted-text-at-point)
