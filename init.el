@@ -315,8 +315,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
     ;; (setq ido-enable-flex-matching t)
     ;; (setq ido-everywhere t)
 
-    (setq inhibit-startup-message t
-          inhibit-startup-echo-area-message t)
+    ;; (setq inhibit-startup-message t
+    ;;       inhibit-startup-echo-area-message t)
     ;;(define-key global-map (kbd "RET") 'newline-and-indent)
 
     ;; (setq desktop-dirname "~/.spacemacs.d/""")
@@ -345,19 +345,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     ;; (setq tooltip-use-echo-area nil)
 
     (setq set-mark-command-repeat-pop t)
-
-    ;; (dolist (command '(yank yank-pop))
-    ;;   (eval `(defadvice ,command (after indent-region activate)
-    ;;            (and (not current-prefix-arg)
-    ;;                 (member major-mode '(emacs-lisp-mode lisp-mode
-    ;;                                                      clojure-mode    scheme-mode
-    ;;                                                      haskell-mode    ruby-mode
-    ;;                                                      rspec-mode      python-mode
-    ;;                                                      c-mode          c++-mode
-    ;;                                                      objc-mode       latex-mode
-    ;;                                                      plain-tex-mode))
-    ;;                 (let ((mark-even-if-inactive transient-mark-mode))
-    ;;                   (indent-region (region-beginning) (region-end) nil))))))
 
     (defun my-recompile ()
       "Run compile and resize the compile window closing the old one if necessary"
@@ -675,40 +662,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     ;; activate View Mode for all read-only files
     (setq view-read-only t)
 
-    (defun send-to-header ()
-      (interactive)
-      (setq equalSign (search-forward "=" (line-end-position) t))
-      ;;(let ((equalSign nil)))
-
-      (defun do-send ()
-        (interactive)
-        (end-of-line)
-        (newline-and-indent)
-        (yank)
-        (whitespace-cleanup-region (line-beginning-position) (line-end-position))
-        (insert ";")
-        (save-buffer)
-        (toggle-source-header)
-        (backward-sexp)
-        (kill-region (line-beginning-position) (point))
-        (indent-for-tab-command)
-        )
-  
-      (if equalSign
-          (progn 
-            (kill-ring-save (line-beginning-position) (- equalSign 1))
-            (toggle-source-header)
-            (goto-char 1)
-
-            (cond ((search-forward-regexp "\\bprivate\\b\[ \\t\]\*:" (point-max) t)   (do-send))
-                  ((search-forward-regexp "\\bprotected\\b\[ \\t\]\*:" (point-max) t) (do-send))
-                  ((search-forward-regexp "\\bpublic\\b\[ \\t\]\*:" (point-max) t) (do-send))
-                  ((search-forward-regexp "\\bclass\\b\.\*:" (point-max) t) (do-send))
-                  )
-            )
-        )
-      )
-
     (defun my-update-env ()
       (interactive)
       (let ((str 
@@ -864,8 +817,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (global-set-key (kbd "C-x f") 'ido-find-file)
     (global-set-key (kbd "C-x C-b") 'switch-to-buffer)
     (global-set-key (kbd "C-x j") 'ansi-term)
-    (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-    (global-set-key (kbd "C-r") 'isearch-backward-regexp)
     (global-set-key (kbd "C-c o") 'insert-cout)
     (global-set-key (kbd "C-c w") 'copy-quoted-text-at-point)
     (global-set-key (kbd "C-c m") 'overwrite-mode)
@@ -893,7 +844,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
                           buffer)
 
             )))
-   
+
     (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
     )
 
