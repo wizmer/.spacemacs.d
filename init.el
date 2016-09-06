@@ -251,7 +251,7 @@ values."
    dotspacemacs-whitespace-cleanup nil
    ))
 
-(defun dotspacemacs/user-config ()
+(defun dotspacemacs/user-config () 
   (global-set-key (kbd "M-/") 'hippie-expand-or-yas-insert-snippet)
   (global-set-key [?\C-h] 'delete-backward-char)
   (global-set-key [remap kill-ring-save] 'easy-kill)
@@ -267,8 +267,10 @@ values."
   (global-set-key [f12] 'my_cout)
   (global-set-key [C-/] 'undo)
   (global-set-key (kbd "M-o") 'other-window)
-  (global-set-key (kbd "C-x f") 'ido-find-file)
-  (global-set-key (kbd "C-x C-b") 'switch-to-buffer)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x f")   'helm-find-files)
+  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+  (global-set-key (kbd "C-x b")   'helm-buffers-list)
   (global-set-key (kbd "C-x j") 'ansi-term)
   (global-set-key (kbd "C-c o") 'insert-cout)
   (global-set-key (kbd "C-c w") 'copy-quoted-text-at-point)
@@ -337,11 +339,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     ;; (global-set-key [M-delete] 'kill-word)
     ;; (global-set-key [?\C-x ?h] 'help-command) ;; overrides mark-whole-buffer
 
-
-    ;; let's unleash the power of IDO mode !
-    ;; (ido-mode 1)
-    ;; (setq ido-enable-flex-matching t)
-    ;; (setq ido-everywhere t)
 
     ;; (setq inhibit-startup-message t
     ;;       inhibit-startup-echo-area-message t)
@@ -890,6 +887,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t))))
  '(org-confirm-babel-evaluate nil)
  '(python-shell-extra-pythonpaths (quote ("/home/bcoste/workspace/leboncoin")))
+ '(python-shell-interpreter "python")
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-mail-address "ben.coste@gmail.com")
  '(smtpmail-smtp-server "smtp.gmail.com" t)
