@@ -858,7 +858,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (global-set-key [f8] 'replace-string)
     (global-set-key [f9] 'toggle-source-header)
     (global-set-key [f10] 'find-regex-in-all-buffers)
-    (global-set-key [f11] 'x11-maximize-frame)
+    ;; (global-set-key [f11] 'x11-maximize-frame)
     (global-set-key [f12] 'my_cout)
     (global-set-key [C-/] 'undo)
     (global-set-key (kbd "M-o") 'other-window)
@@ -875,6 +875,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
     (global-set-key (kbd "C-c /") 'describe-foo-at-point)
     (global-set-key (kbd "M-/") 'hippie-expand-or-yas-insert-snippet)
+    (global-set-key (kbd "M-i") 'imenu)
 
     (defun bury-compile-buffer-if-successful (buffer string)
       "Bury a compilation buffer if succeeded without warnings "
