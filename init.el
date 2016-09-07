@@ -32,6 +32,7 @@ values."
                       auto-completion-enable-help-tooltip t)
      ;; better-defaults
      emacs-lisp
+     python
      git
      ;; markdown
      org
@@ -250,6 +251,39 @@ values."
    dotspacemacs-whitespace-cleanup nil
    ))
 
+(defun dotspacemacs/user-config () 
+  (global-set-key (kbd "M-/") 'hippie-expand-or-yas-insert-snippet)
+  (global-set-key [?\C-h] 'delete-backward-char)
+  (global-set-key [remap kill-ring-save] 'easy-kill)
+  (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
+  (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
+  (global-set-key [f2] 'switch-to-ansi-term)
+  (global-set-key [f6] 'android-gradle-installDebug)
+  (global-set-key [f7] 'recompile)
+  (global-set-key [f8] 'replace-string)
+  (global-set-key [f9] 'toggle-source-header)
+  (global-set-key [f10] 'find-regex-in-all-buffers)
+  (global-set-key [f11] 'x11-maximize-frame)
+  (global-set-key [f12] 'my_cout)
+  (global-set-key [C-/] 'undo)
+  (global-set-key (kbd "M-o") 'other-window)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x f")   'helm-find-files)
+  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+  (global-set-key (kbd "C-x b")   'helm-buffers-list)
+  (global-set-key (kbd "M-y")   'helm-show-kill-ring)
+  (global-set-key (kbd "M-i")   'imenu)
+  (global-set-key (kbd "C-x j") 'ansi-term)
+  (global-set-key (kbd "C-c o") 'insert-cout)
+  (global-set-key (kbd "C-c w") 'copy-quoted-text-at-point)
+  (global-set-key (kbd "C-c m") 'overwrite-mode)
+  (global-set-key (kbd "C-x g") 'magit-status)
+  (global-set-key (kbd "C-x <f2>") 'switch-to-ansi-term-and-goto-current-directory)
+  (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
+  (global-set-key (kbd "C-c /") 'describe-foo-at-point)
+
+  )
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init', before layer configuration
@@ -298,32 +332,24 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
     (setq-default ispell-program-name "aspell")
 
-
-
     (which-func-mode 1) ;; print the name of the current function at the bottom of the screen
 
     ;; stuff to make the backspace key work in any cases
     ;; (normal-erase-is-backspace-mode 0)
-    (global-set-key [?\C-h] 'delete-backward-char)
     ;; (global-set-key [(control h)] 'delete-backward-char)
     ;; (global-set-key [delete] 'delete-char)
     ;; (global-set-key [M-delete] 'kill-word)
     ;; (global-set-key [?\C-x ?h] 'help-command) ;; overrides mark-whole-buffer
 
 
-    ;; let's unleash the power of IDO mode !
-    ;; (ido-mode 1)
-    ;; (setq ido-enable-flex-matching t)
-    ;; (setq ido-everywhere t)
-
-    (setq inhibit-startup-message t
-          inhibit-startup-echo-area-message t)
+    ;; (setq inhibit-startup-message t
+    ;;       inhibit-startup-echo-area-message t)
     ;;(define-key global-map (kbd "RET") 'newline-and-indent)
 
     ;; (setq desktop-dirname "~/.spacemacs.d/""")
     ;; (desktop-save-mode 1)
 
-    (global-set-key [remap kill-ring-save] 'easy-kill)
+
 
     (defun x11-maximize-frame ()
       "Maximize the current frame (to full screen)"
@@ -346,19 +372,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     ;; (setq tooltip-use-echo-area nil)
 
     (setq set-mark-command-repeat-pop t)
-
-    ;; (dolist (command '(yank yank-pop))
-    ;;   (eval `(defadvice ,command (after indent-region activate)
-    ;;            (and (not current-prefix-arg)
-    ;;                 (member major-mode '(emacs-lisp-mode lisp-mode
-    ;;                                                      clojure-mode    scheme-mode
-    ;;                                                      haskell-mode    ruby-mode
-    ;;                                                      rspec-mode      python-mode
-    ;;                                                      c-mode          c++-mode
-    ;;                                                      objc-mode       latex-mode
-    ;;                                                      plain-tex-mode))
-    ;;                 (let ((mark-even-if-inactive transient-mark-mode))
-    ;;                   (indent-region (region-beginning) (region-end) nil))))))
 
     (defun my-recompile ()
       "Run compile and resize the compile window closing the old one if necessary"
@@ -424,9 +437,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     ;; The following lines are always needed. Choose your own keys.
     (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode)) ; not needed since Emacs 22.2
     (add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
-    (global-set-key "\C-cl" 'org-store-link)
-    (global-set-key "\C-ca" 'org-agenda)
-    (global-set-key "\C-cb" 'org-iswitchb)
 
     (defun xah-open-file-at-cursor ()
       "Open the file path under cursor.
@@ -670,45 +680,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 
 
-    (add-hook 'python-mode-hook
-              (lambda () (local-set-key (kbd "C-c C-c") 'toggle-boolean-at-point)))
+    ;; (add-hook 'python-mode-hook
+              ;; (lambda () (local-set-key (kbd "C-c C-c") 'toggle-boolean-at-point)))
 
     ;; activate View Mode for all read-only files
     (setq view-read-only t)
-
-    (defun send-to-header ()
-      (interactive)
-      (setq equalSign (search-forward "=" (line-end-position) t))
-      ;;(let ((equalSign nil)))
-
-      (defun do-send ()
-        (interactive)
-        (end-of-line)
-        (newline-and-indent)
-        (yank)
-        (whitespace-cleanup-region (line-beginning-position) (line-end-position))
-        (insert ";")
-        (save-buffer)
-        (toggle-source-header)
-        (backward-sexp)
-        (kill-region (line-beginning-position) (point))
-        (indent-for-tab-command)
-        )
-  
-      (if equalSign
-          (progn 
-            (kill-ring-save (line-beginning-position) (- equalSign 1))
-            (toggle-source-header)
-            (goto-char 1)
-
-            (cond ((search-forward-regexp "\\bprivate\\b\[ \\t\]\*:" (point-max) t)   (do-send))
-                  ((search-forward-regexp "\\bprotected\\b\[ \\t\]\*:" (point-max) t) (do-send))
-                  ((search-forward-regexp "\\bpublic\\b\[ \\t\]\*:" (point-max) t) (do-send))
-                  ((search-forward-regexp "\\bclass\\b\.\*:" (point-max) t) (do-send))
-                  )
-            )
-        )
-      )
 
     (defun my-update-env ()
       (interactive)
@@ -850,33 +826,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
     ;; (projectile-global-mode)
 
-    (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
-    (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
-    (global-set-key [f2] 'switch-to-ansi-term)
-    (global-set-key [f6] 'android-gradle-installDebug)
-    (global-set-key [f7] 'recompile)
-    (global-set-key [f8] 'replace-string)
-    (global-set-key [f9] 'toggle-source-header)
-    (global-set-key [f10] 'find-regex-in-all-buffers)
-    ;; (global-set-key [f11] 'x11-maximize-frame)
-    (global-set-key [f12] 'my_cout)
-    (global-set-key [C-/] 'undo)
-    (global-set-key (kbd "M-o") 'other-window)
-    (global-set-key (kbd "C-x f") 'ido-find-file)
-    (global-set-key (kbd "C-x C-b") 'switch-to-buffer)
-    (global-set-key (kbd "C-x j") 'ansi-term)
-    (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-    (global-set-key (kbd "C-r") 'isearch-backward-regexp)
-    (global-set-key (kbd "C-c o") 'insert-cout)
-    (global-set-key (kbd "C-c w") 'copy-quoted-text-at-point)
-    (global-set-key (kbd "C-c m") 'overwrite-mode)
-    (global-set-key (kbd "C-x g") 'magit-status)
-    (global-set-key (kbd "C-x <f2>") 'switch-to-ansi-term-and-goto-current-directory)
-    (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
-    (global-set-key (kbd "C-c /") 'describe-foo-at-point)
-    (global-set-key (kbd "M-/") 'hippie-expand-or-yas-insert-snippet)
-    (global-set-key (kbd "M-i") 'imenu)
-
     (defun bury-compile-buffer-if-successful (buffer string)
       "Bury a compilation buffer if succeeded without warnings "
       (if (and
@@ -895,9 +844,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
                           buffer)
 
             )))
-   
-    (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
 
+    (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
     )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -927,7 +875,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     ("093c5fc95104a716c1bdb608ea860c4eb2d37113cb5f7e6f83c76f41ed7081cd" "3a8ec1700930f086cfa102de1a353bdc4dd4db39290b0ab900c16a137ca4c42f" "07db1c8842140ec466f255feb492dd5c9c77db0b0a9c274e82de2e2b518ce3ad" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5aa42e319623e3165cf3711f184faa6fbb7d0c90ead2d945d5f1ec42600e8e98" "9b38567fcb57a7df83c6f7641165fb0350b4d9a396404d4ff26b4e83176fb560" default)))
  '(exec-path
    (quote
-    ("c:/windows/system32" "C:/windows" "C:/windows/System32/Wbem" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/Program Files (x86)/WebEx/Productivity Tools" "C:/Program Files (x86)/Sennheiser/SoftphoneSDK/" "C:/Program Files (x86)/Box/Box Edit/" "C:/Program Files/Git/cmd" "C:/HashiCorp/Vagrant/bin" "d:/Userfiles/bcoste/appz/emacs/libexec/emacs/24.4/i686-pc-mingw32" "d:/Userfiles/bcoste/appz/Aspell/bin" "d:/Userfiles/bcoste/appz/Putty" )))
+    ("c:/windows/system32" "C:/windows" "C:/windows/System32/Wbem" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/Program Files (x86)/WebEx/Productivity Tools" "C:/Program Files (x86)/Sennheiser/SoftphoneSDK/" "C:/Program Files (x86)/Box/Box Edit/" "C:/Program Files/Git/cmd" "C:/HashiCorp/Vagrant/bin" "d:/Userfiles/bcoste/appz/emacs/libexec/emacs/24.4/i686-pc-mingw32" "d:/Userfiles/bcoste/appz/Aspell/bin" "d:/Userfiles/bcoste/appz/Putty")))
  '(gdb-many-windows t)
  '(jabber-account-list
    (quote
@@ -936,9 +884,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (:port . 5223)
       (:connection-type . ssl)))))
  '(mail-host-address "gmail.com")
- '(org-agenda-files nil t)
+ '(org-agenda-files nil)
  '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t))))
  '(org-confirm-babel-evaluate nil)
+ '(python-shell-extra-pythonpaths (quote ("/home/bcoste/workspace/leboncoin")))
+ '(python-shell-interpreter "python")
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-mail-address "ben.coste@gmail.com")
  '(smtpmail-smtp-server "smtp.gmail.com" t)

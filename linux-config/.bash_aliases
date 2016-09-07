@@ -1,7 +1,7 @@
 # -*- mode: shell-script -*-
 
 alias ip='ipython'
-alias e='emacs -nw --no-desktop'
+alias e='emacs -nw -Q'
 alias em='emacs -nw'
 alias o='xdg-open'
 alias f='find . -name'
