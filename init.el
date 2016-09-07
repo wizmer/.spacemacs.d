@@ -261,7 +261,6 @@ values."
   (global-set-key [f6] 'android-gradle-installDebug)
   (global-set-key [f7] 'recompile)
   (global-set-key [f8] 'replace-string)
-  (global-set-key [f9] 'toggle-source-header)
   (global-set-key [f10] 'find-regex-in-all-buffers)
   (global-set-key [f11] 'x11-maximize-frame)
   (global-set-key [f12] 'my_cout)
@@ -282,6 +281,7 @@ values."
   (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
   (global-set-key (kbd "C-c /") 'describe-foo-at-point)
 
+
   )
 
 (defun dotspacemacs/user-init ()
@@ -301,8 +301,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
     (global-hl-line-mode -1) ;; Disable current line highlight
 
-    (load-file "~/.spacemacs.d/toggle-source-header.el")
     (load-file "~/.spacemacs.d/setup-linux-config.el")
+    (load-file "~/.spacemacs.d/edi-mode.el")
 
     ;;Nom de la fonction dans la barre
     ;; (which-function-mode 1)
@@ -872,7 +872,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
    (quote
-    ("093c5fc95104a716c1bdb608ea860c4eb2d37113cb5f7e6f83c76f41ed7081cd" "3a8ec1700930f086cfa102de1a353bdc4dd4db39290b0ab900c16a137ca4c42f" "07db1c8842140ec466f255feb492dd5c9c77db0b0a9c274e82de2e2b518ce3ad" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5aa42e319623e3165cf3711f184faa6fbb7d0c90ead2d945d5f1ec42600e8e98" "9b38567fcb57a7df83c6f7641165fb0350b4d9a396404d4ff26b4e83176fb560" default)))
+    ("02553d55536ec991bfc33b67c34cfb8a8fc51d1968a0e5b805edbc7e666079f7" "093c5fc95104a716c1bdb608ea860c4eb2d37113cb5f7e6f83c76f41ed7081cd" "3a8ec1700930f086cfa102de1a353bdc4dd4db39290b0ab900c16a137ca4c42f" "07db1c8842140ec466f255feb492dd5c9c77db0b0a9c274e82de2e2b518ce3ad" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5aa42e319623e3165cf3711f184faa6fbb7d0c90ead2d945d5f1ec42600e8e98" "9b38567fcb57a7df83c6f7641165fb0350b4d9a396404d4ff26b4e83176fb560" default)))
  '(exec-path
    (quote
     ("c:/windows/system32" "C:/windows" "C:/windows/System32/Wbem" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/Program Files (x86)/WebEx/Productivity Tools" "C:/Program Files (x86)/Sennheiser/SoftphoneSDK/" "C:/Program Files (x86)/Box/Box Edit/" "C:/Program Files/Git/cmd" "C:/HashiCorp/Vagrant/bin" "d:/Userfiles/bcoste/appz/emacs/libexec/emacs/24.4/i686-pc-mingw32" "d:/Userfiles/bcoste/appz/Aspell/bin" "d:/Userfiles/bcoste/appz/Putty")))
@@ -884,7 +884,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (:port . 5223)
       (:connection-type . ssl)))))
  '(mail-host-address "gmail.com")
- '(org-agenda-files nil)
+ '(org-agenda-files nil t)
  '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t))))
  '(org-confirm-babel-evaluate nil)
  '(python-shell-extra-pythonpaths (quote ("/home/bcoste/workspace/leboncoin")))
