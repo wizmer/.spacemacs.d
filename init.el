@@ -33,7 +33,11 @@ values."
      ;; better-defaults
      emacs-lisp
      python
+     haskell
+     rust
+     jabber
      git
+     html
      ;; markdown
      org
      (shell :variables
@@ -52,7 +56,7 @@ values."
                                       cider
                                       ein
                                       easy-kill
-                                      jabber
+                                      py-autopep8
                                       )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -86,7 +90,7 @@ values."
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
-   dotspacemacs-editing-style 'emacs
+   dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -257,6 +261,7 @@ values."
   (global-set-key [remap kill-ring-save] 'easy-kill)
   (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
   (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
+  (global-set-key [f1] 'run)
   (global-set-key [f2] 'switch-to-ansi-term)
   (global-set-key [f6] 'android-gradle-installDebug)
   (global-set-key [f7] 'recompile)
@@ -281,6 +286,8 @@ values."
   (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
   (global-set-key (kbd "C-c /") 'describe-foo-at-point)
 
+  (require 'py-autopep8)
+  (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
   )
 
@@ -322,6 +329,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (setq org-mobile-inbox-for-pull "~/Dropbox/mobileOrg-benoit/from-mobile.org") ;; The filename for new notes created from the MobileOrg app
 
 
+    (require 'iso-transl)
     ;; Display column number
     (setq column-number-mode t)
 
@@ -415,9 +423,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
     (defun switch-to-ansi-term (&optional term-name)
       (interactive)
-      (when (equal term-name nil)
-        (setq term-name "*ansi-term*")
-        )
+      (if (or (string= major-mode "clojure-mode")
+              (string= major-mode "cider-repl-mode")
+              (string= major-mode "cider-test-report-mode"))
+          (setq term-name "*cider-repl refactor-tool*")
+          (when (equal term-name nil)
+            (setq term-name "*ansi-term*")
+            )
+       )
+
       (setq termBuffer (get-buffer term-name))
       (if termBuffer
           (progn
@@ -494,6 +508,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (setq s (buffer-substring-no-properties 1 9) )
 
       (cond
+       ((string= major-mode "clojure-mode")
+        (cider-load-buffer)
+        (cider-run)
+        )
        ((string= major-mode "python-mode")
         (save-buffer)
         (switch-to-ansi-term)
@@ -869,6 +887,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
+ '(cider-prompt-save-file-on-load (quote always-save))
  '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
    (quote
@@ -884,8 +903,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (:port . 5223)
       (:connection-type . ssl)))))
  '(mail-host-address "gmail.com")
- '(org-agenda-files nil t)
- '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t))))
+ '(org-agenda-files nil)
+ '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (plantuml . t))))
  '(org-confirm-babel-evaluate nil)
  '(python-shell-extra-pythonpaths (quote ("/home/bcoste/workspace/leboncoin")))
  '(python-shell-interpreter "python")
