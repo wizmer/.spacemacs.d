@@ -35,6 +35,7 @@ values."
      python
      git
      ;; markdown
+     html
      org
      (shell :variables
             shell-default-height 30
@@ -86,7 +87,7 @@ values."
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
-   dotspacemacs-editing-style 'emacs
+   dotspacemacs-editing-style 'hybrid
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -263,14 +264,15 @@ values."
   (global-set-key [f8] 'replace-string)
   (global-set-key [f9] 'toggle-source-header)
   (global-set-key [f10] 'find-regex-in-all-buffers)
-  (global-set-key [f11] 'x11-maximize-frame)
+  ;; (global-set-key [f11] 'x11-maximize-frame)
   (global-set-key [f12] 'my_cout)
   (global-set-key [C-/] 'undo)
   (global-set-key (kbd "M-o") 'other-window)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (global-set-key (kbd "C-x f")   'helm-find-files)
-  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-  (global-set-key (kbd "C-x b")   'helm-buffers-list)
+  ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  ;; (global-set-key (kbd "C-x f")   'ido-find-file)
+  ;; (global-set-key (kbd "C-x b") 'ido-switch-buffer)
+  (global-set-key (kbd "C-x b")   'helm-mini)
+  (global-set-key (kbd "C-x C-b")   'helm-mini)
   (global-set-key (kbd "M-y")   'helm-show-kill-ring)
   (global-set-key (kbd "M-i")   'imenu)
   (global-set-key (kbd "C-x j") 'ansi-term)
@@ -845,7 +847,22 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
             )))
 
+    ;; Better helm result sorting
+    ;; https://github.com/emacs-helm/helm/issues/1492
+    (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)
+      candidates)
+    (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
+
+
     (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
+    ;; (add-to-list 'magic-mode-alist '("^ISA" . edi-mode))
+
+    (setq-default
+     css-indent-offset 2
+     web-mode-markup-indent-offset 2
+     web-mode-css-indent-offset 2
+     web-mode-code-indent-offset 2
+     web-mode-attr-indent-offset 2)
     )
 
 ;; Do not write anything past this comment. This is where Emacs will
