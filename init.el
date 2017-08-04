@@ -18,6 +18,7 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -33,7 +34,11 @@ values."
      ;; better-defaults
      emacs-lisp
      python
+     haskell
+     rust
+     jabber
      git
+     html
      ;; markdown
      html
      org
@@ -53,7 +58,7 @@ values."
                                       cider
                                       ein
                                       easy-kill
-                                      jabber
+                                      py-autopep8
                                       )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -174,7 +179,7 @@ values."
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
-   dotspacemacs-use-ido nil
+   dotspacemacs-use-ido t
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
    dotspacemacs-helm-resize nil
    ;; if non nil, the helm header is hidden when there is only one source.
@@ -253,18 +258,16 @@ values."
    ))
 
 (defun dotspacemacs/user-config () 
-  (global-set-key (kbd "M-/") 'hippie-expand-or-yas-insert-snippet)
   (global-set-key [?\C-h] 'delete-backward-char)
   (global-set-key [remap kill-ring-save] 'easy-kill)
   (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
   (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
+  (global-set-key [f1] 'run)
   (global-set-key [f2] 'switch-to-ansi-term)
   (global-set-key [f6] 'android-gradle-installDebug)
   (global-set-key [f7] 'recompile)
   (global-set-key [f8] 'replace-string)
-  (global-set-key [f9] 'toggle-source-header)
   (global-set-key [f10] 'find-regex-in-all-buffers)
-  ;; (global-set-key [f11] 'x11-maximize-frame)
   (global-set-key [f12] 'my_cout)
   (global-set-key [C-/] 'undo)
   (global-set-key (kbd "M-o") 'other-window)
@@ -284,6 +287,9 @@ values."
   (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
   (global-set-key (kbd "C-c /") 'describe-foo-at-point)
 
+  (require 'py-autopep8)
+  (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+
   )
 
 (defun dotspacemacs/user-init ()
@@ -301,9 +307,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     ;; explicitly specified that a variable should be set before a package is loaded,
     ;; you should place your code here."
 
-    (global-hl-line-mode -1) ;; Disable current line highlight
 
-    (load-file "~/.spacemacs.d/toggle-source-header.el")
     (load-file "~/.spacemacs.d/setup-linux-config.el")
 
     ;;Nom de la fonction dans la barre
@@ -323,84 +327,17 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (setq org-mobile-directory "~/Dropbox/mobileOrg-benoit") ;; The sync repository
     (setq org-mobile-inbox-for-pull "~/Dropbox/mobileOrg-benoit/from-mobile.org") ;; The filename for new notes created from the MobileOrg app
 
-
-    ;; Display column number
-    (setq column-number-mode t)
-
-    (defun forLoop ()
-      "Insert a template of for loop"
-      (interactive)
-      (insert "for(int i = 0;i<N;++i){\n\n\t}"))
-
     (setq-default ispell-program-name "aspell")
-
-    (which-func-mode 1) ;; print the name of the current function at the bottom of the screen
-
-    ;; stuff to make the backspace key work in any cases
-    ;; (normal-erase-is-backspace-mode 0)
-    ;; (global-set-key [(control h)] 'delete-backward-char)
-    ;; (global-set-key [delete] 'delete-char)
-    ;; (global-set-key [M-delete] 'kill-word)
-    ;; (global-set-key [?\C-x ?h] 'help-command) ;; overrides mark-whole-buffer
-
-
-    ;; (setq inhibit-startup-message t
-    ;;       inhibit-startup-echo-area-message t)
-    ;;(define-key global-map (kbd "RET") 'newline-and-indent)
-
-    ;; (setq desktop-dirname "~/.spacemacs.d/""")
-    ;; (desktop-save-mode 1)
-
-
-
-    (defun x11-maximize-frame ()
-      "Maximize the current frame (to full screen)"
-      (interactive)
-      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
-      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
 
 
     (setq compilation-ask-about-save nil) ;;; Shut up compile saves
-    ;;(setq compilation-save-buffers-predicate '(lambda () nil)) ;;; Don't save *anything*
-
-
     (setq compilation-read-command t) ;; do not ask for which command to run every time
     (setq compile-command "make") ;; supress the default command : "make -k"
     (setq compilation-scroll-output 'first-error)
     (setq compilation-always-kill t)
 
-    (menu-bar-mode t)
-    ;; (tooltip-mode nil)
-    ;; (setq tooltip-use-echo-area nil)
-
     (setq set-mark-command-repeat-pop t)
 
-    (defun my-recompile ()
-      "Run compile and resize the compile window closing the old one if necessary"
-      (interactive)
-      (progn
-        ;; (if (get-buffer "*compilation*") ; If old compile window exists
-        ;;     (progn
-        ;;       (delete-windows-on (get-buffer "*compilation*")) ; Delete the compilation windows
-        ;;       (kill-buffer "*compilation*") ; and kill the buffers
-        ;;       )
-        ;;   )
-        (call-interactively 'compile)
-        )
-      )
-
-    (defun my-compilation-hook ()
-      (when (not (get-buffer-window "*compilation*"))
-        (save-selected-window
-          (save-excursion
-            (let* ((w (split-window-vertically))
-                   (h (window-height w)))
-              (select-window w)
-              (switch-to-buffer "*compilation*")
-              (shrink-window (- h 10)))))))
-    (add-hook 'compilation-mode-hook 'my-compilation-hook)
-
-    (add-hook 'java-mode-hook (lambda () (android-mode)))
 
     ;; BACKUP (see http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files)
     (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
@@ -410,16 +347,18 @@ before packages are loaded. If you are unsure, you should try in setting them in
           kept-old-versions 2
           version-control t)
 
-    ;; Activate disabled commands by default
-    (put 'upcase-region 'disabled nil)
-    (put 'downcase-region 'disabled nil)
-
 
     (defun switch-to-ansi-term (&optional term-name)
       (interactive)
-      (when (equal term-name nil)
-        (setq term-name "*ansi-term*")
-        )
+      (if (or (string= major-mode "clojure-mode")
+              (string= major-mode "cider-repl-mode")
+              (string= major-mode "cider-test-report-mode"))
+          (setq term-name "*cider-repl refactor-tool*")
+          (when (equal term-name nil)
+            (setq term-name "*ansi-term*")
+            )
+       )
+
       (setq termBuffer (get-buffer term-name))
       (if termBuffer
           (progn
@@ -433,60 +372,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
     (setq term-buffer-maximum-size 50000) ;; maximum number of lines in ansi-term
 
-    ;; (require 'package)
-    ;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-
-    ;; The following lines are always needed. Choose your own keys.
-    (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode)) ; not needed since Emacs 22.2
-    (add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
-
-    (defun xah-open-file-at-cursor ()
-      "Open the file path under cursor.
-  If there is text selection, uses the text selection for path.
-  If the path starts with “http://”, open the URL in browser.
-  Input path can be {relative, full path, URL}.
-  Path may have a trailing “:‹n›” that indicates line number. If so, jump to that line number.
-  If path does not have a file extention, automatically try with “.el” for elisp files.
-  This command is similar to `find-file-at-point' but without prompting for confirmation.
-
-  URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
-      (interactive)
-      (let ((ξpath (if (use-region-p)
-                       (buffer-substring-no-properties (region-beginning) (region-end))
-                     (let (p0 p1 p2)
-                       (setq p0 (point))
-                       ;; chars that are likely to be delimiters of full path, e.g. space, tabs, brakets.
-                       (skip-chars-backward "^  \"\t\n'|()[]{}<>〔〕“”〈〉《》【】〖〗«»‹›·。\\`")
-                       (setq p1 (point))
-                       (goto-char p0)
-                       (skip-chars-forward "^  \"\t\n'|()[]{}<>〔〕“”〈〉《》【】〖〗«»‹›·。\\'")
-                       (setq p2 (point))
-                       (goto-char p0)
-                       (buffer-substring-no-properties p1 p2)))))
-        (if (string-match-p "\\`https?://" ξpath)
-            (browse-url ξpath)
-          (progn ; not starting “http://”
-            (if (string-match "^\\`\\(.+?\\):\\([0-9]+\\)\\'" ξpath)
-                (progn
-                  (let (
-                        (ξfpath (match-string 1 ξpath))
-                        (ξline-num (string-to-number (match-string 2 ξpath))))
-                    (if (file-exists-p ξfpath)
-                        (progn
-                          (find-file ξfpath)
-                          (goto-char 1)
-                          (forward-line (1- ξline-num)))
-                      (progn
-                        (when (y-or-n-p (format "file doesn't exist: 「%s」. Create?" ξfpath))
-                          (find-file ξfpath))))))
-              (progn
-                (if (file-exists-p ξpath)
-                    (find-file ξpath)
-                  (if (file-exists-p (concat ξpath ".el"))
-                      (find-file (concat ξpath ".el"))
-                    (when (y-or-n-p (format "file doesn't exist: 「%s」. Create?" ξpath))
-                      (find-file ξpath ))))))))))
-
 
     (defun run()
       (interactive)
@@ -496,6 +381,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (setq s (buffer-substring-no-properties 1 9) )
 
       (cond
+       ((string= major-mode "clojure-mode")
+        (cider-load-buffer)
+        (cider-run)
+        )
        ((string= major-mode "python-mode")
         (save-buffer)
         (switch-to-ansi-term)
@@ -549,36 +438,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
             (clipboard-kill-region (point-min) (point-max)))
           (message filename))))
 
-    (setq gnus-select-method
-          '(nnimap "gmail"
-                   (nnimap-address "imap.gmail.com")
-                   (nnimap-server-port 993)
-                   (nnimap-stream ssl)))
-
-    (custom-set-faces
-     ;; custom-set-faces was added by Custom.
-     ;; If you edit it by hand, you could mess it up, so be careful.
-     ;; Your init file should contain only one such instance.
-     ;; If there is more than one, they won't work right.
-     )
-
-    (defun my_cout()
-      (interactive)
-      (move-beginning-of-line nil)
-      (c-indent-line-or-region)
-      (kill-line)
-
-      (let* ((str         (substring-no-properties (car kill-ring)))
-             (strNoQuotes (replace-regexp-in-string "\"" "" str)))
-        (insert (concat "std::cout << \"" strNoQuotes " : \" << " str " << std::endl;"))))
-
-    (defun insert-cout (message)
-      (interactive "sMessage to cout ? ")
-      (c-indent-line-or-region)
-      (insert "std::cout << \"")
-      (insert message)
-      (insert "\" << std::endl;")
-      (newline-and-indent))
 
     (defun switch-to-ansi-term-and-goto-current-directory ()
       (interactive)
@@ -596,8 +455,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
                 (insert path)
                 (term-send-input)
                 )))))
-
-    (put 'narrow-to-region 'disabled nil)
 
     ;; indenting stuff
     (setq-default indent-tabs-mode nil)
@@ -621,23 +478,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
         (setq end (- (search-forward theDelim) 1))
         (kill-ring-save start end)))
 
-    (defun toggle-boolean-at-point()
-      (interactive)
-      (let ((str (thing-at-point 'word)))
-        (setq bounds (bounds-of-thing-at-point 'symbol))
-        (setq pos1 (car bounds))
-        (setq pos2 (cdr bounds))
-        (if (string= str "True")
-            (progn
-              (delete-region pos1 pos2)
-              (insert "False")
-              ))
-        (if (string= str "False")
-            (progn
-              (delete-region pos1 pos2)
-              (insert "True")
-              ))
-        ))
+
 
     (defun find-regex-in-all-buffers (regexp)
       (interactive "sSearch for regexp ? ")
@@ -652,57 +493,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
           (setq beg (line-beginning-position) end (line-end-position)))
         (comment-or-uncomment-region beg end)))
 
-    	;;; describe this point lisp only
-  	(defun describe-foo-at-point ()
-      "Show the documentation of the Elisp function and variable near point.
-  	This checks in turn:
-  	-- for a function name where point is
-  	-- for a variable name where point is
-  	-- for a surrounding function call
-  	"
-  	  (interactive)
-  	  (let (sym)
-  	    ;; sigh, function-at-point is too clever.  we want only the first half.
-  	    (cond ((setq sym (ignore-errors
-                           (with-syntax-table emacs-lisp-mode-syntax-table
-                             (save-excursion
-                               (or (not (zerop (skip-syntax-backward "_w")))
-                                   (eq (char-syntax (char-after (point))) ?w)
-                                   (eq (char-syntax (char-after (point))) ?_)
-                                   (forward-sexp -1))
-                               (skip-chars-forward "`'")
-          	                   (let ((obj (read (current-buffer))))
-                                 (and (symbolp obj) (fboundp obj) obj))))))
-               (describe-function sym))
-              ((setq sym (variable-at-point)) (describe-variable sym))
-              ;; now let it operate fully -- i.e. also check the
-              ;; surrounding sexp for a function call.
-              ((setq sym (function-at-point)) (describe-function sym)))))
-
-
-
-
-    ;; (add-hook 'python-mode-hook
-              ;; (lambda () (local-set-key (kbd "C-c C-c") 'toggle-boolean-at-point)))
 
     ;; activate View Mode for all read-only files
     (setq view-read-only t)
-
-    (defun my-update-env ()
-      (interactive)
-      (let ((str 
-             (with-temp-buffer
-               (insert-file-contents "env.txt")
-               (buffer-string))) lst)
-        (setq lst (split-string str "\000"))
-        (while lst
-          (setq cur (car lst))
-          (when (string-match "^\\(.*?\\)=\\(.*\\)" cur)
-            (setq var (match-string 1 cur))
-            (setq value (match-string 2 cur))
-            (setenv var value))
-          (setq lst (cdr lst)))))
-
 
     (add-hook 'term-mode-hook
               (function
@@ -712,20 +505,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 
 
-    ;; (setq message-send-mail-function 'smtpmail-send-it
-    ;;       smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-    ;;       smtpmail-auth-credentials '(("smtp.gmail.com" 587 "ben.coste" nil))
-    ;;       smtpmail-default-smtp-server "smtp.gmail.com"
-    ;;       smtpmail-smtp-server "smtp.gmail.com"
-    ;;       )
 
 
-    (defun kill-other-buffers ()
-      "Kill all other buffers."
-      (interactive)
-      (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
-
-    (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
+    ;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
 
     (add-hook
      'c++-mode-hook
@@ -777,16 +559,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
       )
 
 
-    (defun hippie-expand-or-yas-insert-snippet ()
-      "If cursor is after a letter call hippie-expand else call yas-insert-snippet"
-      (interactive)
-      (if (or (= (point) 1)
-              (string= (char-to-string (char-before (point))) " ")
-              (string= (char-to-string (char-before (point))) "\n"))
-          (yas-insert-snippet)
-        (hippie-expand 1)))
-
-
     (custom-set-variables '(android-mode-sdk-dir "~/appz/android-sdk"))
 
     ;; Don't ask confirmation before closing ansi-term
@@ -797,36 +569,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
     (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
 
-    ;; As for C/C++, you need to specify name of the project, point to existing file at the project's root directory, and some additional options:
-
-    ;; :srcroot
-    ;; list of directories with source code. Directory names are specified relatively of project's root (in this example this is src & test);
-    ;; :classpath
-    ;; list of absolute file names for used libraries;
-    ;; :localclasspath
-    ;; list of file names for used libraries, relative to project's root.
-    ;; (require 'eclim)
-    ;; (global-eclim-mode)
-    ;; (require 'eclimd)
-
-    ;; (setq help-at-pt-display-when-idle t)
-    ;; (setq help-at-pt-timer-delay 0.1)
-    ;; (help-at-pt-set-timer)
-
-    ;; regular auto-complete initialization
-    ;; (require 'auto-complete-config)
-    ;; (ac-config-default)
-
-    ;; add the emacs-eclim source
-    ;; (require 'ac-emacs-eclim-source)
-    ;; (ac-emacs-eclim-config)
-
-    ;; (global-ede-mode 1)
-    ;; (require 'semantic/sb)
-    ;; (semantic-mode 1)
-
-
-    ;; (projectile-global-mode)
 
     (defun bury-compile-buffer-if-successful (buffer string)
       "Bury a compilation buffer if succeeded without warnings "
@@ -886,10 +628,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
+ '(bookmark-default-file "~/.spacemacs.d/bookmarks")
+ '(cider-prompt-save-file-on-load (quote always-save))
  '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
    (quote
-    ("093c5fc95104a716c1bdb608ea860c4eb2d37113cb5f7e6f83c76f41ed7081cd" "3a8ec1700930f086cfa102de1a353bdc4dd4db39290b0ab900c16a137ca4c42f" "07db1c8842140ec466f255feb492dd5c9c77db0b0a9c274e82de2e2b518ce3ad" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5aa42e319623e3165cf3711f184faa6fbb7d0c90ead2d945d5f1ec42600e8e98" "9b38567fcb57a7df83c6f7641165fb0350b4d9a396404d4ff26b4e83176fb560" default)))
+    ("02553d55536ec991bfc33b67c34cfb8a8fc51d1968a0e5b805edbc7e666079f7" "093c5fc95104a716c1bdb608ea860c4eb2d37113cb5f7e6f83c76f41ed7081cd" "3a8ec1700930f086cfa102de1a353bdc4dd4db39290b0ab900c16a137ca4c42f" "07db1c8842140ec466f255feb492dd5c9c77db0b0a9c274e82de2e2b518ce3ad" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5aa42e319623e3165cf3711f184faa6fbb7d0c90ead2d945d5f1ec42600e8e98" "9b38567fcb57a7df83c6f7641165fb0350b4d9a396404d4ff26b4e83176fb560" default)))
  '(exec-path
    (quote
     ("c:/windows/system32" "C:/windows" "C:/windows/System32/Wbem" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/Program Files (x86)/WebEx/Productivity Tools" "C:/Program Files (x86)/Sennheiser/SoftphoneSDK/" "C:/Program Files (x86)/Box/Box Edit/" "C:/Program Files/Git/cmd" "C:/HashiCorp/Vagrant/bin" "d:/Userfiles/bcoste/appz/emacs/libexec/emacs/24.4/i686-pc-mingw32" "d:/Userfiles/bcoste/appz/Aspell/bin" "d:/Userfiles/bcoste/appz/Putty")))
@@ -902,13 +646,16 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (:connection-type . ssl)))))
  '(mail-host-address "gmail.com")
  '(org-agenda-files nil)
- '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t))))
+ '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (plantuml . t))))
  '(org-confirm-babel-evaluate nil)
+ '(package-selected-packages
+   (quote
+    (winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
  '(python-shell-extra-pythonpaths (quote ("/home/bcoste/workspace/leboncoin")))
  '(python-shell-interpreter "python")
  '(send-mail-function (quote smtpmail-send-it))
- '(smtpmail-mail-address "ben.coste@gmail.com")
- '(smtpmail-smtp-server "smtp.gmail.com" t)
+ '(smtpmail-mail-address "ben.coste@gmail.com" t)
+ '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 25)
  '(smtpmail-smtp-user "ben.coste@gmail.com")
  '(tramp-default-method "ssh")
