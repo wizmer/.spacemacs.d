@@ -18,6 +18,9 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     clojure
+     javascript
+     markdown
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -248,7 +251,7 @@ values."
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
-   dotspacemacs-default-package-repository nil
+   dotspacemacs-default-package-repository :trailing
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
@@ -290,6 +293,21 @@ values."
   (require 'py-autopep8)
   (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
+  ;; To recognize hoplon files correctly add this to your .emacs
+  (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
+
+  ;; To properly indent hoplon macros. The following is extended from Alan's dotspacemacs:
+  (add-hook 'clojure-mode-hook
+            '(lambda ()
+               ;; Hoplon functions and macros
+               (dolist (pair '((page . 'defun)
+                               (loop-tpl . 'defun)
+                               (if-tpl . '1)
+                               (for-tpl . '1)
+                               (case-tpl . '1)
+                               (cond-tpl . 'defun)))
+                 (put-clojure-indent (car pair)
+                                     (car (last pair))))))
   )
 
 (defun dotspacemacs/user-init ()
@@ -558,6 +576,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (find-file "~/.bashrc")
       )
 
+    (defun convert-html-to-hlisp (html-str)
+      "Take a HTML string and returns the corresponding HLisp string"
+      (interactive "sHTML string ? ")
+      (insert (replace-regexp-in-string "<\\(\\w+\\) " "(\\1 " (replace-regexp-in-string " \\(\\w+\\)=" " :\\1 " (replace-regexp-in-string "</\\w+>" ")"   html-str)))))
+    
+
 
     (custom-set-variables '(android-mode-sdk-dir "~/appz/android-sdk"))
 
@@ -628,8 +652,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
- '(cider-boot-parameters "dev")
  '(bookmark-default-file "~/.spacemacs.d/bookmarks")
+ '(cider-boot-parameters "dev")
  '(cider-prompt-save-file-on-load (quote always-save))
  '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
@@ -653,7 +677,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
    (quote
     (winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
  '(python-shell-extra-pythonpaths (quote ("/home/bcoste/workspace/leboncoin")))
- '(python-shell-interpreter "python")
+ '(python-shell-interpreter "python" t)
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-mail-address "ben.coste@gmail.com" t)
  '(smtpmail-smtp-server "smtp.gmail.com")
