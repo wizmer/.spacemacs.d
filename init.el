@@ -309,7 +309,12 @@ values."
                                (cond-tpl . 'defun)))
                  (put-clojure-indent (car pair)
                                      (car (last pair))))))
+
+  ;; Disable clean-aindent as it break M-backspace
+  (add-hook 'term-mode-hook (lambda ()
+                              (clean-aindent-mode -1)))
   )
+
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -391,6 +396,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
     (setq term-buffer-maximum-size 50000) ;; maximum number of lines in ansi-term
 
+    (add-hook 'c-mode-common-hook
+              (lambda() 
+                (local-set-key  [f9] 'ff-find-other-file)))
 
     (defun run()
       (interactive)
@@ -654,7 +662,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
- '(bookmark-default-file "~/.spacemacs.d/bookmarks")
+ '(bookmark-default-file "/home/bcoste/.spacemacs.d/bookmarks")
  '(cider-boot-parameters "dev")
  '(cider-prompt-save-file-on-load (quote always-save) t)
  '(cider-save-file-on-load (quote always-save))
