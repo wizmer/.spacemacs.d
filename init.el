@@ -18,6 +18,10 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     yaml
+     clojure
+     javascript
+     markdown
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -39,6 +43,8 @@ values."
      rust
      jabber
      git
+     html
+     markdown
      html
      org
      (shell :variables
@@ -247,7 +253,7 @@ values."
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
-   dotspacemacs-default-package-repository nil
+   dotspacemacs-default-package-repository :trailing
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
@@ -270,10 +276,11 @@ values."
   (global-set-key [f12] 'my_cout)
   (global-set-key [C-/] 'undo)
   (global-set-key (kbd "M-o") 'other-window)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (global-set-key (kbd "C-x f")   'helm-find-files)
-  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-  (global-set-key (kbd "C-x b")   'helm-buffers-list)
+  ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  ;; (global-set-key (kbd "C-x f")   'ido-find-file)
+  ;; (global-set-key (kbd "C-x b") 'ido-switch-buffer)
+  (global-set-key (kbd "C-x b")   'helm-mini)
+  (global-set-key (kbd "C-x C-b")   'helm-mini)
   (global-set-key (kbd "M-y")   'helm-show-kill-ring)
   (global-set-key (kbd "M-i")   'imenu)
   (global-set-key (kbd "C-x j") 'ansi-term)
@@ -288,7 +295,27 @@ values."
   (require 'py-autopep8)
   (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
+  ;; To recognize hoplon files correctly add this to your .emacs
+  (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
+
+  ;; To properly indent hoplon macros. The following is extended from Alan's dotspacemacs:
+  (add-hook 'clojure-mode-hook
+            '(lambda ()
+               ;; Hoplon functions and macros
+               (dolist (pair '((page . 'defun)
+                               (loop-tpl . 'defun)
+                               (if-tpl . '1)
+                               (for-tpl . '1)
+                               (case-tpl . '1)
+                               (cond-tpl . 'defun)))
+                 (put-clojure-indent (car pair)
+                                     (car (last pair))))))
+
+  ;; Disable clean-aindent as it break M-backspace
+  (add-hook 'term-mode-hook (lambda ()
+                              (clean-aindent-mode -1)))
   )
+
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -370,6 +397,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
     (setq term-buffer-maximum-size 50000) ;; maximum number of lines in ansi-term
 
+    (add-hook 'c-mode-common-hook
+              (lambda() 
+                (local-set-key  [f9] 'ff-find-other-file)))
 
     (defun run()
       (interactive)
@@ -498,6 +528,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (add-hook 'term-mode-hook
               (function
                (lambda ()
+                 (define-key term-raw-map [?\M-o] 'other-window)
                  (define-key term-raw-map [?\C-c prior] 'scroll-down)
                  (define-key term-raw-map [?\C-c next] 'scroll-up))))
 
@@ -556,6 +587,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (find-file "~/.bashrc")
       )
 
+    (defun convert-html-to-hlisp (html-str)
+      "Take a HTML string and returns the corresponding HLisp string"
+      (interactive "sHTML string ? ")
+      (insert (replace-regexp-in-string "<\\(\\w+\\) " "(\\1 " (replace-regexp-in-string " \\(\\w+\\)=" " :\\1 " (replace-regexp-in-string "</\\w+>" ")"   html-str)))))
+    
+
 
     (custom-set-variables '(android-mode-sdk-dir "~/appz/android-sdk"))
 
@@ -587,7 +624,22 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
             )))
 
+    ;; Better helm result sorting
+    ;; https://github.com/emacs-helm/helm/issues/1492
+    (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)
+      candidates)
+    (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
+
+
     (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
+    ;; (add-to-list 'magic-mode-alist '("^ISA" . edi-mode))
+
+    (setq-default
+     css-indent-offset 2
+     web-mode-markup-indent-offset 2
+     web-mode-css-indent-offset 2
+     web-mode-code-indent-offset 2
+     web-mode-attr-indent-offset 2)
     )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -611,12 +663,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
- '(bookmark-default-file "~/.spacemacs.d/bookmarks")
- '(cider-prompt-save-file-on-load (quote always-save))
+ '(bookmark-default-file "/home/bcoste/.spacemacs.d/bookmarks")
+ '(cider-boot-parameters "dev")
+ '(cider-prompt-save-file-on-load (quote always-save) t)
+ '(cider-save-file-on-load (quote always-save))
  '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
    (quote
     ("02553d55536ec991bfc33b67c34cfb8a8fc51d1968a0e5b805edbc7e666079f7" "093c5fc95104a716c1bdb608ea860c4eb2d37113cb5f7e6f83c76f41ed7081cd" "3a8ec1700930f086cfa102de1a353bdc4dd4db39290b0ab900c16a137ca4c42f" "07db1c8842140ec466f255feb492dd5c9c77db0b0a9c274e82de2e2b518ce3ad" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5aa42e319623e3165cf3711f184faa6fbb7d0c90ead2d945d5f1ec42600e8e98" "9b38567fcb57a7df83c6f7641165fb0350b4d9a396404d4ff26b4e83176fb560" default)))
+ '(evil-want-Y-yank-to-eol t)
  '(exec-path
    (quote
     ("c:/windows/system32" "C:/windows" "C:/windows/System32/Wbem" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/windows/System32/WindowsPowerShell/v1.0/" "C:/Program Files (x86)/WebEx/Productivity Tools" "C:/Program Files (x86)/Sennheiser/SoftphoneSDK/" "C:/Program Files (x86)/Box/Box Edit/" "C:/Program Files/Git/cmd" "C:/HashiCorp/Vagrant/bin" "d:/Userfiles/bcoste/appz/emacs/libexec/emacs/24.4/i686-pc-mingw32" "d:/Userfiles/bcoste/appz/Aspell/bin" "d:/Userfiles/bcoste/appz/Putty")))
@@ -633,7 +688,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(org-confirm-babel-evaluate nil)
  '(package-selected-packages
    (quote
-    (winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
+    (yaml-mode web-beautify org-category-capture mmm-mode markdown-toc markdown-mode livid-mode json-mode json-snatcher json-reformat js2-refactor js-doc gh-md skewer-mode request-deferred deferred js2-mode simple-httpd company-tern dash-functional tern coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
  '(python-shell-extra-pythonpaths (quote ("/home/bcoste/workspace/leboncoin")))
  '(python-shell-interpreter "python")
  '(send-mail-function (quote smtpmail-send-it))
