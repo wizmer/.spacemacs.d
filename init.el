@@ -35,11 +35,11 @@ values."
      emacs-lisp
      python
      haskell
+     (clojure :variables clojure-enable-fancify-symbols t)
      rust
      jabber
      git
      html
-     ;; markdown
      org
      (shell :variables
             shell-default-height 30
