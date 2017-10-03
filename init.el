@@ -37,14 +37,16 @@ values."
                       auto-completion-enable-help-tooltip t)
      ;; better-defaults
      emacs-lisp
+     ;; vim-powerline
      python
      haskell
      rust
      jabber
      git
-     html
      ;; markdown
      html
+     twitter
+     c-c++
      org
      (shell :variables
             shell-default-height 30
@@ -52,6 +54,8 @@ values."
      spell-checking
      syntax-checking
      ;; version-control
+     slack
+     spotify
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -183,7 +187,7 @@ values."
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
-   dotspacemacs-use-ido t
+   dotspacemacs-use-ido nil
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
    dotspacemacs-helm-resize nil
    ;; if non nil, the helm header is hidden when there is only one source.
@@ -291,28 +295,18 @@ values."
   (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
   (global-set-key (kbd "C-c /") 'describe-foo-at-point)
 
-  (require 'py-autopep8)
-  (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
   ;; To recognize hoplon files correctly add this to your .emacs
   (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
 
-  ;; To properly indent hoplon macros. The following is extended from Alan's dotspacemacs:
-  (add-hook 'clojure-mode-hook
-            '(lambda ()
-               ;; Hoplon functions and macros
-               (dolist (pair '((page . 'defun)
-                               (loop-tpl . 'defun)
-                               (if-tpl . '1)
-                               (for-tpl . '1)
-                               (case-tpl . '1)
-                               (cond-tpl . 'defun)))
-                 (put-clojure-indent (car pair)
-                                     (car (last pair))))))
+  (load-file "~/.spacemacs.d/hooks.el")
+  (load-file "~/.spacemacs.d/slack-secret.el")
+  (slack-start)
 
-  ;; Disable clean-aindent as it break M-backspace
-  (add-hook 'term-mode-hook (lambda ()
-                              (clean-aindent-mode -1)))
+
+  (eval-after-load "enriched"
+    '(defun enriched-decode-display-prop (start end &optional param)
+       (list start end)))
   )
 
 
@@ -324,322 +318,225 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
-    ;;   "Configuration function for user code.
-    ;; This function is called at the very end of Spacemacs initialization after
-    ;; layers configuration.
-    ;; This is the place where most of your configurations should be done. Unless it is
-    ;; explicitly specified that a variable should be set before a package is loaded,
-    ;; you should place your code here."
+  ;;   "Configuration function for user code.
+  ;; This function is called at the very end of Spacemacs initialization after
+  ;; layers configuration.
+  ;; This is the place where most of your configurations should be done. Unless it is
+  ;; explicitly specified that a variable should be set before a package is loaded,
+  ;; you should place your code here."
 
 
-    (load-file "~/.spacemacs.d/setup-linux-config.el")
+  (load-file "~/.spacemacs.d/setup-linux-config.el")
+  (load-file "~/.spacemacs.d/python-imports.el")
 
-    ;;Nom de la fonction dans la barre
-    ;; (which-function-mode 1)
+  ;;Nom de la fonction dans la barre
+  ;; (which-function-mode 1)
 
-    ;;Incrementer des nombres
-    (defun increment-number-at-point ()
-      (interactive)
-      (skip-chars-backward "0123456789")
-      (or (looking-at "[0123456789]+")
-          (error "No number at point"))
-      (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
-
-    (setq org-directory "~/notes")
-    (setq org-agenda-files '("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org")) ;; List of org-files to be used for creating the agenda view
-    (setq org-mobile-agenda 'default)
-    (setq org-mobile-directory "~/Dropbox/mobileOrg-benoit") ;; The sync repository
-    (setq org-mobile-inbox-for-pull "~/Dropbox/mobileOrg-benoit/from-mobile.org") ;; The filename for new notes created from the MobileOrg app
-
-    (setq-default ispell-program-name "aspell")
+  
 
 
-    (setq compilation-ask-about-save nil) ;;; Shut up compile saves
-    (setq compilation-read-command t) ;; do not ask for which command to run every time
-    (setq compile-command "make") ;; supress the default command : "make -k"
-    (setq compilation-scroll-output 'first-error)
-    (setq compilation-always-kill t)
+  ;;Incrementer des nombres
+  (defun increment-number-at-point ()
+    (interactive)
+    (skip-chars-backward "0123456789")
+    (or (looking-at "[0123456789]+")
+        (error "No number at point"))
+    (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
 
-    (setq set-mark-command-repeat-pop t)
+  (setq org-directory "~/notes")
+  (setq org-agenda-files '("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org")) ;; List of org-files to be used for creating the agenda view
+  (setq org-mobile-agenda 'default)
+  (setq org-mobile-directory "~/Dropbox/mobileOrg-benoit") ;; The sync repository
+  (setq org-mobile-inbox-for-pull "~/Dropbox/mobileOrg-benoit/from-mobile.org") ;; The filename for new notes created from the MobileOrg app
+
+  (setq-default ispell-program-name "aspell")
 
 
-    ;; BACKUP (see http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files)
-    (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
-    (setq backup-by-copying t)
-    (setq delete-old-versions t
-          kept-new-versions 6
-          kept-old-versions 2
-          version-control t)
+  (setq compilation-ask-about-save nil) ;;; Shut up compile saves
+  (setq compilation-read-command t) ;; do not ask for which command to run every time
+  (setq compilation-scroll-output 'first-error)
+  (setq compilation-always-kill t)
+
+  (setq set-mark-command-repeat-pop t)
 
 
-    (defun switch-to-ansi-term (&optional term-name)
-      (interactive)
-      (if (or (string= major-mode "clojure-mode")
-              (string= major-mode "cider-repl-mode")
-              (string= major-mode "cider-test-report-mode"))
-          (setq term-name "*cider-repl refactor-tool*")
-          (when (equal term-name nil)
-            (setq term-name "*ansi-term*")
-            )
-       )
 
-      (setq termBuffer (get-buffer term-name))
-      (if termBuffer
-          (progn
-            (if (string= (buffer-name (current-buffer)) term-name)
-                (switch-to-buffer (other-buffer))
-              (switch-to-buffer termBuffer)))
+
+
+
+  ;; BACKUP (see http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files)
+  (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
+  (setq backup-by-copying t)
+  (setq delete-old-versions t
+        kept-new-versions 6
+        kept-old-versions 2
+        version-control t)
+
+
+  (defun switch-to-ansi-term (&optional term-name)
+    (interactive)
+    (if (or (string= major-mode "clojure-mode")
+            (string= major-mode "cider-repl-mode")
+            (string= major-mode "cider-test-report-mode"))
+        (setq term-name "*cider-repl refactor-tool*")
+      (when (equal term-name nil)
+        (setq term-name "*ansi-term*")
+        )
+      )
+
+    (setq termBuffer (get-buffer term-name))
+    (if termBuffer
         (progn
-          (ansi-term shell-file-name)
-          (rename-buffer term-name)
-          )))
+          (if (string= (buffer-name (current-buffer)) term-name)
+              (switch-to-buffer (other-buffer))
+            (switch-to-buffer termBuffer)))
+      (progn
+        (ansi-term shell-file-name)
+        (rename-buffer term-name)
+        )))
 
-    (setq term-buffer-maximum-size 50000) ;; maximum number of lines in ansi-term
-
-    (add-hook 'c-mode-common-hook
-              (lambda() 
-                (local-set-key  [f9] 'ff-find-other-file)))
-
-    (defun run()
-      (interactive)
-      ;; (goto-char (point-min) )
-      (setq name (buffer-name))
-      (setq path (file-name-directory(buffer-file-name)))
-      (setq s (buffer-substring-no-properties 1 9) )
-
-      (cond
-       ((string= major-mode "clojure-mode")
-        (cider-load-buffer)
-        (cider-run)
-        )
-       ((string= major-mode "python-mode")
-        (save-buffer)
-        (switch-to-ansi-term)
-        (move-beginning-of-line nil)
-        (insert (kbd "C-c C-c"))
-        (term-send-input)
-        (insert "cd ")
-        (insert path)
-        (term-send-input)
-        (insert "ipython ")
-        (insert name)
-        (term-send-input))
-       ((string= s "// macro")
-        (save-buffer)
-        (switch-to-ansi-term)
-        ;; (term-send-raw)
-        (move-beginning-of-line nil)
-        (insert ".q")
-        (term-send-input)
-        (insert "cd ")
-        (insert path)
-        (term-send-input)
-        (insert "r ")
-        (insert name)
-        (insert "++O")
-        (term-send-input)
-        (my-recompile))
-       ((symbol-value android-mode)
-        (switch-to-ansi-term)
-        (insert (kbd "C-c C-c"))
-        (term-send-input)
-        (insert
-         "cd /home/bcoste/workspace/mobileorg-android;"
-         "./gradlew installDebug;"
-         "adb shell monkey -p com.matburt.mobileorg2 -c android.intent.category.LAUNCHER 1;"
-         )
-        (term-send-input)
-        (switch-to-ansi-term "logcat")
-        )
-       ))
-
-    (defun pwd ()
-      "Put the current file name on the clipboard"
-      (interactive)
-      (let ((filename (if (equal major-mode 'dired-mode)
-                          default-directory
-                        (buffer-file-name))))
-        (when filename
-          (with-temp-buffer
-            (insert filename)
-            (clipboard-kill-region (point-min) (point-max)))
-          (message filename))))
-
-
-    (defun switch-to-ansi-term-and-goto-current-directory ()
-      (interactive)
-      (setq termBuffer (get-buffer "*ansi-term*"))
-      (setq name (buffer-name))
-      (setq path (file-name-directory(buffer-file-name)))
-      (if (get-buffer "*ansi-term*")
-          (progn
-            (setq cur (current-buffer))
-            (if (string= (buffer-name cur) "*ansi-term*")
-                (switch-to-buffer (other-buffer))
-              (progn
-                (switch-to-buffer termBuffer)
-                (insert "cd ")
-                (insert path)
-                (term-send-input)
-                )))))
-
-    ;; indenting stuff
-    (setq-default indent-tabs-mode nil)
-    (setq-default c-basic-offset 4)
-
-    (defun copy-quoted-text-at-point ()
-      (interactive)
-      (let ((delim '("\'" "\"" "\`"))
-            (start 0)
-            (theDelim "")
-            (p0 (point)))
-        (dolist (elt delim)
-          (setq startTmp (search-backward elt nil t) )
-          (goto-char p0)
-          (if (numberp startTmp)
-              (if (< start startTmp)
-                  (progn
-                    (setq theDelim elt)
-                    (setq start (+ startTmp 1))))))
-        (forward-char)
-        (setq end (- (search-forward theDelim) 1))
-        (kill-ring-save start end)))
+  (setq term-buffer-maximum-size 50000) ;; maximum number of lines in ansi-term
 
 
 
-    (defun find-regex-in-all-buffers (regexp)
-      (interactive "sSearch for regexp ? ")
-      (multi-occur-in-matching-buffers ".*" regexp))
+  (defun run()
+    (interactive)
+    ;; (goto-char (point-min) )
+    (setq name (buffer-name))
+    (setq path (file-name-directory(buffer-file-name)))
+    (setq s (buffer-substring-no-properties 1 9) )
 
-    (defun comment-or-uncomment-region-or-line ()
-      "Comments or uncomments the region or the current line if there's no active region."
-      (interactive)
-      (let (beg end)
-        (if (region-active-p)
-            (setq beg (region-beginning) end (region-end))
-          (setq beg (line-beginning-position) end (line-end-position)))
-        (comment-or-uncomment-region beg end)))
-
-
-    ;; activate View Mode for all read-only files
-    (setq view-read-only t)
-
-    (add-hook 'term-mode-hook
-              (function
-               (lambda ()
-                 (define-key term-raw-map [?\M-o] 'other-window)
-                 (define-key term-raw-map [?\C-c prior] 'scroll-down)
-                 (define-key term-raw-map [?\C-c next] 'scroll-up))))
-
-
-
-
-
-    ;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
-
-    (add-hook
-     'c++-mode-hook
-     '(lambda()
-        ;; We could place some regexes into `c-mode-common-hook', but note that their evaluation order
-        ;; matters.
-        (font-lock-add-keywords
-         nil '(;; complete some fundamental keywords
-               ("\\<\\(void\\|unsigned\\|signed\\|char\\|short\\|bool\\|int\\|long\\|float\\|double\\)\\>" . font-lock-keyword-face)
-               ;; namespace names and tags - these are rendered as constants by cc-mode
-               ("\\<\\(\\w+::\\)" . font-lock-function-name-face)
-               ;;  new C++11 keywords
-               ("\\<\\(alignof\\|alignas\\|constexpr\\|decltype\\|noexcept\\|nullptr\\|static_assert\\|thread_local\\|override\\|final\\)\\>" . font-lock-keyword-face)
-               ("\\<\\(char16_t\\|char32_t\\)\\>" . font-lock-keyword-face)
-               ;; PREPROCESSOR_CONSTANT, PREPROCESSORCONSTANT
-               ("\\<[A-Z]*_[A-Z_]+\\>" . font-lock-constant-face)
-               ("\\<[A-Z]\\{3,\\}\\>"  . font-lock-constant-face)
-               ;; hexadecimal numbers
-               ("\\<0[xX][0-9A-Fa-f]+\\>" . font-lock-constant-face)
-               ;; integer/float/scientific numbers
-               ("\\<[\\-+]*[0-9]*\\.?[0-9]+\\([ulUL]+\\|[eE][\\-+]?[0-9]+\\)?\\>" . font-lock-constant-face)
-               ;; c++11 string literals
-               ;;       L"wide string"
-               ;;       L"wide string with UNICODE codepoint: \u2018"
-               ;;       u8"UTF-8 string", u"UTF-16 string", U"UTF-32 string"
-               ("\\<\\([LuU8]+\\)\".*?\"" 1 font-lock-keyword-face)
-               ;;       R"(user-defined literal)"
-               ;;       R"( a "quot'd" string )"
-               ;;       R"delimiter(The String Data" )delimiter"
-               ;;       R"delimiter((a-z))delimiter" is equivalent to "(a-z)"
-               ("\\(\\<[uU8]*R\"[^\\s-\\\\()]\\{0,16\\}(\\)" 1 font-lock-keyword-face t) ; start delimiter
-               (   "\\<[uU8]*R\"[^\\s-\\\\()]\\{0,16\\}(\\(.*?\\))[^\\s-\\\\()]\\{0,16\\}\"" 1 font-lock-string-face t)  ; actual string
-               (   "\\<[uU8]*R\"[^\\s-\\\\()]\\{0,16\\}(.*?\\()[^\\s-\\\\()]\\{0,16\\}\"\\)" 1 font-lock-keyword-face t) ; end delimiter
-
-               ;; user-defined types (rather project-specific)
-               ("\\<[A-Za-z_]+[A-Za-z_0-9]*_\\(type\\|ptr\\)\\>" . font-lock-type-face)
-               ("\\<\\(xstring\\|xchar\\)\\>" . font-lock-type-face)
-               ))
-        ) t)
-
-    (defun init.d()
-      (interactive)
-      (find-file "~/.spacemacs.d/init.el")
+    (cond
+     ((string= major-mode "clojure-mode")
+      (cider-load-buffer)
+      (cider-run)
       )
-
-    (defun bashrc()
-      (interactive)
-      (find-file "~/.bashrc")
+     ((string= major-mode "python-mode")
+      (save-buffer)
+      (switch-to-ansi-term)
+      (move-beginning-of-line nil)
+      (insert (kbd "C-c C-c"))
+      (term-send-input)
+      (insert "cd ")
+      (insert path)
+      (term-send-input)
+      (insert "ipython ")
+      (insert name)
+      (term-send-input))
+     ((string= s "// macro")
+      (save-buffer)
+      (switch-to-ansi-term)
+      ;; (term-send-raw)
+      (move-beginning-of-line nil)
+      (insert ".q")
+      (term-send-input)
+      (insert "cd ")
+      (insert path)
+      (term-send-input)
+      (insert "r ")
+      (insert name)
+      (insert "++O")
+      (term-send-input)
+      (my-recompile))
+     ((symbol-value android-mode)
+      (switch-to-ansi-term)
+      (insert (kbd "C-c C-c"))
+      (term-send-input)
+      (insert
+       "cd /home/bcoste/workspace/mobileorg-android;"
+       "./gradlew installDebug;"
+       "adb shell monkey -p com.matburt.mobileorg2 -c android.intent.category.LAUNCHER 1;"
+       )
+      (term-send-input)
+      (switch-to-ansi-term "logcat")
       )
+     ))
 
-    (defun convert-html-to-hlisp (html-str)
-      "Take a HTML string and returns the corresponding HLisp string"
-      (interactive "sHTML string ? ")
-      (insert (replace-regexp-in-string "<\\(\\w+\\) " "(\\1 " (replace-regexp-in-string " \\(\\w+\\)=" " :\\1 " (replace-regexp-in-string "</\\w+>" ")"   html-str)))))
-    
-
-
-    (custom-set-variables '(android-mode-sdk-dir "~/appz/android-sdk"))
-
-    ;; Don't ask confirmation before closing ansi-term
-    (defun set-no-process-query-on-exit ()
-      (let ((proc (get-buffer-process (current-buffer))))
-        (when (processp proc)
-          (set-process-query-on-exit-flag proc nil))))
-
-    (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
+  (defun pwd ()
+    "Put the current file name on the clipboard"
+    (interactive)
+    (let ((filename (if (equal major-mode 'dired-mode)
+                        default-directory
+                      (buffer-file-name))))
+      (when filename
+        (with-temp-buffer
+          (insert filename)
+          (clipboard-kill-region (point-min) (point-max)))
+        (message filename))))
 
 
-    (defun bury-compile-buffer-if-successful (buffer string)
-      "Bury a compilation buffer if succeeded without warnings "
-      (if (and
-           (string-match "compilation" (buffer-name buffer))
-           (string-match "finished" string)
-           (not
-            (with-current-buffer buffer
-              (goto-char (point-min))
-              (search-forward "warning" nil t))))
-          (progn
-            (android-start-app)
-            (run-with-timer 1 nil
-                          (lambda (buf)
-                            (bury-buffer buf)
-                            (delete-windows-on "*compilation*"))
-                          buffer)
+  (defun switch-to-ansi-term-and-goto-current-directory ()
+    (interactive)
+    (setq termBuffer (get-buffer "*ansi-term*"))
+    (setq name (buffer-name))
+    (setq path (file-name-directory(buffer-file-name)))
+    (if (get-buffer "*ansi-term*")
+        (progn
+          (setq cur (current-buffer))
+          (if (string= (buffer-name cur) "*ansi-term*")
+              (switch-to-buffer (other-buffer))
+            (progn
+              (switch-to-buffer termBuffer)
+              (insert "cd ")
+              (insert path)
+              (term-send-input)
+              )))))
 
-            )))
+  ;; indenting stuff
+  (setq-default indent-tabs-mode nil)
+  (setq-default c-basic-offset 4)
 
-    ;; Better helm result sorting
-    ;; https://github.com/emacs-helm/helm/issues/1492
-    (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)
-      candidates)
-    (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
+  (defun copy-quoted-text-at-point ()
+    (interactive)
+    (let ((delim '("\'" "\"" "\`"))
+          (start 0)
+          (theDelim "")
+          (p0 (point)))
+      (dolist (elt delim)
+        (setq startTmp (search-backward elt nil t) )
+        (goto-char p0)
+        (if (numberp startTmp)
+            (if (< start startTmp)
+                (progn
+                  (setq theDelim elt)
+                  (setq start (+ startTmp 1))))))
+      (forward-char)
+      (setq end (- (search-forward theDelim) 1))
+      (kill-ring-save start end)))
 
 
-    (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
-    ;; (add-to-list 'magic-mode-alist '("^ISA" . edi-mode))
 
-    (setq-default
-     css-indent-offset 2
-     web-mode-markup-indent-offset 2
-     web-mode-css-indent-offset 2
-     web-mode-code-indent-offset 2
-     web-mode-attr-indent-offset 2)
-    )
+  (defun find-regex-in-all-buffers (regexp)
+    (interactive "sSearch for regexp ? ")
+    (multi-occur-in-matching-buffers ".*" regexp))
+
+  (defun comment-or-uncomment-region-or-line ()
+    "Comments or uncomments the region or the current line if there's no active region."
+    (interactive)
+    (let (beg end)
+      (if (region-active-p)
+          (setq beg (region-beginning) end (region-end))
+        (setq beg (line-beginning-position) end (line-end-position)))
+      (comment-or-uncomment-region beg end)))
+
+
+  ;; activate View Mode for all read-only files
+  (setq view-read-only t)
+
+  (defun convert-html-to-hlisp (html-str)
+    "Take a HTML string and returns the corresponding HLisp string"
+    (interactive "sHTML string ? ")
+    (insert (replace-regexp-in-string "<\\(\\w+\\) " "(\\1 " (replace-regexp-in-string " \\(\\w+\\)=" " :\\1 " (replace-regexp-in-string "</\\w+>" ")"   html-str)))))
+
+
+  ;; Better helm result sorting
+  ;; https://github.com/emacs-helm/helm/issues/1492
+  (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)
+    candidates)
+  (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
+
+
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -687,7 +584,22 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(org-confirm-babel-evaluate nil)
  '(package-selected-packages
    (quote
-    (yaml-mode web-beautify org-category-capture mmm-mode markdown-toc markdown-mode livid-mode json-mode json-snatcher json-reformat js2-refactor js-doc gh-md skewer-mode request-deferred deferred js2-mode simple-httpd company-tern dash-functional tern coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
+    (twittering-mode disaster company-c-headers cmake-mode clang-format spotify helm-spotify multi slack emojify circe oauth2 ht yaml-mode web-beautify org-category-capture mmm-mode markdown-toc markdown-mode livid-mode json-mode json-snatcher json-reformat js2-refactor js-doc gh-md skewer-mode request-deferred deferred js2-mode simple-httpd company-tern dash-functional tern coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
+ '(popwin:special-display-config
+   (quote
+    (("^\\*Flycheck.+\\*$" :regexp t :position bottom :noselect t :dedicated t :stick t)
+     ("*cider-doc*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
+     ("*cider-error*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
+     ("^*WoMan.+*$" :regexp t :position bottom)
+     ("*nosetests*" :position bottom :noselect nil :dedicated t :stick t)
+     ("*grep*" :position bottom :noselect nil :dedicated t :stick t)
+     ("*ert*" :position bottom :noselect nil :dedicated t :stick t)
+     (" *undo-tree*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
+     ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
+     ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
+     ("*compilation*" :width 0.5 :position right :noselect t :dedicated t :stick t :tail nil)
+     ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick t))))
+ '(py-autopep8-options (quote ("--max-line-length=100")))
  '(python-shell-extra-pythonpaths (quote ("/home/bcoste/workspace/leboncoin")))
  '(python-shell-interpreter "python")
  '(send-mail-function (quote smtpmail-send-it))
