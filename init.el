@@ -265,12 +265,14 @@ values."
    dotspacemacs-whitespace-cleanup nil
    ))
 
-(defun dotspacemacs/user-config () 
+(defun dotspacemacs/user-config ()
+  (setq c-default-style "linux" c-basic-offset 4)
+
   (global-set-key [?\C-h] 'delete-backward-char)
   (global-set-key [remap kill-ring-save] 'easy-kill)
   (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
   (global-set-key (kbd "M-,") 'backward-up-list) ;; Go out of the block of (),{} ... by the bottom
-  (global-set-key [f1] 'run)
+  (global-set-key [f1] 'recompile)
   (global-set-key [f2] 'switch-to-ansi-term)
   (global-set-key [f6] 'android-gradle-installDebug)
   (global-set-key [f7] 'recompile)
