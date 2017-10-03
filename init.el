@@ -40,11 +40,12 @@ values."
      ;; vim-powerline
      python
      haskell
+     (clojure :variables clojure-enable-fancify-symbols t)
      rust
      jabber
      git
-     ;; markdown
      html
+     markdown
      twitter
      c-c++
      org
