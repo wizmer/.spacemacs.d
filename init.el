@@ -603,6 +603,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
     (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
 
+    (defun castra-to-scratch ()
+        "Put the result of the cast error in the scratch buffer"
+      (interactive)
+      (switch-to-buffer "*scratch*")
+      (kill-region 1 (point-max))
+      (yank 2)
+      )
+
+
 
     (defun bury-compile-buffer-if-successful (buffer string)
       "Bury a compilation buffer if succeeded without warnings "
