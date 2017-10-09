@@ -47,6 +47,7 @@ values."
      html
      markdown
      twitter
+     semantic
      c-c++
      org
      (shell :variables
@@ -268,6 +269,8 @@ values."
 
 (defun dotspacemacs/user-config ()
   (setq c-default-style "linux" c-basic-offset 4)
+  (global-set-key [remap query-replace] 'anzu-query-replace)
+  (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
 
   (global-set-key [?\C-h] 'delete-backward-char)
   (global-set-key [remap kill-ring-save] 'easy-kill)
@@ -276,7 +279,7 @@ values."
   (global-set-key [f1] 'recompile)
   (global-set-key [f2] 'switch-to-ansi-term)
   (global-set-key [f6] 'android-gradle-installDebug)
-  (global-set-key [f7] 'recompile)
+  (global-set-key [f7] 'anzu-replace-at-cursor-thing)
   (global-set-key [f8] 'replace-string)
   (global-set-key [f10] 'find-regex-in-all-buffers)
   (global-set-key [f12] 'my_cout)
@@ -298,6 +301,9 @@ values."
   (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
   (global-set-key (kbd "C-c /") 'describe-foo-at-point)
 
+  (spacemacs/set-leader-keys
+    "o [" 'swap-parens
+    "o (" 'swap-parens)
 
   ;; To recognize hoplon files correctly add this to your .emacs
   (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
@@ -331,11 +337,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (load-file "~/.spacemacs.d/setup-linux-config.el")
   (load-file "~/.spacemacs.d/python-imports.el")
+  (load-file "~/.spacemacs.d/change-brackets.el")
 
   ;;Nom de la fonction dans la barre
   ;; (which-function-mode 1)
 
-  
 
 
   ;;Incrementer des nombres
@@ -562,10 +568,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
- '(bookmark-default-file "/home/bcoste/.spacemacs.d/bookmarks")
  '(cider-boot-parameters "dev")
  '(cider-prompt-save-file-on-load (quote always-save) t)
  '(cider-save-file-on-load (quote always-save))
+ '(clean-aindent-mode t)
+ '(compilation-window-height 10)
  '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
    (quote
@@ -603,6 +610,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
      ("*compilation*" :width 0.5 :position right :noselect t :dedicated t :stick t :tail nil)
      ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick t))))
  '(py-autopep8-options (quote ("--max-line-length=100")))
+ '(py-isort-options (quote ("--lines=100")))
  '(python-shell-extra-pythonpaths (quote ("/home/bcoste/workspace/leboncoin")))
  '(python-shell-interpreter "python")
  '(send-mail-function (quote smtpmail-send-it))
@@ -611,7 +619,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(smtpmail-smtp-service 25)
  '(smtpmail-smtp-user "ben.coste@gmail.com")
  '(tramp-default-method "ssh")
- '(user-full-name "BenoÃ®t Coste")
+ '(user-full-name "Benoît Coste")
  '(user-mail-address "ben.coste@gmail.com"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
