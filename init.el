@@ -29,7 +29,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(csv
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -52,27 +52,27 @@ This function should only modify configuration layer settings."
      html
      jabber
      markdown
-     twitter
-     semantic
      org
+     semantic
+     twitter
      (python :variables python-sort-imports-on-save t)
      rust
      twitter
-     (shell :variables
-            shell-default-height 30
-            shell-default-position 'bottom)
+     shell
      spell-checking
      syntax-checking
-     ;; version-control
      slack
      spotify
+     ;; version-control
      ;; vim-powerline
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(kotlin-mode)
+   dotspacemacs-additional-packages '(kotlin-mode
+                                      py-autopep8
+                                      easy-kill)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -353,6 +353,13 @@ It should only modify the values of Spacemacs settings."
 (defun dotspacemacs/user-config ()
   (require 'iso-transl)
   (require 'helm-bookmark)
+  (require 'py-autopep8)
+
+
+   (defun on-python-fail-compilation-hook (buffer desc)
+     (dotimes (number 10)
+       (next-error)))
+
   (setq c-default-style "linux" c-basic-offset 4)
   (global-set-key [remap query-replace] 'anzu-query-replace)
   (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
@@ -394,7 +401,7 @@ It should only modify the values of Spacemacs settings."
   (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
 
   ;; (load-file "~/.spacemacs.d/hooks.el")
-  ;; (load-file "~/.spacemacs.d/slack-secret.el")
+  (load-file "~/.spacemacs.d/slack-secret.el")
   ;; (slack-start)
 
 
@@ -648,7 +655,7 @@ This function is called at the very end of Spacemacs initialization."
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
  '(bookmark-default-file "/home/bcoste/.spacemacs.d/bookmarks" t)
- '(cider-boot-parameters "dev")
+ '(cider-boot-parameters "cider repl -s wait")
  '(cider-prompt-save-file-on-load (quote always-save) t)
  '(cider-save-file-on-load (quote always-save))
  '(evil-want-Y-yank-to-eol nil)
@@ -672,7 +679,7 @@ This function is called at the very end of Spacemacs initialization."
      ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
      ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
      ("*nosetests*" :width 0.5 :position right :noselect nil :dedicated t :stick t)
-     ("*compilation*" :width 0.5 :position right :noselect t :dedicated t :stick t :tail nil)
+     ("*compilation*" :width 0.5 :position right :noselect t :dedicated t :stick t :tail t)
      ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick t))))
  '(py-autopep8-options (quote ("--max-line-length=100")))
  '(py-isort-options (quote ("--lines=100")))

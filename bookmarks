@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("init.el"
+(("neurom"
+ (filename . "~/workspace/morphology/neurom/")
+ (front-context-string . "__pycache__\n  -r")
+ (rear-context-string . "96 Sep 28 13:23 ")
+ (position . 3331))
+("init.el"
  (filename . "~/.spacemacs.d/init.el")
  (front-context-string . "bookmark-default")
  (rear-context-string . " \"#eeeeec\"])\n '(")

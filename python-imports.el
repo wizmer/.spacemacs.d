@@ -19,3 +19,13 @@
   "insert pandas import"
   (interactive)
   (insert "import pandas as pd\n"))
+
+(defun walk()
+  "insert a recursively walking alogirithm"
+  (interactive)
+  (insert
+   "def walk(folder):
+    import os
+    for root, _, files in os.walk(folder):
+        for file in files:
+            yield os.path.join(root, file)"))
