@@ -4,9 +4,6 @@
 (add-hook 'before-save-hook 'py-isort-before-save)
 
 
-
-
-
 ;; To properly indent hoplon macros. The following is extended from Alan's dotspacemacs:
 (add-hook 'clojure-mode-hook
           '(lambda ()
@@ -73,12 +70,12 @@
       (set-process-query-on-exit-flag proc nil))))
 (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
 
-
+(defun char-mode-and-enter()
+  (interactive)
+  (term-char-mode)
+  (term-send-raw))
 (add-hook 'term-mode-hook
           (function
            (lambda ()
              (clean-aindent-mode -1) ;; Disable clean-aindent as it breaks M-backspace in ansi-term
-             (define-key term-raw-map (kbd "C-x M-x") 'helm-M-x)
-             (define-key term-raw-map (kbd "M-v") 'scroll-down)
-             (define-key term-raw-map (kbd "C-v") 'scroll-up)
-             (define-key term-raw-map [?\M-o] 'other-window))))
+             )))

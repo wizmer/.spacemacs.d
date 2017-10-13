@@ -2,7 +2,32 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("neurom"
+(("h5_repository"
+ (filename . "~/workspace/h5_repository/")
+ (front-context-string . "  /home/bcoste/w")
+ (rear-context-string)
+ (position . 1))
+("repository"
+ (filename . "~/workspace/repository/")
+ (front-context-string . "  /home/bcoste/w")
+ (rear-context-string)
+ (position . 1))
+("hooks.el"
+ (filename . "~/.spacemacs.d/hooks.el")
+ (front-context-string . "(require 'py-aut")
+ (rear-context-string)
+ (position . 1))
+(".profile"
+ (filename . "~/.profile")
+ (front-context-string . "# see /usr/share")
+ (rear-context-string . "login\n# exists.\n")
+ (position . 265))
+(".bashrc"
+ (filename . "~/.bashrc")
+ (front-context-string)
+ (rear-context-string . "ce\n#/bin/zsh -l\n")
+ (position . 5768))
+("neurom"
  (filename . "~/workspace/morphology/neurom/")
  (front-context-string . "__pycache__\n  -r")
  (rear-context-string . "96 Sep 28 13:23 ")
