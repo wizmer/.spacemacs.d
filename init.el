@@ -29,7 +29,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(javascript
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -54,7 +54,7 @@ This function should only modify configuration layer settings."
      jabber
      markdown
      org
-     (python :variables python-sort-imports-on-save t)
+     python
      rust
      semantic
      twitter
@@ -63,7 +63,7 @@ This function should only modify configuration layer settings."
      spell-checking
      spotify
      syntax-checking
-     ;; version-control
+     version-control
      ;; vim-powerline
      )
    ;; List of additional packages that will be installed without being
@@ -140,7 +140,7 @@ It should only modify the values of Spacemacs settings."
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'text-mode
+   dotspacemacs-scratch-mode 'emacs-lisp-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
@@ -152,7 +152,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+                               :size 15
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -357,6 +357,7 @@ It should only modify the values of Spacemacs settings."
   (require 'term)
   (require 'company)
 
+  (define-key xref--xref-buffer-mode-map (kbd "q") 'evil-quit)
   (define-key company-active-map (kbd "C-f") 'nil)
 
   (define-key compilation-mode-map (kbd "?") 'evil-search-backward)
@@ -622,84 +623,89 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
   )
 
-
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(ansi-color-faces-vector
-     [default default default italic underline success warning error])
-   '(ansi-color-names-vector
-     ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
-   '(bookmark-default-file "/home/bcoste/.spacemacs.d/bookmarks")
-   '(cider-boot-parameters "cider repl -s wait")
-   '(cider-prompt-save-file-on-load (quote always-save))
-   '(cider-save-file-on-load (quote always-save))
-   '(compilation-always-kill t)
-   '(evil-want-C-i-jump t)
-   '(evil-want-Y-yank-to-eol nil)
-   '(gdb-many-windows t t)
-   '(mail-host-address "gmail.com")
-   '(org-agenda-files nil)
-   '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (plantuml . t))))
-   '(org-confirm-babel-evaluate nil)
-   '(package-selected-packages
-     (quote
-      (kotlin-mode helm-purpose org-brain evil-org zenburn-theme window-purpose imenu-list symon string-inflection solarized-theme sayid realgud test-simple loc-changes load-relative password-generator monokai-theme impatient-mode flyspell-correct-popup evil-unimpaired evil-lion emoji-cheat-sheet-plus editorconfig dante company-emoji cmake-ide levenshtein twittering-mode disaster company-c-headers cmake-mode clang-format spotify helm-spotify multi slack emojify circe oauth2 ht yaml-mode web-beautify org-category-capture mmm-mode markdown-toc markdown-mode livid-mode json-mode json-snatcher json-reformat js2-refactor js-doc gh-md skewer-mode request-deferred deferred js2-mode simple-httpd company-tern dash-functional tern coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
-   '(popwin:special-display-config
-     (quote
-      (("^\\*Flycheck.+\\*$" :regexp t :position bottom :noselect t :dedicated t :stick t)
-       ("*cider-doc*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
-       ("*cider-error*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
-       ("^*WoMan.+*$" :regexp t :position bottom)
-       ("*grep*" :position bottom :noselect nil :dedicated t :stick t)
-       ("*ert*" :position bottom :noselect nil :dedicated t :stick t)
-       (" *undo-tree*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
-       ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
-       ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
-       ("*nosetests*" :width 0.5 :position right :noselect nil :dedicated t :stick t)
-       ("*Python*" :width 0.5 :position right :noselect t :dedicated t :stick t :tail t)
-       ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick nil))))
-   '(py-autopep8-options (quote ("--max-line-length=100")))
-   '(py-isort-options (quote ("--lines=100")))
-   '(send-mail-function (quote smtpmail-send-it))
-   '(smtpmail-mail-address "ben.coste@gmail.com" t)
-   '(smtpmail-smtp-server "smtp.gmail.com")
-   '(smtpmail-smtp-service 25)
-   '(smtpmail-smtp-user "ben.coste@gmail.com")
-   '(tramp-default-method "ssh")
-   '(user-full-name "Benoit Coste")
-   '(user-mail-address "ben.coste@gmail.com")
-   '(org-directory "~/notes")
-   '(org-agenda-files '("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org")) ;; List of org-files to be used for creating the agenda view
-   '(org-mobile-agenda 'default)
-   '(org-mobile-directory "~/Dropbox/mobileOrg-benoit") ;; The sync repository
-   '(compilation-ask-about-save nil) ;;; Shut up compile saves
-   '(compilation-read-command t) ;; do not ask for which command to run every time
-   '(compilation-scroll-output 'first-error)
-   '(compilation-always-kill t)
-   '(set-mark-command-repeat-pop t)
-   ;; BACKUP (see http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files)
-   '(backup-directory-alist `(("." . "~/.emacs.d/saves")))
-   '(backup-by-copying t)
-   '(delete-old-versions t)
-   '(kept-new-versions 6)
-   '(kept-old-versions 2)
-   '(version-control t)
-   '(view-read-only t)   ;; activate View Mode for all read-only files
-   '(term-buffer-maximum-size 50000) ;; maximum number of lines in ansi-term
-   )
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
-   '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
-  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(alert-fade-time 60)
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
+ '(backup-by-copying t)
+ '(backup-directory-alist (\` (("." . "~/.emacs.d/saves"))))
+ '(bookmark-default-file "/home/bcoste/.spacemacs.d/bookmarks")
+ '(cider-boot-parameters "cider repl -s wait")
+ '(cider-prompt-save-file-on-load (quote always-save))
+ '(cider-save-file-on-load (quote always-save))
+ '(compilation-always-kill t)
+ '(compilation-ask-about-save nil)
+ '(compilation-read-command t)
+ '(compilation-scroll-output (quote first-error))
+ '(delete-old-versions t)
+ '(dired-listing-switches "-lah")
+ '(evil-want-C-i-jump t)
+ '(evil-want-Y-yank-to-eol nil)
+ '(gdb-many-windows t t)
+ '(helm-ff-skip-boring-files t)
+ '(hippie-expand-try-functions-list
+   (quote
+    (try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
+ '(kept-new-versions 6)
+ '(kept-old-versions 2)
+ '(mail-host-address "gmail.com")
+ '(org-agenda-files
+   (quote
+    ("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org")))
+ '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (plantuml . t))))
+ '(org-confirm-babel-evaluate nil)
+ '(org-directory "~/notes")
+ '(org-mobile-agenda (quote default))
+ '(org-mobile-directory "~/Dropbox/mobileOrg-benoit")
+ '(package-selected-packages
+   (quote
+    (ggtags add-node-modules-path stickyfunc-enhance srefactor git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl browse-at-remote kotlin-mode helm-purpose org-brain evil-org zenburn-theme window-purpose imenu-list symon string-inflection solarized-theme sayid realgud test-simple loc-changes load-relative password-generator monokai-theme impatient-mode flyspell-correct-popup evil-unimpaired evil-lion emoji-cheat-sheet-plus editorconfig dante company-emoji cmake-ide levenshtein twittering-mode disaster company-c-headers cmake-mode clang-format spotify helm-spotify multi slack emojify circe oauth2 ht yaml-mode web-beautify org-category-capture mmm-mode markdown-toc markdown-mode livid-mode json-mode json-snatcher json-reformat js2-refactor js-doc gh-md skewer-mode request-deferred deferred js2-mode simple-httpd company-tern dash-functional tern coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
+ '(popwin:special-display-config
+   (quote
+    (("^\\*Flycheck.+\\*$" :regexp t :position bottom :noselect t :dedicated t :stick t)
+     ("*cider-doc*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
+     ("*cider-error*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
+     ("^*WoMan.+*$" :regexp t :position bottom)
+     ("*grep*" :position bottom :noselect nil :dedicated t :stick t)
+     ("*xref*" :position right :noselect nil :dedicated t :stick t)
+     ("*ert*" :position bottom :noselect nil :dedicated t :stick t)
+     (" *undo-tree*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
+     ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
+     ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
+     ("*nosetests*" :width 0.5 :position right :noselect t :dedicated nil :stick t)
+     ("*Python*" :width 0.5 :position right :noselect t :dedicated nil :stick t :tail t)
+     ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick nil))))
+ '(py-autopep8-options (quote ("--max-line-length=100")))
+ '(send-mail-function (quote smtpmail-send-it))
+ '(set-mark-command-repeat-pop t)
+ '(nose-use-verbose t)
+ '(slack-buffer-create-on-notify t)
+ '(smtpmail-mail-address "ben.coste@gmail.com" t)
+ '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-smtp-service 25)
+ '(smtpmail-smtp-user "ben.coste@gmail.com")
+ '(term-buffer-maximum-size 50000)
+ '(tramp-default-method "ssh")
+ '(user-full-name "Benoit Coste")
+ '(user-mail-address "ben.coste@gmail.com")
+ '(version-control t)
+ '(view-read-only t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+)
