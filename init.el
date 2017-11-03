@@ -194,7 +194,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-default-layout-name "Default"
    ;; If non-nil the default layout name is displayed in the mode-line.
    ;; (default nil)
-   dotspacemacs-display-default-layout nil
+   dotspacemacs-display-default-layout t
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
    dotspacemacs-auto-resume-layouts nil
@@ -683,8 +683,8 @@ This function is called at the very end of Spacemacs initialization."
      (" *undo-tree*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
      ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
      ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
-     ("*nosetests*" :width 0.5 :position right :noselect t :dedicated nil :stick t)
-     ("*Python*" :width 0.5 :position right :noselect t :dedicated nil :stick t :tail t)
+     ;; ("*nosetests*" :width 0.5 :position right :noselect t :dedicated nil :stick t)
+     ;; ("*Python*" :width 0.5 :position right :noselect t :dedicated nil :stick nil :tail t)
      ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick nil))))
  '(py-autopep8-options (quote ("--max-line-length=100")))
  '(send-mail-function (quote smtpmail-send-it))

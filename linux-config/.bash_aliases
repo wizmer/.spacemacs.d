@@ -10,6 +10,7 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
+alias cdlast='cd  "$(\ls -1dt ./*/ | head -n 1)"'
 
 alias urpad='ssh -X bcoste@209.148.83.200'
 
