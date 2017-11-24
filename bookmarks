@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("projectionizer"
+(("bg"
+ (filename . "/ssh:bcoste@bbpbg1.cscs.ch:/gpfs/bbp.cscs.ch/home/bcoste/")
+ (front-context-string . "simu\n  drwxr-xr-")
+ (rear-context-string . "0K Nov 21 11:49 ")
+ (position . 3765))
+("projectionizer"
  (filename . "/ssh:bcoste@bbpviz2.cscs.ch:/gpfs/bbp.cscs.ch/home/bcoste/workspace/projectionizer/")
  (front-context-string . "v2\n  drwxr-xr-x ")
  (rear-context-string . "0K Oct 26 11:45 ")

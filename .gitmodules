@@ -1,0 +1,3 @@
+[submodule "neuron-emacs"]
+	path = neuron-emacs
+	url = git@github.com:davidcsterratt/neuron-emacs.git

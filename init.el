@@ -29,7 +29,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(javascript
+   '(yaml
+     javascript
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -54,7 +55,7 @@ This function should only modify configuration layer settings."
      jabber
      markdown
      org
-     python
+     (python :variables python-auto-set-local-pyvenv-virtualenv 'on-project-switch)
      rust
      semantic
      twitter
@@ -71,6 +72,7 @@ This function should only modify configuration layer settings."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(kotlin-mode
+                                      sphinx-doc
                                       py-autopep8
                                       easy-kill)
    ;; A list of packages that cannot be updated.
@@ -410,6 +412,11 @@ It should only modify the values of Spacemacs settings."
   (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
 
   (load-file "~/.spacemacs.d/hooks.el")
+  (load-file "~/.spacemacs.d/neuron-emacs/nmodl.el")
+  (load-file "~/.spacemacs.d/neuron-emacs/nrnhoc.el")
+
+  (setq auto-mode-alist (cons '("\\.hoc\\'" . nrnhoc-mode) auto-mode-alist))
+  (setq auto-mode-alist (cons '("\\.mod\\'" . nmodl-mode) auto-mode-alist))
 
   (when (require 'slack nil :noerror)
     (progn (load-file "~/.spacemacs.d/slack-secret.el")
@@ -640,9 +647,9 @@ This function is called at the very end of Spacemacs initialization."
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
  '(backup-by-copying t)
  '(backup-directory-alist (\` (("." . "~/.emacs.d/saves"))))
- '(bookmark-default-file "/home/bcoste/.spacemacs.d/bookmarks")
+ '(bookmark-default-file "/home/bcoste/.spacemacs.d/bookmarks" t)
  '(cider-boot-parameters "cider repl -s wait")
- '(cider-prompt-save-file-on-load (quote always-save))
+ '(cider-prompt-save-file-on-load (quote always-save) t)
  '(cider-save-file-on-load (quote always-save))
  '(compilation-always-kill t)
  '(compilation-ask-about-save nil)
@@ -660,6 +667,7 @@ This function is called at the very end of Spacemacs initialization."
  '(kept-new-versions 6)
  '(kept-old-versions 2)
  '(mail-host-address "gmail.com")
+ '(nose-use-verbose t)
  '(org-agenda-files
    (quote
     ("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org")))
@@ -670,7 +678,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-mobile-directory "~/Dropbox/mobileOrg-benoit")
  '(package-selected-packages
    (quote
-    (ggtags add-node-modules-path stickyfunc-enhance srefactor git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl browse-at-remote kotlin-mode helm-purpose org-brain evil-org zenburn-theme window-purpose imenu-list symon string-inflection solarized-theme sayid realgud test-simple loc-changes load-relative password-generator monokai-theme impatient-mode flyspell-correct-popup evil-unimpaired evil-lion emoji-cheat-sheet-plus editorconfig dante company-emoji cmake-ide levenshtein twittering-mode disaster company-c-headers cmake-mode clang-format spotify helm-spotify multi slack emojify circe oauth2 ht yaml-mode web-beautify org-category-capture mmm-mode markdown-toc markdown-mode livid-mode json-mode json-snatcher json-reformat js2-refactor js-doc gh-md skewer-mode request-deferred deferred js2-mode simple-httpd company-tern dash-functional tern coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
+    (sphinx-doc ggtags add-node-modules-path stickyfunc-enhance srefactor git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl browse-at-remote kotlin-mode helm-purpose org-brain evil-org zenburn-theme window-purpose imenu-list symon string-inflection solarized-theme sayid realgud test-simple loc-changes load-relative password-generator monokai-theme impatient-mode flyspell-correct-popup evil-unimpaired evil-lion emoji-cheat-sheet-plus editorconfig dante company-emoji cmake-ide levenshtein twittering-mode disaster company-c-headers cmake-mode clang-format spotify helm-spotify multi slack emojify circe oauth2 ht yaml-mode web-beautify org-category-capture mmm-mode markdown-toc markdown-mode livid-mode json-mode json-snatcher json-reformat js2-refactor js-doc gh-md skewer-mode request-deferred deferred js2-mode simple-httpd company-tern dash-functional tern coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu winum toml-mode racer py-autopep8 intero hlint-refactor hindent helm-hoogle haskell-snippets fuzzy flycheck-rust flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode seq cargo rust-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data fsm company-statistics spinner queue adaptive-wrap yapfify xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline powerline smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org org-pomodoro alert log4e gntp org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint jabber info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight eshell-z eshell-prompt-extras esh-help elisp-slime-nav ein request websocket easy-kill dumb-jump diminish define-word cython-mode company-quickhelp pos-tip company-anaconda company column-enforce-mode clean-aindent-mode cider pkg-info clojure-mode epl bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed android-mode anaconda-mode pythonic f dash s aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
  '(popwin:special-display-config
    (quote
     (("^\\*Flycheck.+\\*$" :regexp t :position bottom :noselect t :dedicated t :stick t)
@@ -683,13 +691,10 @@ This function is called at the very end of Spacemacs initialization."
      (" *undo-tree*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
      ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
      ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
-     ;; ("*nosetests*" :width 0.5 :position right :noselect t :dedicated nil :stick t)
-     ;; ("*Python*" :width 0.5 :position right :noselect t :dedicated nil :stick nil :tail t)
      ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick nil))))
  '(py-autopep8-options (quote ("--max-line-length=100")))
  '(send-mail-function (quote smtpmail-send-it))
  '(set-mark-command-repeat-pop t)
- '(nose-use-verbose t)
  '(slack-buffer-create-on-notify t)
  '(smtpmail-mail-address "ben.coste@gmail.com" t)
  '(smtpmail-smtp-server "smtp.gmail.com")
