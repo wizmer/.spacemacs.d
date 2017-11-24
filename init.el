@@ -418,9 +418,10 @@ It should only modify the values of Spacemacs settings."
   (setq auto-mode-alist (cons '("\\.hoc\\'" . nrnhoc-mode) auto-mode-alist))
   (setq auto-mode-alist (cons '("\\.mod\\'" . nmodl-mode) auto-mode-alist))
 
-  (when (require 'slack nil :noerror)
-    (progn (load-file "~/.spacemacs.d/slack-secret.el")
-           (slack-start)))
+  (let ((slack-secret-file "~/.spacemacs.d/slack-secret.el"))
+    (when (file-exists-p slack-secret-file)
+      (progn (load-file slack-secret-file)
+             (slack-start))))
 
   (eval-after-load "enriched"
     '(defun enriched-decode-display-prop (start end &optional param)
@@ -621,6 +622,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     "Take a HTML string and returns the corresponding HLisp string"
     (interactive "sHTML string ? ")
     (insert (replace-regexp-in-string "<\\(\\w+\\) " "(\\1 " (replace-regexp-in-string " \\(\\w+\\)=" " :\\1 " (replace-regexp-in-string "</\\w+>" ")"   html-str)))))
+
 
 
   ;; Better helm result sorting
