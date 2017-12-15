@@ -61,7 +61,7 @@ This function should only modify configuration layer settings."
      twitter
      shell
      slack
-     spell-checking
+     ;; spell-checking
      spotify
      syntax-checking
      version-control
@@ -360,6 +360,16 @@ It should only modify the values of Spacemacs settings."
   (require 'company)
 
   (define-key xref--xref-buffer-mode-map (kbd "q") 'evil-quit)
+
+  (fset 'python-print
+   (lambda (&optional arg)
+     "Insert 'print(\"varname: {}\".format(varname))'
+     with varname being the symbol at point"
+     (interactive "p")
+     (kmacro-exec-ring-item (quote ([1 tab 11 112 114 105 110 116 40 39 25 58 32 123 6 6 46 102 111 114 109 97 116 40 25] 0 "%d")) arg)))
+
+
+
   (define-key company-active-map (kbd "C-f") 'nil)
 
   (define-key compilation-mode-map (kbd "?") 'evil-search-backward)
@@ -384,6 +394,7 @@ It should only modify the values of Spacemacs settings."
   (global-set-key [f6] 'android-gradle-installDebug)
   (global-set-key [f7] 'anzu-replace-at-cursor-thing)
   (global-set-key [f8] 'replace-string)
+  (global-set-key [f9] 'python-print)
   (global-set-key [f10] 'find-regex-in-all-buffers)
   (global-set-key [f12] 'my_cout)
   (global-set-key [C-/] 'undo)
@@ -662,6 +673,9 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-C-i-jump t)
  '(evil-want-Y-yank-to-eol nil)
  '(gdb-many-windows t t)
+ '(helm-boring-file-regexp-list (quote
+                                 ("\\.hi$" "\\.o$" "~$" "\\.bin$" "\\.lbin$" "\\.so$" "\\.a$" "\\.ln$" "\\.blg$" "\\.bbl$" "\\.elc$" "\\.lof$" "\\.glo$" "\\.idx$" "\\.lot$" "\\.svn/\\|\\.svn$" "\\.hg/\\|\\.hg$" "\\.git/\\|\\.git$" "\\.bzr/\\|\\.bzr$" "CVS/\\|CVS$" "_darcs/\\|_darcs$" "_MTN/\\|_MTN$" "\\.fmt$" "\\.tfm$" "\\.class$" "\\.fas$" "\\.lib$" "\\.mem$" "\\.x86f$" "\\.sparcf$" "\\.dfsl$" "\\.pfsl$" "\\.d64fsl$" "\\.p64fsl$" "\\.lx64fsl$" "\\.lx32fsl$" "\\.dx64fsl$" "\\.dx32fsl$" "\\.fx64fsl$" "\\.fx32fsl$" "\\.sx64fsl$" "\\.sx32fsl$" "\\.wx64fsl$" "\\.wx32fsl$" "\\.fasl$" "\\.ufsl$" "\\.fsl$" "\\.dxl$" "\\.lo$" "\\.la$" "\\.gmo$" "\\.mo$" "\\.toc$" "\\.aux$" "\\.cp$" "\\.fn$" "\\.ky$" "\\.pg$" "\\.tp$" "\\.vr$" "\\.cps$" "\\.fns$" "\\.kys$" "\\.pgs$" "\\.tps$" "\\.vrs$" "\\.pyc$" "\\.pyo$" "\\.feather$")))
+ '(helm-buffers-truncate-lines nil)
  '(helm-ff-skip-boring-files t)
  '(hippie-expand-try-functions-list
    (quote
@@ -688,7 +702,7 @@ This function is called at the very end of Spacemacs initialization."
      ("*cider-error*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
      ("^*WoMan.+*$" :regexp t :position bottom)
      ("*grep*" :position bottom :noselect nil :dedicated t :stick t)
-     ("*xref*" :position right :noselect nil :dedicated t :stick t)
+     ("*xref*" :position right :width 0.5 :noselect nil :dedicated nil :stick nil)
      ("*ert*" :position bottom :noselect nil :dedicated t :stick t)
      (" *undo-tree*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
      ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
