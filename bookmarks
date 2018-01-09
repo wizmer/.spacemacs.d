@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("bg"
+(("notes"
+ (filename . "/nfs4/bbp.epfl.ch/user/bcoste/private/notes/")
+ (front-context-string . "notes_morpho.org")
+ (rear-context-string . "3K Dec 19 11:27 ")
+ (position . 315))
+("bg"
  (filename . "/ssh:bcoste@bbpbg1.cscs.ch:/gpfs/bbp.cscs.ch/home/bcoste/")
  (front-context-string . "simu\n  drwxr-xr-")
  (rear-context-string . "0K Nov 21 11:49 ")

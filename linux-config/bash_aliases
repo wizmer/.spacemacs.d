@@ -10,7 +10,10 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
-alias cdlast='cd  "$(\ls -1dt ./*/ | head -n 1)"'
+alias cdl='cd  "$(\ls -1dt ./*/ | head -n 1)"'
+alias ccat='pygmentize -O style=monokai -f console256 -g'
+alias pipi='pip install'
+alias ip='ipython'
 
 alias urpad='ssh -X bcoste@209.148.83.200'
 
@@ -49,4 +52,37 @@ function sel(){
     else
         echo $str | awk '{print $'$col'}'
     fi
+}
+
+function e {
+    emacsclient -n $1
+}
+
+function clip {
+	  $@ | xclip -selection clipboard
+}
+
+function f {
+	  find . -name $@
+}
+
+function lf {
+	  ls -Art | tail -n 1
+}
+function lastless {
+	  less $(lf)
+}
+function lastvim {
+	  vim $(lf)
+}
+
+function foreach {
+    func=$1
+    for f in "${@:2}"; do
+        $func $f
+    done
+}
+
+function o {
+    xdg-open "$@"
 }

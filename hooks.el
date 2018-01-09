@@ -71,6 +71,7 @@
 (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
 
 (defun char-mode-and-enter()
+  "Go back to char-mode before pressing enter"
   (interactive)
   (term-char-mode)
   (term-send-raw))
