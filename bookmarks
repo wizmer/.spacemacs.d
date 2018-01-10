@@ -17,21 +17,11 @@
  (front-context-string . "v2\n  drwxr-xr-x ")
  (rear-context-string . "0K Oct 26 11:45 ")
  (position . 1229))
-("pruning_part"
- (filename . "~/workspace/morphology/projectionizer/tools/thalamocortical_ps_s2f.py")
- (front-context-string . "def parameter_fr")
- (rear-context-string . "()\n            \n")
- (position . 2699))
 ("workspace"
  (filename . "~/workspace/")
  (front-context-string . "clojure\n  drwxr-")
  (rear-context-string . "0K Oct 10 11:44 ")
  (position . 291))
-("COLS"
- (filename . "~/workspace/morphology/neurom/neurom/core/dataformat.py")
- (front-context-string . "class COLS(objec")
- (rear-context-string . "COL_COUNT = 7\n\n\n")
- (position . 1744))
 ("viz"
  (filename . "/ssh:bcoste@bbpviz2.cscs.ch:/gpfs/bbp.cscs.ch/home/bcoste/workspace/")
  (front-context-string)
@@ -45,11 +35,6 @@
 ("repository"
  (filename . "~/workspace/repository/")
  (front-context-string . "  /home/bcoste/w")
- (rear-context-string)
- (position . 1))
-("hooks.el"
- (filename . "~/.spacemacs.d/hooks.el")
- (front-context-string . "(require 'py-aut")
  (rear-context-string)
  (position . 1))
 (".profile"
