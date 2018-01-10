@@ -433,11 +433,9 @@ It should only modify the values of Spacemacs settings."
   (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
 
   (load-file "~/.spacemacs.d/hooks.el")
-  (load-file "~/.spacemacs.d/neuron-emacs/nmodl.el")
-  (load-file "~/.spacemacs.d/neuron-emacs/nrnhoc.el")
 
-  (setq auto-mode-alist (cons '("\\.hoc\\'" . nrnhoc-mode) auto-mode-alist))
-  (setq auto-mode-alist (cons '("\\.mod\\'" . nmodl-mode) auto-mode-alist))
+  (when (string-prefix-p "bluebrain" system-name)
+    (load-file "~/.spacemacs.d/bbp.el"))
 
   (let ((slack-secret-file "~/.spacemacs.d/slack-secret.el"))
     (when (file-exists-p slack-secret-file)
@@ -447,12 +445,6 @@ It should only modify the values of Spacemacs settings."
   (eval-after-load "enriched"
     '(defun enriched-decode-display-prop (start end &optional param)
        (list start end)))
-
-  (setq neurolucida-mode-hook nil)
-  (define-derived-mode neurolucida-mode clojure-mode "NEUROLUCIDA"
-    "major mode for editing mymath language code.")
-  (add-to-list 'auto-mode-alist '("\\.asc\\'" . neurolucida-mode))
-
   )
 
 
