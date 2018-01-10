@@ -434,7 +434,7 @@ It should only modify the values of Spacemacs settings."
 
   (load-file "~/.spacemacs.d/hooks.el")
 
-  (when (string-prefix-p "bluebrain" system-name)
+  (when (string-prefix-p "bluebrain" (system-name))
     (load-file "~/.spacemacs.d/bbp.el"))
 
   (let ((slack-secret-file "~/.spacemacs.d/slack-secret.el"))
