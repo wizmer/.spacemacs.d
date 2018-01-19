@@ -73,9 +73,18 @@ function clip {
 	  $@ | xclip -selection clipboard
 }
 
+# Copy the argument to clipboard
+function z {
+	  echo $@ | xclip -selection clipboard
+}
+
+
 # Recursively search for a file starting a current dir
+# and copy result to clipboard
 function f {
-	  find . -name $@
+	  res=$(find . -name $@)
+    clip echo $res
+    echo $res
 }
 
 # Return the last modified file in the current directory
