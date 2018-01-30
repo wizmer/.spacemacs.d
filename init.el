@@ -46,12 +46,14 @@ This function should only modify configuration layer settings."
      ;; better-defaults
      c-c++
      clojure
+     command-log
      csv
      emacs-lisp
      git
      haskell
      helm
      html
+     imenu-list
      jabber
      markdown
      org
@@ -72,6 +74,7 @@ This function should only modify configuration layer settings."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(kotlin-mode
+                                      cmake-mode
                                       sphinx-doc
                                       py-autopep8
                                       easy-kill)
@@ -391,9 +394,13 @@ It should only modify the values of Spacemacs settings."
   (define-key term-raw-map [?\M-o] 'other-window)
   (define-key term-mode-map (kbd "C-m") 'char-mode-and-enter)
 
-  (setq c-default-style "linux" c-basic-offset 4)
+  (setq c-default-style "linux"
+        c-basic-offset 4)
+  (c-set-offset 'innamespace 0)
+
   (global-set-key [remap query-replace] 'anzu-query-replace)
   (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
+
 
   (global-set-key [?\C-h] 'delete-backward-char)
   (global-set-key [remap kill-ring-save] 'easy-kill)
@@ -404,7 +411,7 @@ It should only modify the values of Spacemacs settings."
   (global-set-key [f6] 'android-gradle-installDebug)
   (global-set-key [f7] 'anzu-replace-at-cursor-thing)
   (global-set-key [f8] 'replace-string)
-  (global-set-key [f9] 'python-print)
+  (global-set-key [f9] 'bcoste-print-variable)
   (global-set-key [f10] 'find-regex-in-all-buffers)
   (global-set-key [f12] 'my_cout)
   (global-set-key [C-/] 'undo)
@@ -426,6 +433,7 @@ It should only modify the values of Spacemacs settings."
   (global-set-key (kbd "C-c /") 'describe-foo-at-point)
 
   (spacemacs/set-leader-keys
+    "o s" 'sp-splice-sexp
     "o [" 'swap-parens
     "o (" 'swap-parens)
 
@@ -509,6 +517,28 @@ before packages are loaded. If you are unsure, you should try in setting them in
           (insert filename)
           (clipboard-kill-region (point-min) (point-max)))
         (message filename))))
+
+
+  (defun bcoste-print-variable ()
+    (interactive)
+    (delete-trailing-whitespace (line-beginning-position) (line-end-position))
+
+    ;; Trick to go to first non empty char
+    (beginning-of-line)
+    (forward-word)
+    (backward-word)
+    (let* ((content (buffer-substring (point) (line-end-position)))
+           (content-no-quote (replace-regexp-in-string "\"" "" content)))
+
+      (kill-line)
+
+      (when (string= major-mode "python-mode")
+        (insert (concat "print(\"" content-no-quote ": {}\".format(" content "))")))
+
+      (when (string= major-mode "c++-mode")
+        (insert (concat "std::cout << \"" content-no-quote ": \" << " content " << std::endl;")))
+      )
+    )
 
   (defun switch-to-ansi-term-and-goto-current-directory ()
     (interactive)
