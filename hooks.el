@@ -1,8 +1,10 @@
 (require 'py-autopep8)
-(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+;; (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 (add-hook 'python-mode-hook (lambda () (setq forward-sexp-function nil)))
-(add-hook 'before-save-hook 'py-isort-before-save)
+
+(add-hook 'cmake-mode-hook (lambda () (evil-local-set-key 'normal "q" 'quit-window )))
+;; (add-hook 'before-save-hook 'py-isort-before-save)
 
 ;; To properly indent hoplon macros. The following is extended from Alan's dotspacemacs:
 (add-hook 'clojure-mode-hook
@@ -17,10 +19,6 @@
                (put-clojure-indent (car pair)
                                    (car (last pair))))))
 
-
-(add-hook 'c-mode-common-hook
-          (lambda()
-            (local-set-key  [f9] 'ff-find-other-file)))
 
 ;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
 
@@ -80,3 +78,20 @@
            (lambda ()
              (clean-aindent-mode -1) ;; Disable clean-aindent as it breaks M-backspace in ansi-term
              )))
+
+(defun bury-compile-buffer-if-successful (buffer string)
+  "Bury a compilation buffer if succeeded without warnings "
+  (when (and
+         (buffer-live-p buffer)
+         (string-match "compilation" (buffer-name buffer))
+         (string-match "finished" string)
+         (not
+          (with-current-buffer buffer
+            (goto-char (point-min))
+            (search-forward "warning" nil t))))
+    (run-with-timer 4 nil
+                    (lambda (buf)
+                      (bury-buffer buf)
+                      (switch-to-prev-buffer (get-buffer-window buf) 'kill))
+                    buffer)))
+;; (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
