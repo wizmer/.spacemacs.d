@@ -539,12 +539,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (defun bcoste-print-variable ()
     (interactive)
-    (delete-trailing-whitespace (line-beginning-position) (line-end-position))
-
-    ;; Trick to go to first non empty char
     (beginning-of-line)
-    (forward-sexp)
-    (backward-sexp)
+    (evil-forward-word-begin)
     (let* ((content (buffer-substring (point) (line-end-position)))
            (content-no-quote (replace-regexp-in-string "\"" "" content)))
 
