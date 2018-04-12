@@ -1,10 +1,18 @@
 (require 'py-autopep8)
-;; (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 (add-hook 'python-mode-hook (lambda () (setq forward-sexp-function nil)))
 
 (add-hook 'cmake-mode-hook (lambda () (evil-local-set-key 'normal "q" 'quit-window )))
 ;; (add-hook 'before-save-hook 'py-isort-before-save)
+
+;; Always save before sending to buffer
+(advice-add 'python-shell-send-buffer :before #'save-buffer)
+
+(defun clang-format-on-save ()
+    (add-hook 'before-save-hook 'clang-format-buffer nil t))
+(add-hook 'c++-mode-hook 'clang-format-on-save)
+(remove-hook 'c-mode-common-hook 'spacemacs//c-toggle-auto-newline )
 
 ;; To properly indent hoplon macros. The following is extended from Alan's dotspacemacs:
 (add-hook 'clojure-mode-hook
