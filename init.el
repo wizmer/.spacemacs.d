@@ -54,6 +54,7 @@ This function should only modify configuration layer settings."
      command-log
      csv
      emacs-lisp
+     erc
      git
      haskell
      helm
@@ -61,17 +62,18 @@ This function should only modify configuration layer settings."
      imenu-list
      jabber
      markdown
+     nixos
      org
      (python :variables python-auto-set-local-pyvenv-virtualenv 'on-project-switch)
      restclient
      rust
      search-engine
-     semantic
+     ;; semantic
      twitter
      shell
      slack
      ;; spell-checking
-     ;; syntax-checking
+     syntax-checking
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
@@ -431,6 +433,7 @@ It should only modify the values of Spacemacs settings."
   (global-set-key [remap query-replace] 'anzu-query-replace)
   (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
 
+  (global-set-key (kbd "C-c d") 'kill-line-relative)
   (global-set-key [?\C-h] 'delete-backward-char)
   (global-set-key [remap kill-ring-save] 'easy-kill)
   (global-set-key (kbd "M-.") 'up-list) ;; Go out of the block of (),{} ... by the top
@@ -462,6 +465,8 @@ It should only modify the values of Spacemacs settings."
     "o c" 'insert-cout
     "o [" 'swap-parens
     "o (" 'swap-parens)
+
+
 
 
   ;; To recognize hoplon files correctly add this to your .emacs
@@ -600,6 +605,22 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 
 
+  (defun to-c++ ()
+    "Reformat python code to c++ code"
+    (interactive)
+    (replace-string "[" "{")
+    (beginning-of-buffer)
+    (replace-string "]" "}")
+    (beginning-of-buffer)
+    (replace-regexp ")\n" ");\n")
+    (beginning-of-buffer)
+    (replace-regexp "}\n" "};\n")
+    (beginning-of-buffer)
+    (replace-string "points =" "points() =")
+    (beginning-of-buffer)
+    (replace-string "diameters =" "diameters() =")
+    )
+
   (defun copy-quoted-text-at-point ()
     (interactive)
     (let ((delim '("\'" "\"" "\`"))
@@ -617,6 +638,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (forward-char)
       (setq end (- (search-forward theDelim) 1))
       (kill-ring-save start end)))
+
+  (defun kill-line-relative (&optional arg)
+    "Kill relative line."
+    (interactive "n")
+    (save-excursion
+      (forward-visible-line arg)
+      (kill-whole-line)))
 
 
   (defun find-regex-in-all-buffers (regexp)
@@ -647,8 +675,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)
     candidates)
   (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
-    )
-
+  )
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
@@ -667,7 +694,7 @@ This function is called at the very end of Spacemacs initialization."
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
  '(backup-by-copying t)
  '(backup-directory-alist (\` (("." . "~/.emacs.d/saves"))))
- '(c-electric-flag nil)
+ '(c-electric-flag nil t)
  '(cider-boot-parameters "cider repl -s wait")
  '(cider-prompt-save-file-on-load (quote always-save) t)
  '(cider-save-file-on-load (quote always-save))
@@ -697,7 +724,7 @@ This function is called at the very end of Spacemacs initialization."
     ("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org")))
  '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (plantuml . t))))
  '(org-confirm-babel-evaluate nil)
- '(org-directory "~/notes" t)
+ '(org-directory "~/notes")
  '(org-mobile-agenda (quote default))
  '(org-mobile-directory "~/Dropbox/mobileOrg-benoit")
  '(package-selected-packages
@@ -718,7 +745,10 @@ This function is called at the very end of Spacemacs initialization."
      ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick nil))))
  '(py-autopep8-options (quote ("--max-line-length=100")))
  '(pyvenv-virtualenvwrapper-python "/usr/bin/python")
- '(safe-local-variable-values (quote ((projectile-project-test-cmd . "make test"))))
+ '(safe-local-variable-values
+   (quote
+    ((helm-make-build-dir . "build/")
+     (projectile-project-test-cmd . "make test"))))
  '(send-mail-function (quote smtpmail-send-it))
  '(set-mark-command-repeat-pop t)
  '(slack-buffer-create-on-notify t)
@@ -726,6 +756,10 @@ This function is called at the very end of Spacemacs initialization."
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 25)
  '(smtpmail-smtp-user "ben.coste@gmail.com")
+ '(spacemacs-large-file-modes-list
+   (quote
+    (tags-table-mode archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode)))
+ '(tags-add-tables nil)
  '(term-buffer-maximum-size 50000)
  '(tramp-default-method "ssh")
  '(user-full-name "Benoit Coste")
