@@ -81,6 +81,7 @@ This function should only modify configuration layer settings."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(kotlin-mode
+                                      vue-mode
                                       sphinx-doc
                                       py-autopep8
                                       easy-kill)
@@ -419,6 +420,16 @@ It should only modify the values of Spacemacs settings."
 
   ;; (define-key compilation-mode-map (kbd "?") 'evil-search-backward)
   ;; (define-key compilation-mode-map (kbd "h") 'evil-backward-char)
+
+  ;; (helm :sources 'evil-search-forward-history
+  ;;       ;; :input (if (string-match-p "\\`~" fname)
+  ;;       ;;            (expand-file-name fname) fname)
+  ;;       ;; :case-fold-search helm-file-name-case-fold-search
+  ;;       ;; :preselect preselect
+  ;;       ;; :ff-transformer-show-only-basename
+  ;;       ;; helm-ff-transformer-show-only-basename
+  ;;       :prompt "Cycle history: "
+  ;;       :buffer "*helm isearch history*")
 
   (define-key term-raw-map [remap execute-extended-command] 'helm-M-x)
   (define-key term-raw-map (kbd "M-v") 'scroll-down)
