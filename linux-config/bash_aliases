@@ -8,6 +8,7 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias pipi='pip install'
 alias ip='ipython'
+alias gca='git commit --amend'
 
 # Colorized version of the cat command
 # You might have to 'pip install pygments' first. But it's worth it !
