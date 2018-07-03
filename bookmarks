@@ -23,7 +23,7 @@
  (rear-context-string . "0K Oct 10 11:44 ")
  (position . 291))
 ("viz"
- (filename . "/ssh:bcoste@bbpviz2.cscs.ch:/gpfs/bbp.cscs.ch/home/bcoste/workspace/")
+ (filename . "/ssh:bcoste@bbpviz2.bbp.epfl.ch:/gpfs/bbp.cscs.ch/home/bcoste/workspace/")
  (front-context-string)
  (rear-context-string . "96 Oct 16 11:06 ")
  (position . 222))
