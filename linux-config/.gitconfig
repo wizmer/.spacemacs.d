@@ -1,14 +1,15 @@
-
-
-[user]
-name = wizmer
-email = ben.coste@gmail.com
 [alias]
-co = checkout
-br = branch
-ci = commit
-st = status
-last = log -1 HEAD
-exists = ls-files --error-unmatch
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	lg = log --all --graph\n--pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\n--abbrev-commit --date=relative
 [push]
-default = simple
+	default = simple
+[core]
+	editor = vim
+	excludesfile = $HOME/.spacemacs.d/linux-config/gitignore
+[commit]
+	gpgsign = false
+[pull]
+	rebase = true
