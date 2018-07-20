@@ -1,8 +1,9 @@
 [alias]
 	co = checkout
-	br = branch
+	br = branch -vv
 	ci = commit
 	st = status
+	rem = remote -vv
 	lg = log --all --graph\n--pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\n--abbrev-commit --date=relative
 [push]
 	default = simple
@@ -13,3 +14,6 @@
 	gpgsign = false
 [pull]
 	rebase = true
+[user]
+  name = Benoît Coste
+	email = benoit.coste@protonmail.com

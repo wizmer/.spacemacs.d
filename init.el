@@ -67,11 +67,16 @@ This function should only modify configuration layer settings."
      markdown
      nixos
      org
-     (python :variables python-auto-set-local-pyvenv-virtualenv 'on-project-switch)
+     (python :variables
+             python-auto-set-local-pyvenv-virtualenv 'on-project-switch
+             python-sort-imports-on-save t
+             python-remove-unused-imports-on-save nil
+             )
      restclient
      rust
      search-engine
      semantic
+     super-save
      twitter
      shell
      slack
@@ -193,7 +198,7 @@ It should only modify the values of Spacemacs settings."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((recents . 5)
+   dotspacemacs-startup-lists '((recents . 10)
                                 (projects . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
@@ -461,11 +466,21 @@ It should only modify the values of Spacemacs settings."
          (,functionname arg))
 
       `(global-set-key [remap ,functionname] ',funsymbol)
-))
+      ))
 
   ;; (apply-and-evil-normal-state spacemacs/python-test-one)
   ;; (apply-and-evil-normal-state spacemacs/python-test-module)
   ;; (apply-and-evil-normal-state spacemacs/python-test-all)
+
+  (defun disable-all-minor-modes ()
+    (interactive)
+    (mapc
+     (lambda (mode-symbol)
+       (when (functionp mode-symbol)
+         ;; some symbols are functions which aren't normal mode functions
+         (ignore-errors
+           (funcall mode-symbol -1))))
+     minor-mode-list))
 
   (defun insert-cout (message)
     (interactive "sMessage to cout ? ")
@@ -476,8 +491,8 @@ It should only modify the values of Spacemacs settings."
     (newline-and-indent))
 
   (menu-bar-mode 1)
-;  (spaceline-toggle-minor-modes-off)
-;  (define-key xref--xref-buffer-mode-map (kbd "q") 'evil-quit)
+                                        ;  (spaceline-toggle-minor-modes-off)
+                                        ;  (define-key xref--xref-buffer-mode-map (kbd "q") 'evil-quit)
 
   (defun nosetests-nose-command()
     "PYTHONPATH=${PYTHONPATH}:/home/bcoste/workspace/morphology/io/build/binds/python LD_PRELOAD=\"/home/bcoste/workspace/morphology/io/build/brion/libbrion.so /home/bcoste/workspace/morphology/io/build/brain/libbrain.so\" /usr/bin/env python $(which nosetests)"
@@ -763,7 +778,9 @@ Else, go to the beggining of line"
   ;; https://github.com/emacs-helm/helm/issues/1492
   (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)
     candidates)
+
   (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
+
   )
 
 (defun dotspacemacs/emacs-custom-settings ()

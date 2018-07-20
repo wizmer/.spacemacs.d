@@ -70,3 +70,7 @@ anaconda-mode/
 
 # End of https://www.gitignore.io/api/emacs
 TAGS
+GPATH
+GRTAGS
+GSYMS
+GTAGS
