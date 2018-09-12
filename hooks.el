@@ -1,5 +1,5 @@
 (require 'py-autopep8)
-(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+;; (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 (add-hook 'python-mode-hook (lambda () (setq forward-sexp-function nil)))
 
@@ -10,6 +10,7 @@
 (advice-add 'python-shell-send-buffer :before #'save-buffer)
 
 (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 (defun clang-format-on-save ()
     (add-hook 'before-save-hook 'clang-format-buffer nil t))
 ;; (add-hook 'c++-mode-hook 'clang-format-on-save)

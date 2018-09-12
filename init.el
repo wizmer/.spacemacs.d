@@ -32,7 +32,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(windows-scripts
+   '(shell-scripts
      yaml
      javascript
      ;; ----------------------------------------------------------------
@@ -68,14 +68,15 @@ This function should only modify configuration layer settings."
      nixos
      org
      (python :variables
-             python-auto-set-local-pyvenv-virtualenv 'on-project-switch
-             python-sort-imports-on-save t
-             python-remove-unused-imports-on-save nil
+             python-auto-set-local-pyvenv-virtualenv 'on-visit
+             ;; python-sort-imports-on-save t
+             ;; python-remove-unused-imports-on-save nil
              )
      restclient
      rust
      search-engine
      semantic
+     shell-script
      super-save
      twitter
      shell
@@ -482,6 +483,10 @@ It should only modify the values of Spacemacs settings."
            (funcall mode-symbol -1))))
      minor-mode-list))
 
+  (defun compile-current-buffer ()
+      (interactive)
+    (compile (buffer-file-name)))
+
   (defun insert-cout (message)
     (interactive "sMessage to cout ? ")
     (c-indent-line-or-region)
@@ -521,6 +526,7 @@ It should only modify the values of Spacemacs settings."
   (define-key term-raw-map (kbd "C-v") 'scroll-up)
   (define-key term-raw-map [?\M-o] 'other-window)
   (define-key term-mode-map (kbd "C-m") 'char-mode-and-enter)
+  ;; (define-key sh-mode-map (kbd "C-c C-c") 'compile-current-buffer)
 
   (setq c-default-style "linux"
         c-basic-offset 4)
@@ -562,6 +568,8 @@ It should only modify the values of Spacemacs settings."
   (define-key evil-normal-state-map (kbd ", t l") 'nosetests-again)
 
 
+  ;; (define-key evil-normal-state-map (kbd "q") 'quit-window)
+  (define-key evil-normal-state-map (kbd "'") 'helm-mini)
 
   (spacemacs/set-leader-keys
     "o s" 'sp-splice-sexp
@@ -588,8 +596,6 @@ It should only modify the values of Spacemacs settings."
   (eval-after-load "enriched"
     '(defun enriched-decode-display-prop (start end &optional param)
        (list start end)))
-
-
   )
 
 (defun dotspacemacs/user-load ()
@@ -732,31 +738,31 @@ Else, go to the beggining of line"
           (theDelim "")
           (p0 (point)))
       (dolist (elt delim)
-        (setq startTmp (search-backward elt nil t) )
+        (setq starttmp (search-backward elt nil t) )
         (goto-char p0)
-        (if (numberp startTmp)
-            (if (< start startTmp)
+        (if (numberp starttmp)
+            (if (< start starttmp)
                 (progn
-                  (setq theDelim elt)
-                  (setq start (+ startTmp 1))))))
+                  (setq thedelim elt)
+                  (setq start (+ starttmp 1))))))
       (forward-char)
-      (setq end (- (search-forward theDelim) 1))
+      (setq end (- (search-forward thedelim) 1))
       (kill-ring-save start end)))
 
   (defun kill-line-relative (&optional arg)
-    "Kill relative line."
-    (interactive "nDelete line # (relative) ? ")
+    "kill relative line."
+    (interactive "ndelete line # (relative) ? ")
     (save-excursion
       (forward-visible-line arg)
       (kill-whole-line)))
 
 
   (defun find-regex-in-all-buffers (regexp)
-    (interactive "sSearch for regexp ? ")
+    (interactive "ssearch for regexp ? ")
     (multi-occur-in-matching-buffers ".*" regexp))
 
   (defun comment-or-uncomment-region-or-line ()
-    "Comments or uncomments the region or the current line if there's no active region."
+    "comments or uncomments the region or the current line if there's no active region."
     (interactive)
     (let (beg end)
       (if (region-active-p)
@@ -767,14 +773,14 @@ Else, go to the beggining of line"
 
 
   (defun convert-html-to-hlisp (html-str)
-    "Take a HTML string and returns the corresponding HLisp string"
-    (interactive "sHTML string ? ")
+    "take a html string and returns the corresponding hlisp string"
+    (interactive "shtml string ? ")
     (insert (replace-regexp-in-string "<\\(\\w+\\) " "(\\1 " (replace-regexp-in-string " \\(\\w+\\)=" " :\\1 " (replace-regexp-in-string "</\\w+>" ")"   html-str)))))
 
 
 
 
-  ;; Better helm result sorting
+  ;; better helm result sorting
   ;; https://github.com/emacs-helm/helm/issues/1492
   (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)
     candidates)
@@ -802,7 +808,7 @@ This function is called at the very end of Spacemacs initialization."
  '(backup-directory-alist (\` (("." . "~/.emacs.d/saves"))))
  '(c-electric-flag nil t)
  '(cider-boot-parameters "cider repl -s wait")
- '(cider-prompt-save-file-on-load (quote always-save))
+ '(cider-prompt-save-file-on-load (quote always-save) t)
  '(cider-save-file-on-load (quote always-save))
  '(compilation-always-kill t)
  '(compilation-ask-about-save nil)
@@ -813,7 +819,7 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-C-i-jump t)
  '(evil-want-Y-yank-to-eol nil)
  '(gdb-many-windows t t)
- '(grep-find-ignored-files ;; I modified *.so -> *.so.*
+ '(grep-find-ignored-files
    (quote
     (".#*" "*.hi" "*.o" "*~" "*.bin" "*.lbin" "*.so.*" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo")))
  '(helm-boring-file-regexp-list
@@ -821,6 +827,9 @@ This function is called at the very end of Spacemacs initialization."
     ("\\.hi$" "\\.o$" "~$" "\\.bin$" "\\.lbin$" "\\.so$" "\\.a$" "\\.ln$" "\\.blg$" "\\.bbl$" "\\.elc$" "\\.lof$" "\\.glo$" "\\.idx$" "\\.lot$" "\\.svn/\\|\\.svn$" "\\.hg/\\|\\.hg$" "\\.git/\\|\\.git$" "\\.bzr/\\|\\.bzr$" "CVS/\\|CVS$" "_darcs/\\|_darcs$" "_MTN/\\|_MTN$" "\\.fmt$" "\\.tfm$" "\\.class$" "\\.fas$" "\\.lib$" "\\.mem$" "\\.x86f$" "\\.sparcf$" "\\.dfsl$" "\\.pfsl$" "\\.d64fsl$" "\\.p64fsl$" "\\.lx64fsl$" "\\.lx32fsl$" "\\.dx64fsl$" "\\.dx32fsl$" "\\.fx64fsl$" "\\.fx32fsl$" "\\.sx64fsl$" "\\.sx32fsl$" "\\.wx64fsl$" "\\.wx32fsl$" "\\.fasl$" "\\.ufsl$" "\\.fsl$" "\\.dxl$" "\\.lo$" "\\.la$" "\\.gmo$" "\\.mo$" "\\.toc$" "\\.aux$" "\\.cp$" "\\.fn$" "\\.ky$" "\\.pg$" "\\.tp$" "\\.vr$" "\\.cps$" "\\.fns$" "\\.kys$" "\\.pgs$" "\\.tps$" "\\.vrs$" "\\.pyc$" "\\.pyo$" "\\.feather$")))
  '(helm-buffers-truncate-lines nil)
  '(helm-ff-skip-boring-files t)
+ '(helm-grep-ignored-directories
+   (quote
+    ("SCCS/" "RCS/" "CVS/" "MCVS/" ".svn/" ".git/" ".hg/" ".bzr/" "_MTN/" "_darcs/" "{arch}/" ".gvfs/" "site-packages/")))
  '(hippie-expand-try-functions-list
    (quote
     (try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
@@ -840,7 +849,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-mobile-directory "~/Dropbox/mobileOrg-benoit")
  '(package-selected-packages
    (quote
-    (stickyfunc-enhance srefactor yasnippet-snippets yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify vue-mode volatile-highlights vi-tilde-fringe uuidgen use-package twittering-mode toml-mode toc-org tagedit symon string-inflection sphinx-doc spaceline-all-the-icons smeargle slim-mode slack shell-pop scss-mode sayid sass-mode restclient-helm restart-emacs rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort py-autopep8 pug-mode powershell popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file ob-restclient ob-http nix-mode neotree nameless multi-term move-text markdown-toc magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint kotlin-mode json-navigator json-mode js2-refactor js-doc jabber intero indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-nixos-options helm-mode-manager helm-make helm-hoogle helm-gitignore helm-flx helm-descbinds helm-ctest helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy font-lock+ flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks engine-mode emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig easy-kill dumb-jump disaster diminish define-word dante cython-mode csv-mode counsel-projectile company-web company-tern company-statistics company-rtags company-restclient company-quickhelp company-nixos-options company-ghci company-ghc company-emoji company-cabal company-c-headers company-anaconda command-log-mode column-enforce-mode cmm-mode cmake-mode cmake-ide clojure-snippets clojure-cheatsheet clj-refactor clean-aindent-mode clang-format cider-eval-sexp-fu centered-cursor-mode cargo auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (insert-shebang helm-gtags ggtags flycheck-bashate fish-mode counsel-gtags company-shell stickyfunc-enhance srefactor yasnippet-snippets yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify vue-mode volatile-highlights vi-tilde-fringe uuidgen use-package twittering-mode toml-mode toc-org tagedit symon string-inflection sphinx-doc spaceline-all-the-icons smeargle slim-mode slack shell-pop scss-mode sayid sass-mode restclient-helm restart-emacs rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort py-autopep8 pug-mode powershell popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file ob-restclient ob-http nix-mode neotree nameless multi-term move-text markdown-toc magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint kotlin-mode json-navigator json-mode js2-refactor js-doc jabber intero indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-nixos-options helm-mode-manager helm-make helm-hoogle helm-gitignore helm-flx helm-descbinds helm-ctest helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy font-lock+ flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks engine-mode emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig easy-kill dumb-jump disaster diminish define-word dante cython-mode csv-mode counsel-projectile company-web company-tern company-statistics company-rtags company-restclient company-quickhelp company-nixos-options company-ghci company-ghc company-emoji company-cabal company-c-headers company-anaconda command-log-mode column-enforce-mode cmm-mode cmake-mode cmake-ide clojure-snippets clojure-cheatsheet clj-refactor clean-aindent-mode clang-format cider-eval-sexp-fu centered-cursor-mode cargo auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(popwin:special-display-config
    (quote
     (("^\\*Flycheck.+\\*$" :regexp t :position bottom :noselect t :dedicated t :stick t)
@@ -853,7 +862,12 @@ This function is called at the very end of Spacemacs initialization."
      (" *undo-tree*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
      ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
      ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
+     (magit-status-mode :position right :width 0.5 :noselect nil :dedicated t :stick t)
+     ("*nosetests*" :position right :width 0.5 :noselect nil :dedicated t :stick t)
      ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick nil))))
+ '(projectile-globally-ignored-directories
+   (quote
+    ("platform_venv" ".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "site-packages")))
  '(py-autopep8-options (quote ("--max-line-length=100")))
  '(pyvenv-virtualenvwrapper-python "/usr/bin/python")
  '(safe-local-variable-values
@@ -870,7 +884,7 @@ This function is called at the very end of Spacemacs initialization."
  '(spacemacs-large-file-modes-list
    (quote
     (tags-table-mode archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode)))
- '(split-width-threshold 0) ;; To always split vertically
+ '(split-width-threshold 0)
  '(tags-add-tables nil)
  '(term-buffer-maximum-size 50000)
  '(tramp-default-method "ssh" nil (tramp))

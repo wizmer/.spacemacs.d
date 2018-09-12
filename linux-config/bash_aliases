@@ -39,7 +39,7 @@ function cdl {
 
 # a 'cd' followed by 'ls -lrt'
 function c {
-    cd $1 && ls -lrt;
+    cd $1 && l
 }
 
 # open file as if double-clicked on
