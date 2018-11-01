@@ -74,3 +74,5 @@ GPATH
 GRTAGS
 GSYMS
 GTAGS
+
+.gdb_history

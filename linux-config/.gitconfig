@@ -5,6 +5,7 @@
 	st = status
 	rem = remote -vv
 	lg = log --all --graph\n--pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\n--abbrev-commit --date=relative
+	no-edit = git commit --amend --no-edit
 [push]
 	default = simple
 [core]
