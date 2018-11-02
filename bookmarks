@@ -2,28 +2,28 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("projectionizer"
+(("notes"
+ (filename . "/nfs4/bbp.epfl.ch/user/bcoste/private/notes/")
+ (front-context-string . "notes_morpho.org")
+ (rear-context-string . "3K Dec 19 11:27 ")
+ (position . 315))
+("bg"
+ (filename . "/ssh:bcoste@bbpbg1.cscs.ch:/gpfs/bbp.cscs.ch/home/bcoste/")
+ (front-context-string . "simu\n  drwxr-xr-")
+ (rear-context-string . "0K Nov 21 11:49 ")
+ (position . 3765))
+("projectionizer"
  (filename . "/ssh:bcoste@bbpviz2.cscs.ch:/gpfs/bbp.cscs.ch/home/bcoste/workspace/projectionizer/")
  (front-context-string . "v2\n  drwxr-xr-x ")
  (rear-context-string . "0K Oct 26 11:45 ")
  (position . 1229))
-("pruning_part"
- (filename . "~/workspace/morphology/projectionizer/tools/thalamocortical_ps_s2f.py")
- (front-context-string . "def parameter_fr")
- (rear-context-string . "()\n            \n")
- (position . 2699))
 ("workspace"
  (filename . "~/workspace/")
  (front-context-string . "clojure\n  drwxr-")
  (rear-context-string . "0K Oct 10 11:44 ")
  (position . 291))
-("COLS"
- (filename . "~/workspace/morphology/neurom/neurom/core/dataformat.py")
- (front-context-string . "class COLS(objec")
- (rear-context-string . "COL_COUNT = 7\n\n\n")
- (position . 1744))
 ("viz"
- (filename . "/ssh:bcoste@bbpviz2.cscs.ch:/gpfs/bbp.cscs.ch/home/bcoste/workspace/")
+ (filename . "/ssh:bcoste@bbpviz2.bbp.epfl.ch:/gpfs/bbp.cscs.ch/home/bcoste/workspace/")
  (front-context-string)
  (rear-context-string . "96 Oct 16 11:06 ")
  (position . 222))
@@ -35,11 +35,6 @@
 ("repository"
  (filename . "~/workspace/repository/")
  (front-context-string . "  /home/bcoste/w")
- (rear-context-string)
- (position . 1))
-("hooks.el"
- (filename . "~/.spacemacs.d/hooks.el")
- (front-context-string . "(require 'py-aut")
  (rear-context-string)
  (position . 1))
 (".profile"
@@ -54,9 +49,9 @@
  (position . 5768))
 ("neurom"
  (filename . "~/workspace/morphology/neurom/")
- (front-context-string . "__pycache__\n  -r")
- (rear-context-string . "96 Sep 28 13:23 ")
- (position . 3331))
+ (front-context-string . ".travis.yml\n  dr")
+ (rear-context-string . "49 Apr 30 11:24 ")
+ (position . 3240))
 ("init.el"
  (filename . "~/.spacemacs.d/init.el")
  (front-context-string . "bookmark-default")

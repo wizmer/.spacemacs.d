@@ -1,14 +1,20 @@
-
-
-[user]
-name = wizmer
-email = ben.coste@gmail.com
 [alias]
-co = checkout
-br = branch
-ci = commit
-st = status
-last = log -1 HEAD
-exists = ls-files --error-unmatch
+	co = checkout
+	br = branch -vv
+	ci = commit
+	st = status
+	rem = remote -vv
+	lg = log --all --graph\n--pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\n--abbrev-commit --date=relative
+	no-edit = git commit --amend --no-edit
 [push]
-default = simple
+	default = simple
+[core]
+	editor = vim
+	excludesfile = $HOME/.spacemacs.d/linux-config/gitignore
+[commit]
+	gpgsign = false
+[pull]
+	rebase = true
+[user]
+  name = Benoît Coste
+	email = benoit.coste@protonmail.com
