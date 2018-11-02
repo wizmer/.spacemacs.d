@@ -411,9 +411,11 @@ It should only modify the values of Spacemacs settings."
 
   (load-file "~/.spacemacs.d/hooks.el")
 
-  (when (require 'slack nil :noerror)
-    (progn (load-file "~/.spacemacs.d/slack-secret.el")
-           (slack-start)))
+  (let ((slack-secret "~/.spacemacs.d/slack-secret.el"))
+    (when (and (require 'slack nil :noerror)
+               (file-exists-p slack-secret))
+      (progn (load-file slack-secret)
+             (slack-start))))
 
   (eval-after-load "enriched"
     '(defun enriched-decode-display-prop (start end &optional param)
