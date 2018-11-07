@@ -57,9 +57,7 @@ This function should only modify configuration layer settings."
      command-log
      csv
      emacs-lisp
-     erc
      git
-     haskell
      (helm :variables helm-use-fuzzy 'source)
      html
      imenu-list
@@ -72,7 +70,6 @@ This function should only modify configuration layer settings."
              ;; python-sort-imports-on-save t
              ;; python-remove-unused-imports-on-save nil
              )
-     restclient
      rust
      search-engine
      semantic
@@ -91,8 +88,7 @@ This function should only modify configuration layer settings."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(kotlin-mode
-                                      vue-mode
+   dotspacemacs-additional-packages '(vue-mode
                                       sphinx-doc
                                       py-autopep8
                                       easy-kill)
@@ -109,7 +105,7 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-but-keep-unused))
 
 (defun dotspacemacs/init ()
   "Initialization:
@@ -497,8 +493,6 @@ It should only modify the values of Spacemacs settings."
     (newline-and-indent))
 
   (menu-bar-mode 1)
-                                        ;  (spaceline-toggle-minor-modes-off)
-                                        ;  (define-key xref--xref-buffer-mode-map (kbd "q") 'evil-quit)
 
   (defun nosetests-nose-command()
     "PYTHONPATH=${PYTHONPATH}:/home/bcoste/workspace/morphology/io/build/binds/python LD_PRELOAD=\"/home/bcoste/workspace/morphology/io/build/brion/libbrion.so /home/bcoste/workspace/morphology/io/build/brain/libbrain.so\" /usr/bin/env python $(which nosetests)"
@@ -579,8 +573,6 @@ It should only modify the values of Spacemacs settings."
     "o (" 'swap-parens)
 
 
-
-
   ;; To recognize hoplon files correctly add this to your .emacs
   (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
 
@@ -631,9 +623,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (add-to-list 'auto-mode-alist '("\\.ipp\\'" . c++-mode))
   ;;Nom de la fonction dans la barre
   ;; (which-function-mode 1)
-
-
-  (setq-default ispell-program-name "aspell")
 
   (defun back-to-indentation-or-beginning-of-line ()
     "Go to the first non-blank char of the line if not already on it
@@ -715,8 +704,6 @@ Else, go to the beggining of line"
               (insert path)
               (term-send-input)
               )))))
-
-
 
   (defun to-c++ ()
     "Reformat python code to c++ code"
@@ -833,6 +820,7 @@ This function is called at the very end of Spacemacs initialization."
  '(helm-grep-ignored-directories
    (quote
     ("build/" "SCCS/" "RCS/" "CVS/" "MCVS/" ".svn/" ".git/" ".hg/" ".bzr/" "_MTN/" "_darcs/" "{arch}/" ".gvfs/" "site-packages/" ".tox")))
+ '(helm-window-prefer-horizontal-split t)
  '(hippie-expand-try-functions-list
    (quote
     (try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
@@ -888,7 +876,8 @@ This function is called at the very end of Spacemacs initialization."
  '(spacemacs-large-file-modes-list
    (quote
     (tags-table-mode archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode)))
- '(split-width-threshold 0)
+ '(split-height-threshold 0)
+ '(split-width-threshold nil)
  '(tags-add-tables nil)
  '(term-buffer-maximum-size 50000)
  '(tramp-default-method "ssh")
