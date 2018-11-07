@@ -77,7 +77,7 @@ This function should only modify configuration layer settings."
      search-engine
      semantic
      shell-script
-     spacemacs-purpose
+     ;; spacemacs-purpose
      super-save
      twitter
      shell
@@ -832,7 +832,7 @@ This function is called at the very end of Spacemacs initialization."
  '(helm-ff-skip-boring-files t)
  '(helm-grep-ignored-directories
    (quote
-    ("SCCS/" "RCS/" "CVS/" "MCVS/" ".svn/" ".git/" ".hg/" ".bzr/" "_MTN/" "_darcs/" "{arch}/" ".gvfs/" "site-packages/" ".tox")))
+    ("build/" "SCCS/" "RCS/" "CVS/" "MCVS/" ".svn/" ".git/" ".hg/" ".bzr/" "_MTN/" "_darcs/" "{arch}/" ".gvfs/" "site-packages/" ".tox")))
  '(hippie-expand-try-functions-list
    (quote
     (try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
@@ -846,7 +846,7 @@ This function is called at the very end of Spacemacs initialization."
     ("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org")))
  '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (plantuml . t))))
  '(org-confirm-babel-evaluate nil)
- '(org-directory "~/notes")
+ '(org-directory "~/notes" t)
  '(org-jira-working-dir "~/org-jira/")
  '(org-mobile-agenda (quote default))
  '(org-mobile-directory "~/Dropbox/mobileOrg-benoit")
@@ -866,11 +866,12 @@ This function is called at the very end of Spacemacs initialization."
      ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
      ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
      (magit-status-mode :position right :width 0.5 :noselect nil :dedicated t :stick t)
+     ("*compilation*" :position right :width 0.5 :noselect t :dedicated nil :stick t)
      ("*nosetests*" :position right :width 0.5 :noselect t :dedicated t :stick t)
      ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick nil))))
  '(projectile-globally-ignored-directories
    (quote
-    (".tox" "platform_venv" ".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "site-packages")))
+    ("build" ".tox" "platform_venv" ".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "site-packages")))
  '(py-autopep8-options (quote ("--max-line-length=100")))
  '(pyvenv-virtualenvwrapper-python "/usr/bin/python")
  '(safe-local-variable-values

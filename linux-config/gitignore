@@ -76,3 +76,6 @@ GSYMS
 GTAGS
 
 .gdb_history
+.venv
+
+*.egg-info
