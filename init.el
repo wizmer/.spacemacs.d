@@ -74,7 +74,7 @@ This function should only modify configuration layer settings."
      search-engine
      semantic
      shell-script
-     ;; spacemacs-purpose
+     spacemacs-purpose
      super-save
      twitter
      shell
@@ -578,11 +578,11 @@ It should only modify the values of Spacemacs settings."
 
   (load-file "~/.spacemacs.d/hooks.el")
 
-  (let ((slack-secret "~/.spacemacs.d/slack-secret.el"))
-    (when (and (require 'slack nil :noerror)
-               (file-exists-p slack-secret))
-      (progn (load-file slack-secret)
-             (slack-start))))
+  ;; (let ((slack-secret "~/.spacemacs.d/slack-secret.el"))
+  ;;   (when (and (require 'slack nil :noerror)
+  ;;              (file-exists-p slack-secret))
+  ;;     (progn (load-file slack-secret)
+  ;;            (slack-start))))
 
   (when (string-prefix-p "bluebrain" (system-name))
     (load-file "~/.spacemacs.d/bbp.el"))
@@ -854,12 +854,12 @@ This function is called at the very end of Spacemacs initialization."
      ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
      ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
      (magit-status-mode :position right :width 0.5 :noselect nil :dedicated t :stick t)
-     ("*compilation*" :position right :width 0.5 :noselect t :dedicated nil :stick t)
-     ("*nosetests*" :position right :width 0.5 :noselect t :dedicated t :stick t)
+     ("*compilation*" :position right :width 0.5 :noselect nil :dedicated nil :stick t)
+     ("*nosetests*" :position right :width 0.5 :noselect t :dedicated nil :stick nil)
      ("*Help*" :height 0.4 :position bottom :noselect t :dedicated t :stick nil))))
  '(projectile-globally-ignored-directories
    (quote
-    ("build" ".tox" "platform_venv" ".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "site-packages")))
+    ("build" ".tox" "platform_venv" ".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".stack-work" "site-packages")))
  '(py-autopep8-options (quote ("--max-line-length=100")))
  '(pyvenv-virtualenvwrapper-python "/usr/bin/python")
  '(safe-local-variable-values
