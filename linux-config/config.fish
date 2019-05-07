@@ -7,7 +7,8 @@ or set -gx OMF_PATH "$HOME/.local/share/omf"
 source $OMF_PATH/init.fish
 
 function gpfs
-    sshfs bbpviz2.bbp.epfl.ch:/gpfs /gpfs -o reconnect
+    # sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect
+    mount_gpfs
 end
 
 function bb5
@@ -173,11 +174,9 @@ function root
 	  docker run -it -u 0 --rm --entrypoint /bin/bash -v $argv:/blah centos
 end
 
-function viewer
-    set cmd "import neurom; from neurom.view.plotly import draw; draw(neurom.load_neuron('"$argv"')) "
-    /home/bcoste/.virtualenvs/viewer2/bin/python -c $cmd
+function mm
+    cd /gpfs/bbp.cscs.ch/project/proj68/model-management/o1-mm
 end
-
 
 eval (python -m virtualfish auto_activation global_requirements projects)
 # source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
@@ -197,3 +196,19 @@ set -x NEXUS_TOKEN "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJON
 set -x NEXUS_ORG "thalamusproject"
 set -x NEXUS_BASE https://bbp-nexus.epfl.ch/staging/v0
 set -x LD_LIBRARY_PATH $LD_LIBRARY_PATH /home/bcoste/workspace/morphology/io/build/src/
+
+set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
+if not test -d /gpfs/bbp.cscs.ch/project/
+    echo "gpfs is not mounted yet"
+    echo "Mounting gpfs ..."
+    if type -q gpfs
+        echo "Use 'gpfs' command"
+        gpfs
+    else
+        echo "No gpfs prefered command. Use:"
+        echo $default_gpfs_command
+        eval $default_gpfs_command
+    end
+end
+
+alias r='cd /gpfs/bbp.cscs.ch/project/proj55/bcoste/'
