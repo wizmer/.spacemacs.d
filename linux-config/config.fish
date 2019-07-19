@@ -6,11 +6,6 @@ or set -gx OMF_PATH "$HOME/.local/share/omf"
 # Load Oh My Fish configuration.
 source $OMF_PATH/init.fish
 
-function gpfs
-    # sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect
-    mount_gpfs
-end
-
 function bb5
     ssh -X bbpv1.epfl.ch
 end
@@ -138,12 +133,16 @@ function f --description '
     printf '%s\n' "$res"
 end
 
-function lf --description 'Return the last modified file in the current directory'
-    ls -Art | tail -n 1
+function lf --description 'Return the last modified file in the directory'
+    echo (realpath "$argv")"/"(ls -Art $argv | tail -n 1)
+end
+
+function ol --description "open the most recently modified file of the directory (mnemonic: open last)"
+    o (lf $argv)
 end
 
 function lastless --description 'Open less on the last modified file'
-    less (lf)
+    less (lf $argv)
 end
 
 function lastvim --description 'Open vim on the last modified file'
@@ -187,7 +186,7 @@ eval (python -m virtualfish auto_activation global_requirements projects)
 
 
 
-set DEVPI_ARG --index-url "https://bbpteam.epfl.ch/repository/devpi/bbprelman/dev/+simple/"
+set DEVPI --index-url "https://bbpteam.epfl.ch/repository/devpi/bbprelman/dev/+simple/"
 set CDPATH . /home/bcoste/workspace/nexus/ /home/bcoste/workspace/nse /home/bcoste/workspace/infra /home/bcoste/workspace/hbp /home/bcoste/workspace/morphology/ /home/bcoste/workspace/hpc/
 source ~/bin/nexus-cli.fish
 
@@ -197,7 +196,8 @@ set -x NEXUS_ORG "thalamusproject"
 set -x NEXUS_BASE https://bbp-nexus.epfl.ch/staging/v0
 set -x LD_LIBRARY_PATH $LD_LIBRARY_PATH /home/bcoste/workspace/morphology/io/build/src/
 
-set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
+# set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
+set -l default_gpfs_command "mount_gpfs"
 if not test -d /gpfs/bbp.cscs.ch/project/
     echo "gpfs is not mounted yet"
     echo "Mounting gpfs ..."
@@ -212,3 +212,4 @@ if not test -d /gpfs/bbp.cscs.ch/project/
 end
 
 alias r='cd /gpfs/bbp.cscs.ch/project/proj55/bcoste/'
+alias acr='git add -u; and git commit --amend --no-edit; and git review'
