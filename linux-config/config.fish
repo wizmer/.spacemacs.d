@@ -33,6 +33,10 @@ function ......
     cd ../../../../..
 end
 
+function morph-view
+    neurom view --backend plotly $argv
+end
+
 function pipi
     pip install $argv
 end
@@ -41,6 +45,15 @@ function gca
     git commit --amend --no-edit
 end
 
+function acr
+    git add -u
+    git commit --amend --no-edit
+    git review
+end
+
+function my-diff
+    git diff master:$argv[1] $argv[2]
+end
 
 # . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null and pwd )"/enumerate_ls.sh
 
@@ -64,7 +77,6 @@ end
 function urpad
     ssh -X bcoste@209.148.83.200
 end
-
 
 function cdl --description "cd to the most recently modified directory (mnemonic: cd last)"
     set dir (ls -lrtd */ | tail -1 | awk '{print $9}')
@@ -149,6 +161,10 @@ function lastvim --description 'Open vim on the last modified file'
     vim (lf)
 end
 
+function rgrep-all --description 'rgrep but excluting unwanted dirs'
+    find . \( -name .tox -prune \) -o -name "*.py" -exec grep --color -Hn "$argv" \{\} 2>/dev/null \;
+end
+
 # function foreach --description '
 #     Call first argument (which has to be a function) with each other arguments
 #     Example: foreach xdg-open *.png
@@ -187,14 +203,15 @@ eval (python -m virtualfish auto_activation global_requirements projects)
 
 
 set DEVPI --index-url "https://bbpteam.epfl.ch/repository/devpi/bbprelman/dev/+simple/"
-set CDPATH . /home/bcoste/workspace/nexus/ /home/bcoste/workspace/nse /home/bcoste/workspace/infra /home/bcoste/workspace/hbp /home/bcoste/workspace/morphology/ /home/bcoste/workspace/hpc/
+set CDPATH . /home/bcoste/workspace/
 source ~/bin/nexus-cli.fish
 
 set -x NEXUS_TOKEN "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJONS1CU0ZxZG5NS3Y4SWtKUkg1R3E0LVA2c1RWQUxwU0EydGNQeEpWM1NBIn0.eyJqdGkiOiJmNTA2NzMwNS0zYzI4LTQ3OGMtYjIyNS1mMGM4NjQ2YzljYjEiLCJleHAiOjE1NDQwODUyNjUsIm5iZiI6MCwiaWF0IjoxNTQzNDgwNDY1LCJpc3MiOiJodHRwczovL2JicHRlYW0uZXBmbC5jaC9hdXRoL3JlYWxtcy9CQlAiLCJhdWQiOiJiYnAtbmV4dXMtc3RhZ2luZyIsInN1YiI6ImY6OWQ0NmRkZDYtMTM0ZS00NGQ2LWFhNzQtYmRmMDBmNDhkZmNlOmJjb3N0ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJicC1uZXh1cy1zdGFnaW5nIiwiYXV0aF90aW1lIjoxNTQzNDgwNDY1LCJzZXNzaW9uX3N0YXRlIjoiNzY5ZWMxMzEtMmQ0NC00ZWVjLWFlMWItNjJlOGZkMWYzYzNmIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIvKiJdLCJyZXNvdXJjZV9hY2Nlc3MiOnt9LCJzY29wZSI6Im9wZW5pZCBuZXh1cyIsIm5hbWUiOiJCZW5vw650IEplYW4tQWxiZXJ0IENvc3RlIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYmNvc3RlIiwiZ2l2ZW5fbmFtZSI6IkJlbm_DrnQgSmVhbi1BbGJlcnQiLCJmYW1pbHlfbmFtZSI6IkNvc3RlIiwiZW1haWwiOiJiZW5vaXQuY29zdGVAZXBmbC5jaCJ9.eAmll8Ijs0TIoOMe2IgNFL0n1dht4W3gqfqsSJkmf2pxd_di07caoHQTSo2DNCr6i3tBM-OB5wrYjYiQn5peTC-zT0drN8MYNXsYSLZAYz_pdqrM4pkb096PdyuggvdfR0FasSkP-_OmxkUjg4YFz2bwNyrm-duTyZGHcPVQPBqj4qxe5oghW24MmJzivQrORK55NqXQrH5qmCC8NHMIJrwmE8eNnzlMYOm0OJQpho0_h_J23oDry8M-QP8-B1EccTZ_LRfEbY6kcaW7fjvj8xWF8WEYN_C3Hs-nuHrrqoJe82gVzoCMfhHLrgNbHNW3sq_20wpycrDlTLQqMnWRrg"
 
 set -x NEXUS_ORG "thalamusproject"
 set -x NEXUS_BASE https://bbp-nexus.epfl.ch/staging/v0
-set -x LD_LIBRARY_PATH $LD_LIBRARY_PATH /home/bcoste/workspace/morphology/io/build/src/
+# set -x LD_LIBRARY_PATH $LD_LIBRARY_PATH /home/bcoste/workspace/morphology/io/build/src/
+set -x EDITOR vim
 
 # set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
 set -l default_gpfs_command "mount_gpfs"
@@ -210,6 +227,10 @@ if not test -d /gpfs/bbp.cscs.ch/project/
         eval $default_gpfs_command
     end
 end
+
+# set -x CC clang
+# set -x CXX clang
+
 
 alias r='cd /gpfs/bbp.cscs.ch/project/proj55/bcoste/'
 alias acr='git add -u; and git commit --amend --no-edit; and git review'

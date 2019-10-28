@@ -53,7 +53,7 @@ This function should only modify configuration layer settings."
       :variables
       c-c++-default-mode-for-headers 'c++-mode
       c-c++-enable-clang-support t)
-     clojure
+     ;; clojure
      cmake
      command-log
      csv
@@ -72,12 +72,12 @@ This function should only modify configuration layer settings."
              ;; python-sort-imports-on-save t
              ;; python-remove-unused-imports-on-save nil
              )
-     rust
+     ;; rust
      search-engine
      semantic
-     shell-script
+     ;; shell-script
      spacemacs-purpose
-     super-save
+     ;; super-save
      twitter
      shell
      slack
@@ -609,6 +609,8 @@ See the header of this file for more information."
   (eval-after-load "enriched"
     '(defun enriched-decode-display-prop (start end &optional param)
        (list start end)))
+
+  (global-column-enforce-mode t)
   )
 
 (defun dotspacemacs/user-load ()
@@ -818,6 +820,7 @@ This function is called at the very end of Spacemacs initialization."
  '(cider-boot-parameters "cider repl -s wait")
  '(cider-prompt-save-file-on-load (quote always-save) t)
  '(cider-save-file-on-load (quote always-save))
+ '(column-enforce-column 100)
  '(compilation-always-kill t)
  '(compilation-ask-about-save nil)
  '(compilation-read-command t)
@@ -852,7 +855,7 @@ This function is called at the very end of Spacemacs initialization."
     ("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org")))
  '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (plantuml . t))))
  '(org-confirm-babel-evaluate nil)
- '(org-directory "~/notes")
+ '(org-directory "~/notes" t)
  '(org-jira-working-dir "~/org-jira/")
  '(org-mobile-agenda (quote default))
  '(org-mobile-directory "~/Dropbox/mobileOrg-benoit")
