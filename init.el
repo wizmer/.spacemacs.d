@@ -510,6 +510,8 @@ See the header of this file for more information."
     (insert "\" << std::endl;")
     (newline-and-indent))
 
+  (setq mac-command-modifier 'meta)
+
   (menu-bar-mode 1)
 
   (defun nosetests-nose-command()
