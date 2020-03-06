@@ -213,8 +213,12 @@ set -x NEXUS_BASE https://bbp-nexus.epfl.ch/staging/v0
 # set -x LD_LIBRARY_PATH $LD_LIBRARY_PATH /home/bcoste/workspace/morphology/io/build/src/
 set -x EDITOR vim
 
-# set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
-set -l default_gpfs_command "mount_gpfs"
+if type -q mount_gpfs
+    set -l default_gpfs_command "mount_gpfs"
+else
+    set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
+end
+
 if not test -d /gpfs/bbp.cscs.ch/project/
     echo "gpfs is not mounted yet"
     echo "Mounting gpfs ..."
