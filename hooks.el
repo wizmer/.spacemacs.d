@@ -9,6 +9,7 @@
 ;; Always save before sending to buffer
 (advice-add 'python-shell-send-buffer :before #'save-buffer)
 
+(add-to-list 'auto-mode-alist '("\\.asc\\'" . fundamental-mode))
 (add-to-list 'auto-mode-alist '("\\.tpp\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 (defun clang-format-on-save ()

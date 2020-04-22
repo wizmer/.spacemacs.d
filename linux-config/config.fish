@@ -5,6 +5,9 @@ or set -gx OMF_PATH "$HOME/.local/share/omf"
 
 # Load Oh My Fish configuration.
 source $OMF_PATH/init.fish
+set -g theme_vcs_ignore_paths /gpfs
+
+
 
 function bb5
     ssh -X bbpv1.epfl.ch
