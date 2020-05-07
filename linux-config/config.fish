@@ -192,10 +192,6 @@ function root
 	  docker run -it -u 0 --rm --entrypoint /bin/bash -v $argv:/blah centos
 end
 
-function mm
-    cd /gpfs/bbp.cscs.ch/project/proj68/model-management/o1-mm
-end
-
 eval (python -m virtualfish auto_activation global_requirements projects)
 # source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 # source $HOME/.spacemacs.d/linux-config/bash_aliases
@@ -239,5 +235,6 @@ end
 # set -x CXX clang
 
 
-alias r='cd /gpfs/bbp.cscs.ch/project/proj55/bcoste/'
 alias acr='git add -u; and git commit --amend --no-edit; and git review'
+alias m='morpheus'
+alias ma='morpheus-admin'
