@@ -1,10 +1,10 @@
-# Path to Oh My Fish install.
-set -q XDG_DATA_HOME
-and set -gx OMF_PATH "$XDG_DATA_HOME/omf"
-or set -gx OMF_PATH "$HOME/.local/share/omf"
+# # Path to Oh My Fish install.
+# set -q XDG_DATA_HOME
+# and set -gx OMF_PATH "$XDG_DATA_HOME/omf"
+# or set -gx OMF_PATH "$HOME/.local/share/omf"
 
-# Load Oh My Fish configuration.
-source $OMF_PATH/init.fish
+# # Load Oh My Fish configuration.
+# source $OMF_PATH/init.fish
 set -g theme_vcs_ignore_paths /gpfs
 
 
@@ -86,10 +86,6 @@ function cdl --description "cd to the most recently modified directory (mnemonic
     cd $dir
 end
 
-function c --description "a 'cd' followed by 'ls -lrt'"
-    cd $argv[1] and l
-end
-
 function o --description "open file as if double-clicked on"
     xdg-open $argv
 end
@@ -102,15 +98,15 @@ function sel --description "
     Filter the input to select the given line and row
     Example: ls -lrt | sel 2 8 # to get the modification time of the 2nd file
     To be used in conjonction with the pipe to select a given line and column from stdout"
-    line=$argv[1]
-    col=$argv[2]
+    set line $argv[1]
+    set col $argv[2]
 
     if [[ "$line" == "" ]]; then
-        line=1
+        set line 1
     end
 
     if [[ "$col" == "" ]]; then
-        col=9
+        set col 9
     end
 
     set count 1
@@ -132,6 +128,19 @@ function clip --description '
     Example: "clip pwd" to copy the current path to clipboard
     '
     eval $argv | xclip -selection clipboard
+end
+
+function compare-plot --description "clip path"
+    neurom view --backend plotly /gpfs/bbp.cscs.ch/project/proj59/release_2017-10/output-2017-10-30/05_RepairUnravel/$argv[1] $argv[2] $argv[3]
+    neurom view --backend plotly /gpfs/bbp.cscs.ch/data/project_no_backup/proj82_no_backup/bcoste/02-07-2020/out/morphology-release/05_RepairUnravel/$argv[1] $argv[2] $argv[3]
+end
+
+function c --description "clip path"
+    clip realpath $argv
+end
+
+function cdls --description "a 'cd' followed by 'ls -lrt'"
+    cd $argv[1] and l
 end
 
 function z --description 'Copy the argument to clipboard'
@@ -192,7 +201,7 @@ function root
 	  docker run -it -u 0 --rm --entrypoint /bin/bash -v $argv:/blah centos
 end
 
-eval (python -m virtualfish auto_activation global_requirements projects)
+# eval (python -m virtualfish auto_activation global_requirements projects)
 # source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 # source $HOME/.spacemacs.d/linux-config/bash_aliases
 # source $HOME/.rvm/scripts/rvm # Load RVM into a shell session *as a function*
@@ -218,18 +227,18 @@ else
     set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
 end
 
-if not test -d /gpfs/bbp.cscs.ch/project/
-    echo "gpfs is not mounted yet"
-    echo "Mounting gpfs ..."
-    if type -q gpfs
-        echo "Use 'gpfs' command"
-        gpfs
-    else
-        echo "No gpfs prefered command. Use:"
-        echo $default_gpfs_command
-        eval $default_gpfs_command
-    end
-end
+# if not test -d /gpfs/bbp.cscs.ch/project/
+#     echo "gpfs is not mounted yet"
+#     echo "Mounting gpfs ..."
+#     if type -q gpfs
+#         echo "Use 'gpfs' command"
+#         gpfs
+#     else
+#         echo "No gpfs prefered command. Use:"
+#         echo $default_gpfs_command
+#         eval $default_gpfs_command
+#     end
+# end
 
 # set -x CC clang
 # set -x CXX clang
