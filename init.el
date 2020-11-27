@@ -721,8 +721,8 @@ Else, go to the beggining of line"
         (message filename))))
 
 
-  (defun bcoste-print-variable ()
-    (interactive)
+  (defun bcoste-print-variable (arg)
+    (interactive "P")
     (beginning-of-line)
     (evil-forward-word-begin)
     (let* ((content (buffer-substring (point) (line-end-position)))
@@ -738,6 +738,10 @@ Else, go to the beggining of line"
       (when (string= major-mode "c++-mode")
         (insert (concat "std::cout << \"" content-no-quote ": \" << " content " << std::endl;")))
       )
+    (evil-normal-state)
+    (save-buffer)
+    (if arg
+        (nosetests-again))
     )
 
   (defun switch-to-ansi-term-and-goto-current-directory ()

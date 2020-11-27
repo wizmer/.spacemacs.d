@@ -8,7 +8,6 @@
 set -g theme_vcs_ignore_paths /gpfs
 
 
-
 function bb5
     ssh -X bbpv1.epfl.ch
 end
@@ -221,6 +220,7 @@ set -x NEXUS_BASE https://bbp-nexus.epfl.ch/staging/v0
 # set -x LD_LIBRARY_PATH $LD_LIBRARY_PATH /home/bcoste/workspace/morphology/io/build/src/
 set -x EDITOR vim
 
+<<<<<<< HEAD
 if type -q mount_gpfs
     set -l default_gpfs_command "mount_gpfs"
 else
@@ -239,11 +239,32 @@ end
 #         eval $default_gpfs_command
 #     end
 # end
+=======
+# set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
+#set -l default_gpfs_command "mount_gpfs"
+#if not test -d /gpfs/bbp.cscs.ch/project/
+#    echo "gpfs is not mounted yet"
+#    echo "Mounting gpfs ..."
+#    if type -q gpfs
+#        echo "Use 'gpfs' command"
+#        gpfs
+#    else
+#        echo "No gpfs prefered command. Use:"
+#        echo $default_gpfs_command
+#        eval $default_gpfs_command
+#    end
+#end
+>>>>>>> bla
 
 # set -x CC clang
 # set -x CXX clang
 
 
 alias acr='git add -u; and git commit --amend --no-edit; and git review'
+<<<<<<< HEAD
 alias m='morpheus'
 alias ma='morpheus-admin'
+=======
+
+set -x DISPLAY 0
+>>>>>>> bla
