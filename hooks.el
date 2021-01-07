@@ -2,6 +2,7 @@
 ;; (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 (add-hook 'python-mode-hook (lambda () (setq forward-sexp-function nil)))
+(add-hook 'python-mode-hook 'hs-hide-initial-comment-block t)
 
 (add-hook 'cmake-mode-hook (lambda () (evil-local-set-key 'normal "q" 'quit-window )))
 ;; (add-hook 'before-save-hook 'py-isort-before-save)

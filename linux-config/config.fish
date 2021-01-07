@@ -1,10 +1,3 @@
-# # Path to Oh My Fish install.
-# set -q XDG_DATA_HOME
-# and set -gx OMF_PATH "$XDG_DATA_HOME/omf"
-# or set -gx OMF_PATH "$HOME/.local/share/omf"
-
-# # Load Oh My Fish configuration.
-# source $OMF_PATH/init.fish
 set -g theme_vcs_ignore_paths /gpfs
 
 
@@ -67,11 +60,22 @@ function gerrit
     git clone "ssh://bbpcode.epfl.ch:22/$argv[1]" $argv[2]
 end
 
-function ip
-    ipython
+function rchmod --argument-names 'directory' 'd_chmod' 'f_chmod'
+    if test -n "$d_chmod":
+        set d_chmod 755
+    end
+    if test -n "$f_chmod":
+        set f_chmod 664
+    end
+    find $directory -type d -exec chmod $d_chmod {} \;
+    find $directory -type f -exec chmod $f_chmod {} \;
 end
 
-function ccat --description "Colorized version of the cat command
+# function ip
+#     ipython
+# end
+
+function ccat --description "Colorized versioo of the cat command
     You might have to 'pip install pygments' first. But it's worth it !"
     pygmentize -O style=monokai -f console256 -g $argv
 end
@@ -129,9 +133,12 @@ function clip --description '
     eval $argv | xclip -selection clipboard
 end
 
-function compare-plot --description "clip path"
-    neurom view --backend plotly /gpfs/bbp.cscs.ch/project/proj59/release_2017-10/output-2017-10-30/05_RepairUnravel/$argv[1] $argv[2] $argv[3]
-    neurom view --backend plotly /gpfs/bbp.cscs.ch/data/project_no_backup/proj82_no_backup/bcoste/02-07-2020/out/morphology-release/05_RepairUnravel/$argv[1] $argv[2] $argv[3]
+function compare-plot --description "Compare neurom morph from different folders"
+    neurom view --backend plotly /gpfs/bbp.cscs.ch/project/proj83/home/gevaert/morph-release/morph_release_new_code-2020-09-01/output/04_RepairUnravel/unravel_output/$argv[1] $argv[2] $argv[3]
+    sleep 10
+    neurom view --backend plotly /gpfs/bbp.cscs.ch/project/proj83/home/gevaert/morph-release/morph_release_new_code-2020-09-01/output/04_RepairUnravel/$argv[1] $argv[2] $argv[3]
+    sleep 10
+    neurom view --backend plotly /gpfs/bbp.cscs.ch/project/proj83/home/gevaert/morph-release/morph_release_old_code-2020-07-27/output/06_RepairUnravel/$argv[1] $argv[2] $argv[3]
 end
 
 function c --description "clip path"
@@ -200,7 +207,6 @@ function root
 	  docker run -it -u 0 --rm --entrypoint /bin/bash -v $argv:/blah centos
 end
 
-# eval (python -m virtualfish auto_activation global_requirements projects)
 # source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 # source $HOME/.spacemacs.d/linux-config/bash_aliases
 # source $HOME/.rvm/scripts/rvm # Load RVM into a shell session *as a function*
@@ -211,60 +217,17 @@ end
 
 set DEVPI --index-url "https://bbpteam.epfl.ch/repository/devpi/bbprelman/dev/+simple/"
 set CDPATH . /home/bcoste/workspace/
-#source ~/bin/nexus-cli.fish
 
-set -x NEXUS_TOKEN "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJONS1CU0ZxZG5NS3Y4SWtKUkg1R3E0LVA2c1RWQUxwU0EydGNQeEpWM1NBIn0.eyJqdGkiOiJmNTA2NzMwNS0zYzI4LTQ3OGMtYjIyNS1mMGM4NjQ2YzljYjEiLCJleHAiOjE1NDQwODUyNjUsIm5iZiI6MCwiaWF0IjoxNTQzNDgwNDY1LCJpc3MiOiJodHRwczovL2JicHRlYW0uZXBmbC5jaC9hdXRoL3JlYWxtcy9CQlAiLCJhdWQiOiJiYnAtbmV4dXMtc3RhZ2luZyIsInN1YiI6ImY6OWQ0NmRkZDYtMTM0ZS00NGQ2LWFhNzQtYmRmMDBmNDhkZmNlOmJjb3N0ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJicC1uZXh1cy1zdGFnaW5nIiwiYXV0aF90aW1lIjoxNTQzNDgwNDY1LCJzZXNzaW9uX3N0YXRlIjoiNzY5ZWMxMzEtMmQ0NC00ZWVjLWFlMWItNjJlOGZkMWYzYzNmIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIvKiJdLCJyZXNvdXJjZV9hY2Nlc3MiOnt9LCJzY29wZSI6Im9wZW5pZCBuZXh1cyIsIm5hbWUiOiJCZW5vw650IEplYW4tQWxiZXJ0IENvc3RlIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYmNvc3RlIiwiZ2l2ZW5fbmFtZSI6IkJlbm_DrnQgSmVhbi1BbGJlcnQiLCJmYW1pbHlfbmFtZSI6IkNvc3RlIiwiZW1haWwiOiJiZW5vaXQuY29zdGVAZXBmbC5jaCJ9.eAmll8Ijs0TIoOMe2IgNFL0n1dht4W3gqfqsSJkmf2pxd_di07caoHQTSo2DNCr6i3tBM-OB5wrYjYiQn5peTC-zT0drN8MYNXsYSLZAYz_pdqrM4pkb096PdyuggvdfR0FasSkP-_OmxkUjg4YFz2bwNyrm-duTyZGHcPVQPBqj4qxe5oghW24MmJzivQrORK55NqXQrH5qmCC8NHMIJrwmE8eNnzlMYOm0OJQpho0_h_J23oDry8M-QP8-B1EccTZ_LRfEbY6kcaW7fjvj8xWF8WEYN_C3Hs-nuHrrqoJe82gVzoCMfhHLrgNbHNW3sq_20wpycrDlTLQqMnWRrg"
-
-set -x NEXUS_ORG "thalamusproject"
-set -x NEXUS_BASE https://bbp-nexus.epfl.ch/staging/v0
-# set -x LD_LIBRARY_PATH $LD_LIBRARY_PATH /home/bcoste/workspace/morphology/io/build/src/
 set -x EDITOR vim
-
-<<<<<<< HEAD
-if type -q mount_gpfs
-    set -l default_gpfs_command "mount_gpfs"
-else
-    set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
-end
-
-# if not test -d /gpfs/bbp.cscs.ch/project/
-#     echo "gpfs is not mounted yet"
-#     echo "Mounting gpfs ..."
-#     if type -q gpfs
-#         echo "Use 'gpfs' command"
-#         gpfs
-#     else
-#         echo "No gpfs prefered command. Use:"
-#         echo $default_gpfs_command
-#         eval $default_gpfs_command
-#     end
-# end
-=======
-# set -l default_gpfs_command "sshfs bbpv1.epfl.ch:/gpfs /gpfs -o reconnect"
-#set -l default_gpfs_command "mount_gpfs"
-#if not test -d /gpfs/bbp.cscs.ch/project/
-#    echo "gpfs is not mounted yet"
-#    echo "Mounting gpfs ..."
-#    if type -q gpfs
-#        echo "Use 'gpfs' command"
-#        gpfs
-#    else
-#        echo "No gpfs prefered command. Use:"
-#        echo $default_gpfs_command
-#        eval $default_gpfs_command
-#    end
-#end
->>>>>>> bla
 
 # set -x CC clang
 # set -x CXX clang
+
 
 
 alias acr='git add -u; and git commit --amend --no-edit; and git review'
 <<<<<<< HEAD
 alias m='morpheus'
 alias ma='morpheus-admin'
-=======
 
-set -x DISPLAY 0
->>>>>>> bla
+set -x PATH $HOME/.local/bin $PATH

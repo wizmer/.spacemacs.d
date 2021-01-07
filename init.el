@@ -73,7 +73,7 @@ This function should only modify configuration layer settings."
      (python :variables
              python-auto-set-local-pyvenv-virtualenv 'on-project-switch
              ;; python-sort-imports-on-save t
-             ;; python-remove-unused-imports-on-save nil
+             python-remove-unused-imports-on-save nil
              )
      ;; rust
      search-engine
@@ -97,6 +97,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(vue-mode
                                       sphinx-doc
                                       py-autopep8
+                                      pyimport
                                       easy-kill)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -405,7 +406,7 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
-   dotspacemacs-line-numbers 'visual
+   dotspacemacs-line-numbers 'nil
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -884,10 +885,9 @@ This function is called at the very end of Spacemacs initialization."
  '(dired-listing-switches "-lah")
  '(evil-want-C-i-jump t)
  '(evil-want-Y-yank-to-eol nil)
-
- ; disable because we want to run pylint as first checker at BBP
  '(flycheck-disabled-checkers '(python-flake8))
  '(gdb-many-windows t t)
+ '(git-commit-major-mode 'markdown-mode)
  '(grep-find-ignored-files
    '("*.whl" "*.so" ".#*" "*.hi" "*.o" "*~" "*.bin" "*.lbin" "*.so.*" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo"))
  '(helm-boring-file-regexp-list
@@ -908,7 +908,7 @@ This function is called at the very end of Spacemacs initialization."
    '("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org"))
  '(org-babel-load-languages '((python . t) (emacs-lisp . t) (plantuml . t)))
  '(org-confirm-babel-evaluate nil)
- '(org-directory "~/notes" t)
+ '(org-directory "~/notes")
  '(org-jira-working-dir "~/org-jira/")
  '(org-mobile-agenda 'default)
  '(org-mobile-directory "~/Dropbox/mobileOrg-benoit")
