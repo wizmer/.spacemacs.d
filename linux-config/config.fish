@@ -223,10 +223,19 @@ set -x EDITOR vim
 # set -x CC clang
 # set -x CXX clang
 
+function ox --description "Run tox and plays a sound depending on the outcome"
+    tox $argv
+    set return_status $status
+    if test $status -eq 0
+        aplay /usr/share/sounds/sound-icons/glass-water-1.wav
+    else
+        aplay /usr/share/sounds/sound-icons/guitar-12.wav
+    end
+    return $return_status
+end
 
 
 alias acr='git add -u; and git commit --amend --no-edit; and git review'
-<<<<<<< HEAD
 alias m='morpheus'
 alias ma='morpheus-admin'
 
