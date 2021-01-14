@@ -7,7 +7,7 @@
 	lg = log --all --graph\n--pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\n--abbrev-commit --date=relative
 	no-edit = git commit --amend --no-edit
 [push]
-	default = simple
+	default = current
 [core]
 	editor = vim
 	excludesfile = $HOME/.spacemacs.d/linux-config/gitignore
@@ -24,3 +24,7 @@
 	includeStatusHeader = false
 	includePullRequestsSection = false
 	includeIssuesSection = false
+[remote]
+	# Triangular workfow: push to origin but pull from upstream
+	# https://github.blog/2015-07-29-git-2-5-including-multiple-worktrees-and-triangular-workflows/
+	pushDefault = origin
