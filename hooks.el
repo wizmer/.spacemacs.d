@@ -5,7 +5,7 @@
 (add-hook 'python-mode-hook 'hs-hide-initial-comment-block t)
 
 (add-hook 'cmake-mode-hook (lambda () (evil-local-set-key 'normal "q" 'quit-window )))
-;; (add-hook 'before-save-hook 'py-isort-before-save)
+(add-hook 'before-save-hook 'pyimport-remove-unused)
 
 ;; Always save before sending to buffer
 (advice-add 'python-shell-send-buffer :before #'save-buffer)
