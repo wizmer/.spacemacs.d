@@ -1,0 +1,12 @@
+epc
+importmagic
+autoflake
+isort
+tox
+autopep8
+pip
+ipython
+mock
+nose
+jedi
+
