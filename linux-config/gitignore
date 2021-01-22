@@ -79,3 +79,4 @@ GTAGS
 .venv
 
 *.egg-info
+.eggs

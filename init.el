@@ -839,15 +839,6 @@ Else, go to the beggining of line"
       (comment-or-uncomment-region beg end)))
 
 
-
-  (defun convert-html-to-hlisp (html-str)
-    "take a html string and returns the corresponding hlisp string"
-    (interactive "shtml string ? ")
-    (insert (replace-regexp-in-string "<\\(\\w+\\) " "(\\1 " (replace-regexp-in-string " \\(\\w+\\)=" " :\\1 " (replace-regexp-in-string "</\\w+>" ")"   html-str)))))
-
-
-
-
   ;; better helm result sorting
   ;; https://github.com/emacs-helm/helm/issues/1492
   (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)

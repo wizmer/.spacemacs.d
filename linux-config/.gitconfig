@@ -10,7 +10,7 @@
 	default = current
 [core]
 	editor = vim
-	excludesfile = $HOME/.spacemacs.d/linux-config/gitignore
+	excludesfile = ~/.spacemacs.d/linux-config/gitignore
 [commit]
 	gpgsign = false
 [pull]
