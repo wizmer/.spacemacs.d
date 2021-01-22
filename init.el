@@ -97,6 +97,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(vue-mode
                                       sphinx-doc
                                       py-autopep8
+                                      (py-docformatter :location (recipe :fetcher github :repo "humitos/py-docformatter.el"))
                                       pyimport
                                       easy-kill)
    ;; A list of packages that cannot be updated.
