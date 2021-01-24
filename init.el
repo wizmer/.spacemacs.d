@@ -628,9 +628,7 @@ See the header of this file for more information."
   (global-set-key (kbd "C-a") 'back-to-indentation-or-beginning-of-line)
   (global-set-key (kbd "C-x <f2>") 'switch-to-ansi-term-and-goto-current-directory)
   (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
-  (global-set-key (kbd "C-c /") 'describe-foo-at-point)
 
-  (global-set-key (kbd "") 'describe-foo-at-point)
 
   (define-key evil-normal-state-map (kbd ", t l") 'nosetests-again)
 
@@ -645,9 +643,6 @@ See the header of this file for more information."
     "o (" 'swap-parens)
 
 
-  ;; To recognize hoplon files correctly add this to your .emacs
-  (add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
-
   (load-file "~/.spacemacs.d/hooks.el")
 
   ;; (let ((slack-secret "~/.spacemacs.d/slack-secret.el"))
@@ -660,6 +655,7 @@ See the header of this file for more information."
     '(defun enriched-decode-display-prop (start end &optional param)
        (list start end)))
 
+  ;; Highlight characters that are after column 100
   (global-column-enforce-mode t)
   )
 
