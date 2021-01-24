@@ -207,16 +207,12 @@ function root
 	  docker run -it -u 0 --rm --entrypoint /bin/bash -v $argv:/blah centos
 end
 
-# source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
-# source $HOME/.spacemacs.d/linux-config/bash_aliases
-# source $HOME/.rvm/scripts/rvm # Load RVM into a shell session *as a function*
-# source /home/bcoste/.nix-profile/etc/profile.d/nix.sh # added by Nix installer
 # alias dvorak='setxkbmap -layout us -variant dvp'
 
 
 
 set DEVPI --index-url "https://bbpteam.epfl.ch/repository/devpi/bbprelman/dev/+simple/"
-set CDPATH . /home/bcoste/workspace/
+set CDPATH . $HOME/workspace/
 
 set -x EDITOR vim
 
@@ -240,3 +236,8 @@ alias m='morpheus'
 alias ma='morpheus-admin'
 
 set -x PATH $HOME/.local/bin $PATH
+
+switch (uname)
+    case Darwin
+        . ~/.spacemacs.d/linux-config/config-macos.fish
+end

@@ -570,7 +570,7 @@ See the header of this file for more information."
     "PYTHONPATH=${PYTHONPATH}:/home/bcoste/workspace/morphology/io/build/binds/python LD_PRELOAD=\"/home/bcoste/workspace/morphology/io/build/brion/libbrion.so /home/bcoste/workspace/morphology/io/build/brain/libbrain.so\" /usr/bin/env python $(which nosetests)"
     ;; "PYTHONPATH=${PYTHONPATH}:/home/bcoste/workspace/morphology/io/build/binds/python LD_PRELOAD='/home/bcoste/workspace/morphology/io/build/brion/libbrion.so /home/bcoste/workspace/morphology/io/build/brain/libbrain.so' python -u -c \"import nose; nose.run()\""
     )
-  (setq bookmark-default-file "/home/bcoste/.spacemacs.d/bookmarks")
+  (setq bookmark-default-file "~/.spacemacs.d/bookmarks")
 
 
   (define-key company-active-map (kbd "C-f") 'nil)
@@ -655,10 +655,6 @@ See the header of this file for more information."
   ;;              (file-exists-p slack-secret))
   ;;     (progn (load-file slack-secret)
   ;;            (slack-start))))
-
-  (when (string-prefix-p "bluebrain" (system-name))
-    (load-file "~/.spacemacs.d/bbp.el"))
-
 
   (eval-after-load "enriched"
     '(defun enriched-decode-display-prop (start end &optional param)
