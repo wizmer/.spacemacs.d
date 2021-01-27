@@ -1,4 +1,7 @@
-from pathlib import Path
+try:
+    from pathlib import Path
+except:
+    pass
 
 try:
     import morphio as mio

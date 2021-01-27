@@ -1,0 +1,3 @@
+[submodule "packages/sphinx-doc"]
+	path = packages/sphinx-doc
+	url = git@github.com:wizmer/sphinx-doc.el
