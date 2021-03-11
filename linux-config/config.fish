@@ -241,3 +241,11 @@ switch (uname)
     case Darwin
         . ~/.spacemacs.d/linux-config/config-macos.fish
 end
+
+function push-notes --description "Push my notes to GitHub"
+    pushd ~/notes
+    git add -u
+    git commit -m "Push $argv"
+    git push
+    popd
+end
