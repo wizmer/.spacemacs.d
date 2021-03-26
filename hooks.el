@@ -1,5 +1,5 @@
 (require 'py-autopep8)
-(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+;; (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 (add-hook 'python-mode-hook (lambda () (setq forward-sexp-function nil)))
 (add-hook 'python-mode-hook 'hs-hide-initial-comment-block t)
