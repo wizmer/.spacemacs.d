@@ -1,14 +1,3 @@
-set -g theme_vcs_ignore_paths /gpfs
-
-
-function bb5
-    ssh -X bbpv1.epfl.ch
-end
-
-function em
-    emacs -nw $argv
-end
-
 function ..
     cd ..
 end
@@ -26,10 +15,6 @@ end
 
 function ......
     cd ../../../../..
-end
-
-function morph-view
-    neurom view --backend plotly $argv
 end
 
 function pipi
@@ -50,8 +35,6 @@ function my-diff
     git diff master:$argv[1] $argv[2]
 end
 
-# . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null and pwd )"/enumerate_ls.sh
-
 function github
     git clone git@github.com:$argv[1] $argv[2]
 end
@@ -71,17 +54,13 @@ function rchmod --argument-names 'directory' 'd_chmod' 'f_chmod'
     find $directory -type f -exec chmod $f_chmod {} \;
 end
 
-# function ip
-#     ipython
-# end
+function ip
+    ipython
+end
 
 function ccat --description "Colorized versioo of the cat command
     You might have to 'pip install pygments' first. But it's worth it !"
     pygmentize -O style=monokai -f console256 -g $argv
-end
-
-function urpad
-    ssh -X bcoste@209.148.83.200
 end
 
 function cdl --description "cd to the most recently modified directory (mnemonic: cd last)"
@@ -133,14 +112,6 @@ function clip --description '
     eval $argv | xclip -selection clipboard
 end
 
-function compare-plot --description "Compare neurom morph from different folders"
-    neurom view --backend plotly /gpfs/bbp.cscs.ch/project/proj83/home/gevaert/morph-release/morph_release_new_code-2020-09-01/output/04_RepairUnravel/unravel_output/$argv[1] $argv[2] $argv[3]
-    sleep 10
-    neurom view --backend plotly /gpfs/bbp.cscs.ch/project/proj83/home/gevaert/morph-release/morph_release_new_code-2020-09-01/output/04_RepairUnravel/$argv[1] $argv[2] $argv[3]
-    sleep 10
-    neurom view --backend plotly /gpfs/bbp.cscs.ch/project/proj83/home/gevaert/morph-release/morph_release_old_code-2020-07-27/output/06_RepairUnravel/$argv[1] $argv[2] $argv[3]
-end
-
 function c --description "clip path"
     clip realpath $argv
 end
@@ -157,8 +128,9 @@ end
 function f --description '
     Recursively search for a file starting a current dir
     and copy result to clipboard
+    Skips results in ./tox folder
     '
-    set res (find . -name $argv)
+    set res (find . -path ./.tox -prune -false -o -name $argv)
     clip echo $res
     printf '%s\n' "$res"
 end
@@ -183,17 +155,6 @@ function rgrep-all --description 'rgrep but excluting unwanted dirs'
     find . \( -name .tox -prune \) -o -name "*.py" -exec grep --color -Hn "$argv" \{\} 2>/dev/null \;
 end
 
-# function foreach --description '
-#     Call first argument (which has to be a function) with each other arguments
-#     Example: foreach xdg-open *.png
-#     '
-#     func=$argv[1]
-#     for f in "${@:2}"; do
-#         $func $f
-#     end
-# end
-
-
 function l
     ls -lrt $argv
 end
@@ -202,40 +163,31 @@ function o
     xdg-open $argv
 end
 
-function root
-	  echo "mounting $argv in /blah"
-	  docker run -it -u 0 --rm --entrypoint /bin/bash -v $argv:/blah centos
-end
-
 # alias dvorak='setxkbmap -layout us -variant dvp'
 
+function sound-ok --description "Play a sound representing a success"
+    aplay /usr/share/sounds/sound-icons/glass-water-1.wav
+end
 
+function sound-fail --description "Play a sound representing a failure"
+    aplay /usr/share/sounds/sound-icons/guitar-12.wav
+end
 
-set DEVPI --index-url "https://bbpteam.epfl.ch/repository/devpi/bbprelman/dev/+simple/"
-set CDPATH . $HOME/workspace/
-
-set -x EDITOR vim
-
-# set -x CC clang
-# set -x CXX clang
 
 function ox --description "Run tox and plays a sound depending on the outcome"
     tox $argv
     set return_status $status
     if test $status -eq 0
-        aplay /usr/share/sounds/sound-icons/glass-water-1.wav
+        sound-ok
     else
-        aplay /usr/share/sounds/sound-icons/guitar-12.wav
+        sound-fail
     end
     return $return_status
 end
 
 
 alias acr='git add -u; and git commit --amend --no-edit; and git review'
-alias m='morpheus'
-alias ma='morpheus-admin'
 
-set -x PATH $HOME/.local/bin $PATH
 
 switch (uname)
     case Darwin
@@ -249,3 +201,74 @@ function push-notes --description "Push my notes to GitHub"
     git push
     popd
 end
+
+function cdissue --description "CD into issue directory and checks it out"
+    # strip trailing slash
+    set issue (echo $argv[1] | string replace -r '/$' '' | string upper)
+
+    if test $issue = "-"
+        if test -n "$PREVIOUS_JIRA_ISSUE"
+            set tmp $PREVIOUS_JIRA_ISSUE
+            set -gx PREVIOUS_JIRA_ISSUE $CURRENT_JIRA_ISSUE
+            set -gx CURRENT_JIRA_ISSUE $tmp
+        else
+            echo No previous ticket
+            return
+        end
+    else
+        if test -n "$CURRENT_JIRA_ISSUE"
+            set -gx PREVIOUS_JIRA_ISSUE $CURRENT_JIRA_ISSUE
+        end
+        set -gx CURRENT_JIRA_ISSUE $issue
+    end
+
+    sf checkout $CURRENT_JIRA_ISSUE
+    cd (echo $issue | string lower)
+end
+
+function sf-prod --description "run snowflake-explorer in prod environment"
+    /home/bcoste/.virtualenvs/cdp-prod/bin/sf $argv
+end
+
+function __fish_complete_directories -d "Complete directory prefixes" --argument-names comp desc
+    if not set -q desc[1]
+        set desc Directory
+    end
+
+    if not set -q comp[1]
+        set comp (commandline -ct)
+    end
+
+    pushd /home/bcoste/.snowflake-explorer/
+    # HACK: We call into the file completions by using a non-existent command.
+    # If we used e.g. `ls`, we'd run the risk of completing its options or another kind of argument.
+    # But since we default to file completions, if something doesn't have another completion...
+    set -l dirs (complete -C"nonexistentcommandooheehoohaahaahdingdongwallawallabingbang $comp" | string match -r '.*/$')
+
+    if set -q dirs[1]
+        printf "%s\t$desc\n" $dirs
+    end
+    popd
+end
+
+complete --no-files --exclusive --command cdissue --arguments "(__fish_complete_directories)"
+
+set CDPATH . $HOME/workspace/ $HOME/.snowflake-explorer
+set -x SPARK_HOME /opt/spark
+set -x PATH $HOME/.local/bin $PATH $SPARK_HOME/bin $SPARK_HOME/sbin
+set -x PYSPARK_PYTHON /home/bcoste/.virtualenvs/cdp/bin/python
+set -x EDITOR vim
+set -x CC clang
+set -x CXX clang
+
+if test -e ~/.credentials.fish
+    . ~/.credentials.fish
+end
+
+
+setenv PYENV_ROOT "$HOME/.pyenv"
+setenv PATH "$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
+status is-login; and pyenv init --path | source
+status is-interactive; and pyenv init - | source
+
+vf activate cdp
