@@ -175,12 +175,16 @@ end
 
 
 function ox --description "Run tox and plays a sound depending on the outcome"
-    tox $argv
+    set logfile /tmp/tox.log
+    tox $argv --result-json $logfile
+
     set return_status $status
     if test $status -eq 0
         sound-ok
     else
-        sound-fail
+        echo running fix-tox
+        /home/bcoste/.virtualenvs/cdp/bin/code-assist fix-tox $logfile
+        # sound-fail
     end
     return $return_status
 end
@@ -202,58 +206,12 @@ function push-notes --description "Push my notes to GitHub"
     popd
 end
 
-function cdissue --description "CD into issue directory and checks it out"
-    # strip trailing slash
-    set issue (echo $argv[1] | string replace -r '/$' '' | string upper)
-
-    if test $issue = "-"
-        if test -n "$PREVIOUS_JIRA_ISSUE"
-            set tmp $PREVIOUS_JIRA_ISSUE
-            set -gx PREVIOUS_JIRA_ISSUE $CURRENT_JIRA_ISSUE
-            set -gx CURRENT_JIRA_ISSUE $tmp
-        else
-            echo No previous ticket
-            return
-        end
-    else
-        if test -n "$CURRENT_JIRA_ISSUE"
-            set -gx PREVIOUS_JIRA_ISSUE $CURRENT_JIRA_ISSUE
-        end
-        set -gx CURRENT_JIRA_ISSUE $issue
-    end
-
-    sf checkout $CURRENT_JIRA_ISSUE
-    cd (echo $issue | string lower)
-end
-
 function sf-prod --description "run snowflake-explorer in prod environment"
     /home/bcoste/.virtualenvs/cdp-prod/bin/sf $argv
 end
 
-function __fish_complete_directories -d "Complete directory prefixes" --argument-names comp desc
-    if not set -q desc[1]
-        set desc Directory
-    end
 
-    if not set -q comp[1]
-        set comp (commandline -ct)
-    end
-
-    pushd /home/bcoste/.snowflake-explorer/
-    # HACK: We call into the file completions by using a non-existent command.
-    # If we used e.g. `ls`, we'd run the risk of completing its options or another kind of argument.
-    # But since we default to file completions, if something doesn't have another completion...
-    set -l dirs (complete -C"nonexistentcommandooheehoohaahaahdingdongwallawallabingbang $comp" | string match -r '.*/$')
-
-    if set -q dirs[1]
-        printf "%s\t$desc\n" $dirs
-    end
-    popd
-end
-
-complete --no-files --exclusive --command cdissue --arguments "(__fish_complete_directories)"
-
-set CDPATH . $HOME/workspace/ $HOME/.snowflake-explorer
+set CDPATH . $HOME/workspace/ $HOME/.cdp-core
 set -x SPARK_HOME /opt/spark
 set -x PATH $HOME/.local/bin $PATH $SPARK_HOME/bin $SPARK_HOME/sbin
 set -x PYSPARK_PYTHON /home/bcoste/.virtualenvs/cdp/bin/python
@@ -272,3 +230,14 @@ status is-login; and pyenv init --path | source
 status is-interactive; and pyenv init - | source
 
 vf activate cdp
+
+set -x CDP_CLI_WORKDIR $HOME/.cdp-cli
+
+set -x DATABRICKS_USER Benoit.Coste.Contractor@pepsico.com
+set -x SNOWFLAKE_USERNAME BENOIT_COSTE
+set -x SNOWFLAKE_PASSWORD 2c2y2RHNpNQ9QjY
+
+alias ca 'code-assist'
+
+alias q 'cdp snowflake q'
+source /home/bcoste/workspace/cdp-cli/scripts/cdissue.fish
