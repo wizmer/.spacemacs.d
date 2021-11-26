@@ -58,6 +58,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      git
      github
+     gtags
      (helm :variables helm-use-fuzzy 'source)
      html
      imenu-list
@@ -658,6 +659,7 @@ See the header of this file for more information."
 
   ;; Highlight characters that are after column 100
   (global-column-enforce-mode t)
+  (pyvenv-workon "cdp")
   )
 
 (defun dotspacemacs/user-load ()
@@ -858,12 +860,18 @@ Else, go to the beggining of line"
              (range (cdr (assoc `range data)))
              )
         (goto-line (+ 1 (aref range 0)))
-        (kill-whole-line (- (aref range 1) (aref range 0)))
+        (when (aref range 1)
+            (kill-whole-line (- (aref range 1) (aref range 0))))
         (insert docstring)
         )
       ))
 
-
+  (defun next-function-to-top ()
+    (interactive)
+    (end-of-defun 2)
+    (beginning-of-defun)
+    (recenter 0)
+    )
 
   ;; better helm result sorting
   ;; https://github.com/emacs-helm/helm/issues/1492
@@ -872,7 +880,6 @@ Else, go to the beggining of line"
 
   (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
 
-  (pyvenv-workon "cdp")
   )
 
 (defun dotspacemacs/emacs-custom-settings ()

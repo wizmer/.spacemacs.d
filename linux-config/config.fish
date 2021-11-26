@@ -233,10 +233,6 @@ vf activate cdp
 
 set -x CDP_CLI_WORKDIR $HOME/.cdp-cli
 
-set -x DATABRICKS_USER Benoit.Coste.Contractor@pepsico.com
-set -x SNOWFLAKE_USERNAME BENOIT_COSTE
-set -x SNOWFLAKE_PASSWORD 2c2y2RHNpNQ9QjY
-
 alias ca 'code-assist'
 
 alias q 'cdp snowflake q'
