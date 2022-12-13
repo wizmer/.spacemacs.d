@@ -3,7 +3,7 @@
 (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 (add-hook 'python-mode-hook (lambda () (setq forward-sexp-function nil)))
 (add-hook 'python-mode-hook 'hs-hide-initial-comment-block t)
-(define-key python-mode-map [remap end-of-defun] 'next-function-to-top)
+;; (define-key python-mode-map [remap end-of-defun] 'next-function-to-top)
 
 ;; (add-hook 'before-save-hook 'pyimport-remove-unused)
 

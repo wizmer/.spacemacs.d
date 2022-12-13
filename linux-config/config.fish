@@ -54,7 +54,7 @@ function rchmod --argument-names 'directory' 'd_chmod' 'f_chmod'
     find $directory -type f -exec chmod $f_chmod {} \;
 end
 
-function ip
+function i
     ipython
 end
 
@@ -212,9 +212,9 @@ end
 
 
 set CDPATH . $HOME/workspace/ $HOME/.cdp-core
-set -x SPARK_HOME /opt/spark
-set -x PATH $HOME/.local/bin $PATH $SPARK_HOME/bin $SPARK_HOME/sbin
-set -x PYSPARK_PYTHON /home/bcoste/.virtualenvs/cdp/bin/python
+# set -x SPARK_HOME /opt/spark
+set -x PATH $HOME/bin $PATH
+# set -x PYSPARK_PYTHON /home/bcoste/.virtualenvs/cdp/bin/python
 set -x EDITOR vim
 set -x CC clang
 set -x CXX clang
@@ -224,16 +224,16 @@ if test -e ~/.credentials.fish
 end
 
 
-setenv PYENV_ROOT "$HOME/.pyenv"
-setenv PATH "$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
 status is-login; and pyenv init --path | source
 status is-interactive; and pyenv init - | source
 
-vf activate cdp
 
 set -x CDP_CLI_WORKDIR $HOME/.cdp-cli
 
 alias ca 'code-assist'
 
-alias q 'cdp snowflake q'
 source /home/bcoste/workspace/cdp-cli/scripts/cdissue.fish
+
+vf activate env
+#gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]"
+cd energy-cost
