@@ -1,3 +1,9 @@
+%load_ext autoreload
+
+%autoreload 2
+
+from energy_cost.api.urjanet import *
+
 try:
     from pathlib import Path
 except:

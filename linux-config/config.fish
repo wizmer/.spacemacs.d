@@ -236,4 +236,4 @@ source /home/bcoste/workspace/cdp-cli/scripts/cdissue.fish
 
 vf activate env
 #gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]"
-cd energy-cost
+# cd energy-cost
