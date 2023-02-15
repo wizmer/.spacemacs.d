@@ -3,6 +3,7 @@
 %autoreload 2
 
 from energy_cost.api.urjanet import *
+from energy_cost.api.urjanet import _api
 
 try:
     from pathlib import Path
