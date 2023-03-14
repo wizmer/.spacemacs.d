@@ -18,7 +18,7 @@ if test -e ~/.credentials.fish
     . ~/.credentials.fish
 end
 
-
+set -x CDPATH . $HOME/workspace
 alias ca 'code-assist'
 
 source /home/bcoste/workspace/cdp-cli/scripts/cdissue.fish

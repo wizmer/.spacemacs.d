@@ -17,7 +17,7 @@
 	rebase = true
 [user]
   name = Benoît Coste
-	email = benoit.coste@epfl.ch
+	email = benoit.coste@pm.me
 [magithub]
 	online = false
 [magithub "status"]
