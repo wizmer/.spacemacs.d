@@ -9,7 +9,6 @@ switch (uname)
 end
 
 
-# set -x PYSPARK_PYTHON /home/bcoste/.virtualenvs/cdp/bin/python
 set -x EDITOR vim
 set -x CC clang
 set -x CXX clang
@@ -19,10 +18,10 @@ if test -e ~/.credentials.fish
 end
 
 set -x CDPATH . $HOME/workspace
-alias ca 'code-assist'
-
-source /home/bcoste/workspace/cdp-cli/scripts/cdissue.fish
 
 vf activate env
 #gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]"
 # cd energy-cost
+
+
+set -x USE_PYGEOS 0

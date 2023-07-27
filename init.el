@@ -32,7 +32,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(typescript
+   '(systemd
+     typescript
      ansible
      rust
      clojure
@@ -56,6 +57,7 @@ This function should only modify configuration layer settings."
      ;; clojure
      cmake
      command-log
+     csharp
      csv
      emacs-lisp
      git
@@ -387,7 +389,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
@@ -396,7 +398,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default t) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
 
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' to obtain fullscreen
@@ -586,9 +588,9 @@ See the header of this file for more information."
   (require 'py-autopep8)
   (require 'term)
   (require 'company)
-  ;; (require 'sphinx-doc "~/.spacemacs.d/packages/sphinx-doc/sphinx-doc.el")
+  ;; (require 'sphinx-doc "~/.spacemacs.d/packages/sphinx-doc/sphinx-doc.el") ;
 
-  (setq source-directory "/home/bcoste/appz/emacs-27.1/src")
+  (setq source-directory "/home/bcoste/appz/emacs-28.1/src")
   (defun normal-state-and-recompile ()
     (interactive)
     (evil-normal-state)
@@ -631,6 +633,25 @@ See the header of this file for more information."
     (insert "\" << std::endl;")
     (newline-and-indent))
 
+  (defun python-toggle-boolean ()
+    "If point is on `true' or `false', toggle it."
+    (interactive)
+    (unless (nth 8 (syntax-ppss)) ; inside a keyword, string or comment
+      (let* ((bounds (bounds-of-thing-at-point 'symbol))
+             (string (and bounds (buffer-substring-no-properties (car bounds) (cdr bounds))))
+             (pt (point)))
+        (when (and bounds (member string '("True" "False")))
+          (delete-region (car bounds) (cdr bounds))
+          (cond
+           ((string= "True" string)
+            (insert "False")
+            (goto-char (if (= pt (cdr bounds)) (1+ pt) pt)))
+           (t
+            (insert "True")
+            (goto-char (if (= pt (cdr bounds)) (1- pt) pt))))
+          (save-buffer)
+))))
+
   (setq mac-command-modifier 'meta)
 
   (menu-bar-mode 1)
@@ -664,7 +685,7 @@ See the header of this file for more information."
         c-basic-offset 4)
   (c-set-offset 'innamespace 0)
 
-  (global-set-key [remap query-replace] 'anzu-query-replace)
+  (global-set-key [remap query-ureplace] 'anzu-query-replace)
   (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
 
   (global-set-key (kbd "C-c d") 'kill-line-relative)
@@ -709,6 +730,7 @@ See the header of this file for more information."
     "o t" 'python-pytest-dispatch
     "o f" 'create-test-function
     "o d" 'create-docstring
+    "o ." 'python-toggle-boolean
     )
 
 
@@ -726,7 +748,7 @@ See the header of this file for more information."
 
   ;; Highlight characters that are after column 100
   (global-column-enforce-mode t)
-  (pyvenv-workon "env")
+  ;; (pyvenv-workon "env")
 
 
   (with-eval-after-load 'company
@@ -767,200 +789,200 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; you should place your code here."
 
 
-  (load-file "~/.spacemacs.d/setup-linux-config.el")
-  (load-file "~/.spacemacs.d/python-imports.el")
-  (load-file "~/.spacemacs.d/change-brackets.el")
+   (load-file "~/.spacemacs.d/setup-linux-config.el")
+   (load-file "~/.spacemacs.d/python-imports.el")
+   (load-file "~/.spacemacs.d/change-brackets.el")
 
-  (add-to-list 'auto-mode-alist '("\\.ipp\\'" . c++-mode))
-  ;;Nom de la fonction dans la barre
-  ;; (which-function-mode 1)
+   (add-to-list 'auto-mode-alist '("\\.ipp\\'" . c++-mode))
+   ;;Nom de la fonction dans la barre
+   ;; (which-function-mode 1)
 
-  (defun back-to-indentation-or-beginning-of-line ()
-    "Go to the first non-blank char of the line if not already on it
-Else, go to the beggining of line"
-    (interactive)
-    (let ((current-point (point)))
-      (back-to-indentation)
-      (when (= (point) current-point)
-        (beginning-of-line))))
+   (defun back-to-indentation-or-beginning-of-line ()
+     "Go to the first non-blank char of the line if not already on it
+ Else, go to the beggining of line"
+     (interactive)
+     (let ((current-point (point)))
+       (back-to-indentation)
+       (when (= (point) current-point)
+         (beginning-of-line))))
 
-  (defun switch-to-ansi-term (&optional term-name)
-    (interactive)
-    (if (or (string= major-mode "clojure-mode")
-            (string= major-mode "cider-repl-mode")
-            (string= major-mode "cider-test-report-mode"))
-        (setq term-name "*cider-repl refactor-tool*")
-      (when (equal term-name nil)
-        (setq term-name "*ansi-term*")
-        )
-      )
+   (defun switch-to-ansi-term (&optional term-name)
+     (interactive)
+     (if (or (string= major-mode "clojure-mode")
+             (string= major-mode "cider-repl-mode")
+             (string= major-mode "cider-test-report-mode"))
+         (setq term-name "*cider-repl refactor-tool*")
+       (when (equal term-name nil)
+         (setq term-name "*ansi-term*")
+         )
+       )
 
-    (setq termBuffer (get-buffer term-name))
-    (if termBuffer
-        (progn
-          (if (string= (buffer-name (current-buffer)) term-name)
-              (switch-to-buffer (other-buffer))
-            (switch-to-buffer termBuffer)))
-      (progn
-        (ansi-term shell-file-name)
-        (rename-buffer term-name)
-        )))
+     (setq termBuffer (get-buffer term-name))
+     (if termBuffer
+         (progn
+           (if (string= (buffer-name (current-buffer)) term-name)
+               (switch-to-buffer (other-buffer))
+             (switch-to-buffer termBuffer)))
+       (progn
+         (ansi-term shell-file-name)
+         (rename-buffer term-name)
+         )))
 
-  (defun pwd (arg)
-    "Put the current file name on the clipboard
-     if ARG is not nil, put the parent folder "
-    (interactive "P")
-    (let ((filename (if (or arg (equal major-mode 'dired-mode))
-                        default-directory
-                      (buffer-file-name))))
-      (when filename
-        (with-temp-buffer
-          (insert filename)
-          (clipboard-kill-region (point-min) (point-max)))
-        (message filename))))
-
-
-  (defun bcoste-print-variable (arg)
-    (interactive "P")
-    (beginning-of-line)
-    (evil-forward-word-begin)
-    (let* ((content (buffer-substring (point) (line-end-position)))
-           (content-no-quote (replace-regexp-in-string "\"" "" content)))
-
-      (kill-line)
-
-      (when (string= major-mode "python-mode")
-        (insert (concat "print(\"" content-no-quote ": {}\".format(" content "))")))
-
-      (when (string= major-mode "nrnhoc-mode")
-        (insert (concat "printf(\"" content-no-quote ": %g\\n\", " content ")")))
-      (when (string= major-mode "c++-mode")
-        (insert (concat "std::cout << \"" content-no-quote ": \" << " content " << std::endl;")))
-      )
-    (evil-normal-state)
-    (save-buffer)
-    (if arg
-        (nosetests-again))
-    )
-
-  (defun switch-to-ansi-term-and-goto-current-directory ()
-    (interactive)
-    (setq termBuffer (get-buffer "*ansi-term*"))
-    (setq name (buffer-name))
-    (setq path (file-name-directory(buffer-file-name)))
-    (if (get-buffer "*ansi-term*")
-        (progn
-          (setq cur (current-buffer))
-          (if (string= (buffer-name cur) "*ansi-term*")
-              (switch-to-buffer (other-buffer))
-            (progn
-              (switch-to-buffer termBuffer)
-              (insert "cd ")
-              (insert path)
-              (term-send-input)
-              )))))
-
-  (defun to-c++ ()
-    "Reformat python code to c++ code"
-    (interactive)
-    (replace-string "[" "{")
-    (beginning-of-buffer)
-    (replace-string "]" "}")
-    (beginning-of-buffer)
-    (replace-regexp ")\n" ");\n")
-    (beginning-of-buffer)
-    (replace-regexp "}\n" "};\n")
-    (beginning-of-buffer)
-    (replace-string "points =" "points() =")
-    (beginning-of-buffer)
-    (replace-string "diameters =" "diameters() =")
-    )
-
-  (defun copy-quoted-text-at-point ()
-    (interactive)
-    (let ((delim '("\'" "\"" "\`"))
-          (start 0)
-          (theDelim "")
-          (p0 (point)))
-      (dolist (elt delim)
-        (setq starttmp (search-backward elt nil t) )
-        (goto-char p0)
-        (if (numberp starttmp)
-            (if (< start starttmp)
-                (progn
-                  (setq thedelim elt)
-                  (setq start (+ starttmp 1))))))
-      (forward-char)
-      (setq end (- (search-forward thedelim) 1))
-      (kill-ring-save start end)))
-
-  (defun kill-line-relative (&optional arg)
-    "kill relative line."
-    (interactive "ndelete line # (relative) ? ")
-    (save-excursion
-      (forward-visible-line arg)
-      (kill-whole-line)))
+   (defun pwd (arg)
+     "Put the current file name on the clipboard
+      if ARG is not nil, put the parent folder "
+     (interactive "P")
+     (let ((filename (if (or arg (equal major-mode 'dired-mode))
+                         default-directory
+                       (buffer-file-name))))
+       (when filename
+         (with-temp-buffer
+           (insert filename)
+           (clipboard-kill-region (point-min) (point-max)))
+         (message filename))))
 
 
-  (defun find-regex-in-all-buffers (regexp)
-    (interactive "ssearch for regexp ? ")
-    (multi-occur-in-matching-buffers ".*" regexp))
+   (defun bcoste-print-variable (arg)
+     (interactive "P")
+     (beginning-of-line)
+     (evil-forward-word-begin)
+     (let* ((content (buffer-substring (point) (line-end-position)))
+            (content-no-quote (replace-regexp-in-string "\"" "" content)))
 
-  (defun comment-or-uncomment-region-or-line ()
-    "comments or uncomments the region or the current line if there's no active region."
-    (interactive)
-    (let (beg end)
-      (if (region-active-p)
-          (setq beg (region-beginning) end (region-end))
-        (setq beg (line-beginning-position) end (line-end-position)))
-      (comment-or-uncomment-region beg end)))
+       (kill-line)
 
-  (defun create-test-function ()
-    (interactive)
-    (let* ((args (split-string (pytest-py-testable) "::"))
-           (cmd (concat "/home/bcoste/.virtualenvs/cdp/bin/code-assist "
-                        "add-test-function "
-                        (if (> (length args) 2)
-                            (string-join (list (car args) (nth 2 args) "--class-name" (nth 1 args)) " ")
-                          (string-join args " ")))))
-      (message (concat "cdm: " cmd))
-      (shell-command cmd)
-      ))
+       (when (string= major-mode "python-mode")
+         (insert (concat "print(f\"" content-no-quote ": {"content"}\")")))
 
-  (defun create-docstring ()
-    (interactive)
-    (let* ((args (split-string (pytest-py-testable) "::"))
-           (cmd (concat "/home/bcoste/.virtualenvs/cdp/bin/code-assist "
-                        "get-docstring "
-                        (string-join args " "))))
-      (message (concat "cdm: " cmd))
-      (shell-command cmd)
-      (let* ((data (json-read-from-string (progn
-                                            (with-current-buffer "*Shell Command Output*"
-                                              (buffer-string)))))
-             (docstring (cdr (assoc `docstring data)))
-             (range (cdr (assoc `range data)))
-             )
-        (goto-line (+ 1 (aref range 0)))
-        (when (aref range 1)
-            (kill-whole-line (- (aref range 1) (aref range 0))))
-        (insert docstring)
-        )
-      ))
+       (when (string= major-mode "nrnhoc-mode")
+         (insert (concat "printf(\"" content-no-quote ": %g\\n\", " content ")")))
+       (when (string= major-mode "c++-mode")
+         (insert (concat "std::cout << \"" content-no-quote ": \" << " content " << std::endl;")))
+       )
+     (evil-normal-state)
+     (save-buffer)
+     (if arg
+         (nosetests-again))
+     )
 
-  (defun next-function-to-top ()
-    (interactive)
-    (end-of-defun 2)
-    (beginning-of-defun)
-    (recenter 0)
-    )
+   (defun switch-to-ansi-term-and-goto-current-directory ()
+     (interactive)
+     (setq termBuffer (get-buffer "*ansi-term*"))
+     (setq name (buffer-name))
+     (setq path (file-name-directory(buffer-file-name)))
+     (if (get-buffer "*ansi-term*")
+         (progn
+           (setq cur (current-buffer))
+           (if (string= (buffer-name cur) "*ansi-term*")
+               (switch-to-buffer (other-buffer))
+             (progn
+               (switch-to-buffer termBuffer)
+               (insert "cd ")
+               (insert path)
+               (term-send-input)
+               )))))
 
-  ;; better helm result sorting
-  ;; https://github.com/emacs-helm/helm/issues/1492
-  (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)
-    candidates)
+   (defun to-c++ ()
+     "Reformat python code to c++ code"
+     (interactive)
+     (replace-string "[" "{")
+     (beginning-of-buffer)
+     (replace-string "]" "}")
+     (beginning-of-buffer)
+     (replace-regexp ")\n" ");\n")
+     (beginning-of-buffer)
+     (replace-regexp "}\n" "};\n")
+     (beginning-of-buffer)
+     (replace-string "points =" "points() =")
+     (beginning-of-buffer)
+     (replace-string "diameters =" "diameters() =")
+     )
 
-  (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
+   (defun copy-quoted-text-at-point ()
+     (interactive)
+     (let ((delim '("\'" "\"" "\`"))
+           (start 0)
+           (theDelim "")
+           (p0 (point)))
+       (dolist (elt delim)
+         (setq starttmp (search-backward elt nil t) )
+         (goto-char p0)
+         (if (numberp starttmp)
+             (if (< start starttmp)
+                 (progn
+                   (setq thedelim elt)
+                   (setq start (+ starttmp 1))))))
+       (forward-char)
+       (setq end (- (search-forward thedelim) 1))
+       (kill-ring-save start end)))
+
+   (defun kill-line-relative (&optional arg)
+     "kill relative line."
+     (interactive "ndelete line # (relative) ? ")
+     (save-excursion
+       (forward-visible-line arg)
+       (kill-whole-line)))
+
+
+   (defun find-regex-in-all-buffers (regexp)
+     (interactive "ssearch for regexp ? ")
+     (multi-occur-in-matching-buffers ".*" regexp))
+
+   (defun comment-or-uncomment-region-or-line ()
+     "comments or uncomments the region or the current line if there's no active region."
+     (interactive)
+     (let (beg end)
+       (if (region-active-p)
+           (setq beg (region-beginning) end (region-end))
+         (setq beg (line-beginning-position) end (line-end-position)))
+       (comment-or-uncomment-region beg end)))
+
+   (defun create-test-function ()
+     (interactive)
+     (let* ((args (split-string (pytest-py-testable) "::"))
+            (cmd (concat "/home/bcoste/.virtualenvs/cdp/bin/code-assist "
+                         "add-test-function "
+                         (if (> (length args) 2)
+                             (string-join (list (car args) (nth 2 args) "--class-name" (nth 1 args)) " ")
+                           (string-join args " ")))))
+       (message (concat "cdm: " cmd))
+       (shell-command cmd)
+       ))
+
+   (defun create-docstring ()
+     (interactive)
+     (let* ((args (split-string (pytest-py-testable) "::"))
+            (cmd (concat "/home/bcoste/.virtualenvs/cdp/bin/code-assist "
+                         "get-docstring "
+                         (string-join args " "))))
+       (message (concat "cdm: " cmd))
+       (shell-command cmd)
+       (let* ((data (json-read-from-string (progn
+                                             (with-current-buffer "*Shell Command Output*"
+                                               (buffer-string)))))
+              (docstring (cdr (assoc `docstring data)))
+              (range (cdr (assoc `range data)))
+              )
+         (goto-line (+ 1 (aref range 0)))
+         (when (aref range 1)
+             (kill-whole-line (- (aref range 1) (aref range 0))))
+         (insert docstring)
+         )
+       ))
+
+   (defun next-function-to-top ()
+     (interactive)
+     (end-of-defun 2)
+     (beginning-of-defun)
+     (recenter 0)
+     )
+
+   ;; better helm result sorting
+   ;; https://github.com/emacs-helm/helm/issues/1492
+   (defun helm-buffers-sort-transformer@donot-sort (_ candidates _)
+     candidates)
+
+   (advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@donot-sort)
 
   )
 
@@ -1023,12 +1045,12 @@ This function is called at the very end of Spacemacs initialization."
    '("second.org" "jazz.org" "poleEmploi.org" "google.org" "muscu.org" "rando.org" "test.org"))
  '(org-babel-load-languages '((python . t) (emacs-lisp . t) (plantuml . t)))
  '(org-confirm-babel-evaluate nil)
- '(org-directory "~/notes")
+ '(org-directory "~/notes" t)
  '(org-jira-working-dir "~/org-jira/")
  '(org-mobile-agenda 'default)
  '(org-mobile-directory "~/Dropbox/mobileOrg-benoit")
  '(package-selected-packages
-   '(copilot lsp-docker ccls helm-lsp lsp-origami origami lsp-pyright lsp-python-ms lsp-ui vim-powerline tern string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin space-doc pylookup multi-vterm xref help-fns+ code-cells holy-mode evil-evilified-state typescript-mode import-js grizzl add-node-modules-path ron-mode rust-mode dap-mode lsp-treemacs bui lsp-mode cfrs posframe jinja2-mode company-ansible ansible-doc ansible python-pytest anaconda-mode counsel swiper ivy sqlup-mode sql-indent insert-shebang helm-gtags ggtags flycheck-bashate fish-mode counsel-gtags company-shell stickyfunc-enhance srefactor yasnippet-snippets yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify vue-mode volatile-highlights vi-tilde-fringe uuidgen use-package twittering-mode toml-mode toc-org tagedit symon string-inflection spaceline-all-the-icons smeargle slim-mode slack shell-pop scss-mode sayid sass-mode restclient-helm restart-emacs rainbow-delimiters racer pyvenv pytest py-isort py-autopep8 pug-mode powershell popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file ob-restclient ob-http nix-mode neotree nameless multi-term move-text markdown-toc magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint kotlin-mode json-navigator json-mode js2-refactor js-doc jabber intero indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-nixos-options helm-mode-manager helm-make helm-hoogle helm-gitignore helm-flx helm-descbinds helm-ctest helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy font-lock+ flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks engine-mode emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig easy-kill dumb-jump disaster diminish define-word dante cython-mode csv-mode counsel-projectile company-web company-tern company-statistics company-rtags company-restclient company-quickhelp company-nixos-options company-ghci company-ghc company-emoji company-cabal company-c-headers company-anaconda command-log-mode column-enforce-mode cmm-mode cmake-mode cmake-ide clojure-snippets clojure-cheatsheet clj-refactor clean-aindent-mode clang-format cider-eval-sexp-fu centered-cursor-mode cargo auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(journalctl-mode omnisharp csharp-mode copilot lsp-docker ccls helm-lsp lsp-origami origami lsp-pyright lsp-python-ms lsp-ui vim-powerline tern string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin space-doc pylookup multi-vterm xref help-fns+ code-cells holy-mode evil-evilified-state typescript-mode import-js grizzl add-node-modules-path ron-mode rust-mode dap-mode lsp-treemacs bui lsp-mode cfrs posframe jinja2-mode company-ansible ansible-doc ansible python-pytest anaconda-mode counsel swiper ivy sqlup-mode sql-indent insert-shebang helm-gtags ggtags flycheck-bashate fish-mode counsel-gtags company-shell stickyfunc-enhance srefactor yasnippet-snippets yapfify yaml-mode xterm-color ws-butler winum which-key web-mode web-beautify vue-mode volatile-highlights vi-tilde-fringe uuidgen use-package twittering-mode toml-mode toc-org tagedit symon string-inflection spaceline-all-the-icons smeargle slim-mode slack shell-pop scss-mode sayid sass-mode restclient-helm restart-emacs rainbow-delimiters racer pyvenv pytest py-isort py-autopep8 pug-mode powershell popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file ob-restclient ob-http nix-mode neotree nameless multi-term move-text markdown-toc magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint kotlin-mode json-navigator json-mode js2-refactor js-doc jabber intero indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-nixos-options helm-mode-manager helm-make helm-hoogle helm-gitignore helm-flx helm-descbinds helm-ctest helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate google-c-style golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy font-lock+ flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks engine-mode emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig easy-kill dumb-jump disaster diminish define-word dante cython-mode csv-mode counsel-projectile company-web company-tern company-statistics company-rtags company-restclient company-quickhelp company-nixos-options company-ghci company-ghc company-emoji company-cabal company-c-headers company-anaconda command-log-mode column-enforce-mode cmm-mode cmake-mode cmake-ide clojure-snippets clojure-cheatsheet clj-refactor clean-aindent-mode clang-format cider-eval-sexp-fu centered-cursor-mode cargo auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
  '(popwin:special-display-config
    '(("^\\*Flycheck.+\\*$" :regexp t :position bottom :noselect t :dedicated t :stick t)
      ("*cider-doc*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)

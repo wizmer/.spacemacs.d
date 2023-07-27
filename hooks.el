@@ -7,7 +7,7 @@
 
 ;; (add-hook 'before-save-hook 'pyimport-remove-unused)
 
-;; Always save before sending to buffer
+;; always save before sending to buffer
 (advice-add 'python-shell-send-buffer :before #'save-buffer)
 
 (add-to-list 'auto-mode-alist '("\\.asc\\'" . fundamental-mode))
@@ -18,10 +18,10 @@
 ;; (add-hook 'c++-mode-hook 'clang-format-on-save)
 (remove-hook 'c-mode-common-hook 'spacemacs//c-toggle-auto-newline )
 
-;; To properly indent hoplon macros. The following is extended from Alan's dotspacemacs:
+;; to properly indent hoplon macros. the following is extended from alan's dotspacemacs:
 (add-hook 'clojure-mode-hook
           '(lambda ()
-             ;; Hoplon functions and macros
+             ;; hoplon functions and macros
              (dolist (pair '((page . 'defun)
                              (loop-tpl . 'defun)
                              (if-tpl . '1)
@@ -35,7 +35,7 @@
 ;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
 
 
-;; Don't ask confirmation before closing ansi-term
+;; don't ask confirmation before closing ansi-term
 (defun set-no-process-query-on-exit ()
   (let ((proc (get-buffer-process (current-buffer))))
     (when (processp proc)
@@ -43,18 +43,18 @@
 (add-hook 'term-exec-hook 'set-no-process-query-on-exit)
 
 (defun char-mode-and-enter()
-  "Go back to char-mode before pressing enter"
+  "go back to char-mode before pressing enter"
   (interactive)
   (term-char-mode)
   (term-send-raw))
 (add-hook 'term-mode-hook
           (function
            (lambda ()
-             (clean-aindent-mode -1) ;; Disable clean-aindent as it breaks M-backspace in ansi-term
+             (clean-aindent-mode -1) ;; disable clean-aindent as it breaks m-backspace in ansi-term
              )))
 
 (defun bury-compile-buffer-if-successful (buffer string)
-  "Bury a compilation buffer if succeeded without warnings "
+  "bury a compilation buffer if succeeded without warnings "
   (when (and
          (buffer-live-p buffer)
          (string-match "compilation" (buffer-name buffer))

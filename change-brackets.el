@@ -1,4 +1,4 @@
-(defvar swap-paren-pairs '("()" "[]" "{}"))
+(defvar swap-paren-pairs '("[]" "()" "{}"))
 (defun swap-parens-at-points (begin end)
   (let ((open-char (buffer-substring begin (+ begin 1)))
         (paren-pair-list (append swap-paren-pairs swap-paren-pairs)))

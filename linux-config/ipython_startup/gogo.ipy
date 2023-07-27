@@ -13,6 +13,8 @@ except:
 try:
     import pandas as pd
     pd.set_option('min_rows', 40)
+    pd.set_option('display.max_colwidth', None)
+    pd.options.plotting.backend = "plotly"
 except:
     pass
 try:
