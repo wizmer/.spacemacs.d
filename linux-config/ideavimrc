@@ -36,3 +36,7 @@ set surround
 set clipboard^=unnamed
 imap jj <Esc>
 set timeoutlen=1000
+map ' <Action>(RecentFiles)
+map <Space> <Action>(HideAllWindows)
+"map <Ctrl> <Shift> f <Action>(MethodUp)
+:set ignorecase smartcase
