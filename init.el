@@ -88,6 +88,7 @@ This function should only modify configuration layer settings."
      twitter
      shell
      slack
+     (svelte :variables svelte-backend 'lsp)
      ;; spell-checking
      syntax-checking
      treemacs
@@ -854,6 +855,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
        (when (string= major-mode "python-mode")
          (insert (concat "print(f\"" content-no-quote ": {"content"}\")")))
+       (when (or (string= major-mode "typescript-mode")
+                 (string= major-mode "web-mode")
+                 (string= major-mode "Javascript-IDE")
+                 (string= major-mode "js-mode"))
+         (insert (concat "console.log(\"" content-no-quote "\")"
+                         "; "
+                         "console.log(" content ")"
+                         )))
 
        (when (string= major-mode "nrnhoc-mode")
          (insert (concat "printf(\"" content-no-quote ": %g\\n\", " content ")")))
@@ -1021,15 +1030,15 @@ This function is called at the very end of Spacemacs initialization."
  '(gdb-many-windows t t)
  '(git-commit-major-mode 'markdown-mode)
  '(grep-find-ignored-directories
-   '("site-packages" "SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "node_modules" "dist" ".next"))
+   '(".svelte-kit" "site-packages" "SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "node_modules" "dist" ".next"))
  '(grep-find-ignored-files
-   '("unittests" "nodeids" "*.whl" "*.so" ".#*" "*.hi" "*.o" "*~" "*.bin" "*.lbin" "*.so.*" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.parquet" "*.sqlite3" "GRTAGS" "GTAGS" "tags" "TAGS" "GPATH"))
+   '("*.zip" "unittests" "nodeids" "*.whl" "*.so" ".#*" "*.hi" "*.o" "*~" "*.bin" "*.lbin" "*.so.*" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.parquet" "*.sqlite3" "GRTAGS" "GTAGS" "tags" "TAGS" "GPATH"))
  '(helm-boring-file-regexp-list
    '("\\.egg-info$" "\\.hi$" "\\.o$" "~$" "\\.bin$" "\\.lbin$" "\\.so$" "\\.a$" "\\.ln$" "\\.blg$" "\\.bbl$" "\\.elc$" "\\.lof$" "\\.glo$" "\\.idx$" "\\.lot$" "\\.svn/\\|\\.svn$" "\\.hg/\\|\\.hg$" "\\.git/\\|\\.git$" "\\.bzr/\\|\\.bzr$" "CVS/\\|CVS$" "_darcs/\\|_darcs$" "_MTN/\\|_MTN$" "\\.fmt$" "\\.tfm$" "\\.class$" "\\.fas$" "\\.lib$" "\\.mem$" "\\.x86f$" "\\.sparcf$" "\\.dfsl$" "\\.pfsl$" "\\.d64fsl$" "\\.p64fsl$" "\\.lx64fsl$" "\\.lx32fsl$" "\\.dx64fsl$" "\\.dx32fsl$" "\\.fx64fsl$" "\\.fx32fsl$" "\\.sx64fsl$" "\\.sx32fsl$" "\\.wx64fsl$" "\\.wx32fsl$" "\\.fasl$" "\\.ufsl$" "\\.fsl$" "\\.dxl$" "\\.lo$" "\\.la$" "\\.gmo$" "\\.mo$" "\\.toc$" "\\.aux$" "\\.cp$" "\\.fn$" "\\.ky$" "\\.pg$" "\\.tp$" "\\.vr$" "\\.cps$" "\\.fns$" "\\.kys$" "\\.pgs$" "\\.tps$" "\\.vrs$" "\\.pyc$" "\\.pyo$" "\\.feather$"))
  '(helm-buffers-truncate-lines nil)
  '(helm-ff-skip-boring-files t)
  '(helm-grep-ignored-directories
-   '("build/" "SCCS/" "RCS/" "CVS/" "MCVS/" ".svn/" ".git/" ".hg/" ".bzr/" "_MTN/" "_darcs/" "{arch}/" ".gvfs/" "site-packages/" ".tox/" ".mypy_cache/"))
+   '(".svelte-kit/" "build/" "SCCS/" "RCS/" "CVS/" "MCVS/" ".svn/" ".git/" ".hg/" ".bzr/" "_MTN/" "_darcs/" "{arch}/" ".gvfs/" "site-packages/" ".tox/" ".mypy_cache/"))
  '(helm-grep-ignored-files
    '("package-lock.json" "unittests" "nodeids" ".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.parquet"))
  '(helm-window-prefer-horizontal-split t)
@@ -1039,7 +1048,7 @@ This function is called at the very end of Spacemacs initialization."
  '(jiralib-url "https://bbpteam.epfl.ch/project/issues/")
  '(kept-new-versions 6)
  '(kept-old-versions 2)
- '(lsp-ui-doc-include-signature t t)
+ '(lsp-ui-doc-include-signature t)
  '(mail-host-address "gmail.com")
  '(nose-use-verbose nil t)
  '(org-agenda-files
@@ -1074,7 +1083,26 @@ This function is called at the very end of Spacemacs initialization."
  '(py-isort-options '("-l 100"))
  '(pytest-cmd-flags "-x -s -vv")
  '(safe-local-variable-values
-   '((projectile-project-ignored-directories quote
+   '((eval eval-after-load "grep"
+           '(dolist
+                (item
+                 '("*.feather" "*.xlsx"))
+              (add-to-list
+               (make-local-variable 'grep-find-ignored-files)
+               item)))
+     (eval eval-after-load "grep"
+           '(add-to-list
+             (make-local-variable 'grep-find-ignored-files)
+             "*.feather" "*.xlsx"))
+     (eval eval-after-load "grep"
+           '(add-to-list
+             (make-local-variable 'grep-find-ignored-files)
+             "*.feather"))
+     (eval eval-after-load "grep"
+           '(add-to-list
+             (make-local-variable 'grep-find-ignored-files)
+             "*.feather *.xlsx"))
+     (projectile-project-ignored-directories quote
                                              ("data/"))
      (projectile-project-ignored-directories quote
                                              ("data"))

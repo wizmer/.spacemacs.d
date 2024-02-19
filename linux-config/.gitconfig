@@ -6,11 +6,14 @@
 	rem = remote -vv
 	lg = log --all --graph\n--pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\n--abbrev-commit --date=relative
 	no-edit = git commit --amend --no-edit
+	permission-reset = !git diff -p -R --no-ext-diff --no-color --diff-filter=M | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
+	permission-reset = !git diff -p -R --no-ext-diff --no-color --diff-filter=M | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
 [push]
 	default = current
 [core]
 	editor = vim
 	excludesfile = ~/.spacemacs.d/linux-config/gitignore
+	autocrlf = input
 [commit]
 	gpgsign = false
 [pull]

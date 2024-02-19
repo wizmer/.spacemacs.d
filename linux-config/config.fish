@@ -26,3 +26,5 @@ vf activate env
 
 set -x USE_PYGEOS 0
 fish_add_path /home/bcoste/appz/pycharm-2023.2.5/bin
+fish_add_path /home/bcoste/workspace/next-tag
+export PGDATABASE=bcoste
