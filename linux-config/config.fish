@@ -17,7 +17,7 @@ if test -e ~/.credentials.fish
     . ~/.credentials.fish
 end
 
-set -x CDPATH . $HOME/workspace
+set -x CDPATH . $HOME/workspace/peachtree $HOME/workspace
 
 vf activate env
 #gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]"

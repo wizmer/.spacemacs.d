@@ -1,0 +1,56 @@
+[alias]
+	co = checkout
+	br = branch -vv
+	ci = commit
+	st = status
+	rem = remote -vv
+	lg = log --all --graph\n--pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\n--abbrev-commit --date=relative
+	no-edit = git commit --amend --no-edit
+	permission-reset = !git diff -p -R --no-ext-diff --no-color --diff-filter=M | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
+    autoremove = "!f() { \
+        whitelist=\"main|master|dev\"; \
+        git fetch --prune; \
+        if [ -z \"$1\" ]; then \
+            list=$(git branch --merged | egrep -v \"(^\\*|$whitelist)\") && \
+            cmd='echo \"$list\" | xargs -n 1 git branch -d'; \
+        else \
+            list=$(git branch -r --merged | grep \"$1\" | egrep -v \"(>|$whitelist)\") && \
+            cmd='echo \"$list\" | cut -d'/' -f2- | xargs -n 1 git push \"$1\" --delete'; \
+        fi; \
+        echo \"On branch $(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \\(.*\\)/\\1/'). \"; echo \"\"; \
+        if [ -z \"$list\" ]; then \
+            echo \"No branches to remove.\"; \
+        else \
+            echo \"Branches to remove:\"; echo \"$list\"; echo \"\"; \
+            read -p 'Press enter to continue'; echo \" \"; \
+            eval $cmd; \
+        fi \
+    }; f"
+    autoremoveall = "!git remote | xargs -n 1 git autoremove; git autoremove"	
+[push]
+	default = current
+[core]
+	editor = vim
+	excludesFile = ~/.gitignore
+	autocrlf = input
+[commit]
+	gpgsign = false
+[pull]
+	rebase = true
+[user]
+	name = Benoît Coste
+	email = benoit.coste@pm.me
+[magithub]
+	online = false
+[magithub "status"]
+	includeStatusHeader = false
+	includePullRequestsSection = false
+	includeIssuesSection = false
+[remote]
+	# Triangular workfow: push to origin but pull from upstream
+	# https://github.blog/2015-07-29-git-2-5-including-multiple-worktrees-and-triangular-workflows/
+	pushDefault = origin
+[advice]
+	detachedHead = false
+[init]
+	defaultBranch = main

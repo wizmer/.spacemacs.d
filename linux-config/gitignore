@@ -80,3 +80,6 @@ GTAGS
 
 *.egg-info
 .eggs
+
+
+.vscode/

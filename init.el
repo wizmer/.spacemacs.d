@@ -42,7 +42,7 @@ This function should only modify configuration layer settings."
      sql
      shell-scripts
      yaml
-     javascript
+     (javascript :variables javascript-import-tool 'import-js)
      (auto-completion :variables
                       auto-completion-return-key-behavior 'complete
                       auto-completion-tab-key-behavior 'cycle
@@ -69,6 +69,7 @@ This function should only modify configuration layer settings."
      jabber
      lsp
      markdown
+     import-js
      ;; multiple-cursors
      org
      (python :variables
@@ -1026,6 +1027,8 @@ This function is called at the very end of Spacemacs initialization."
  '(compilation-ask-about-save nil)
  '(compilation-read-command t)
  '(compilation-scroll-output 'first-error)
+ '(custom-safe-themes
+   '("7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf" "bbb13492a15c3258f29c21d251da1e62f1abb8bbd492386a673dcfab474186af" default))
  '(delete-old-versions t)
  '(dired-listing-switches "-lah")
  '(evil-want-C-i-jump t)
