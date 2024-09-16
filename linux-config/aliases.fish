@@ -189,3 +189,15 @@ end
 
 
 alias acr='git add -u; and git commit --amend --no-edit; and git review'
+
+function gc
+    git commit -m "$argv"
+end
+
+function gf
+    npm run format; and git add -u; git commit -m "format"
+end
+
+function gt
+    git add -u; git commit -m "fix tests"
+end

@@ -28,3 +28,10 @@ set -x USE_PYGEOS 0
 fish_add_path /home/bcoste/appz/pycharm-2023.2.5/bin
 fish_add_path /home/bcoste/workspace/next-tag
 export PGDATABASE=bcoste
+
+# pnpm
+set -gx PNPM_HOME "/home/bcoste/.local/share/pnpm"
+if not string match -q -- $PNPM_HOME $PATH
+  set -gx PATH "$PNPM_HOME" $PATH
+end
+# pnpm end
